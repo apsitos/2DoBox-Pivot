@@ -150,7 +150,7 @@ button:focus {
   textarea {
     height: 90px;
   }
-  .body-field::-webkit-input-placeholder {
+  .task-field::-webkit-input-placeholder {
     vertical-align: text-top;
   }
 }
