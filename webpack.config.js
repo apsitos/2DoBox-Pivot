@@ -9,4 +9,4 @@ module.exports = {
     path: __dirname,
     filename: "[name].bundle.js"
   }
-}
+};

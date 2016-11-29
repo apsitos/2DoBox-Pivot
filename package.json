@@ -2,6 +2,7 @@
   "name": "2dobox",
   "version": "1.0.0",
   "description": "2dobox",
+
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,6 +12,7 @@
     "url": "git+https://github.com/apsitos/2DoBox-Pivot.git"
   },
   "keywords": [
+
     "todobox"
   ],
   "author": "Anna Josh",
