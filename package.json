@@ -2,7 +2,6 @@
   "name": "2dobox",
   "version": "1.0.0",
   "description": "2dobox",
-
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,7 +11,6 @@
     "url": "git+https://github.com/apsitos/2DoBox-Pivot.git"
   },
   "keywords": [
-
     "todobox"
   ],
   "author": "Anna Josh",
@@ -22,6 +20,9 @@
   },
   "homepage": "https://github.com/apsitos/2DoBox-Pivot#readme",
   "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-loader": "^6.2.8",
+    "babel-preset-es2015": "^6.18.0",
     "chai": "^3.5.0",
     "jquery": "^3.1.1",
     "mocha": "^3.2.0",
