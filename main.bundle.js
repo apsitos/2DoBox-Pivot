@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $ = __webpack_require__(1);
+	var $ = __webpack_require__(1)
 	var title = $('.title-field');
 	var body = $('.body-field');
 	var search = $('.search-field');
@@ -64,7 +64,7 @@
 	  ideaArray.push(newUserIdea);
 	  saveToStorage(newUserIdea);
 	  clearInputFields();
-	});
+	})
 
 	$('ul').on('click', '.delete', function(){
 	  var id = this.closest('li').id
