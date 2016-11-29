@@ -1,0 +1,30 @@
+{
+  "name": "2do-box",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apsitos/2DoBox-Pivot.git"
+  },
+  "keywords": [
+    "2DoBox"
+  ],
+  "author": "Annastasia Psitos & Joshua Small",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/apsitos/2DoBox-Pivot/issues"
+  },
+  "homepage": "https://github.com/apsitos/2DoBox-Pivot#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "jquery": "^3.1.1",
+    "mocha": "^3.2.0",
+    "mocha-loader": "^1.0.0",
+    "webpack": "^1.13.3",
+    "webpack-dev-server": "^1.16.2"
+  }
+}
