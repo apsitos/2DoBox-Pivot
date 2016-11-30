@@ -44,22 +44,22 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $ = __webpack_require__(1)
-	var title = $('.title-field');
-	var body = $('.body-field');
-	var search = $('.search-field');
-	var ideaArray = JSON.parse(localStorage.getItem('newUserIdea')) || [];
+	const $ = __webpack_require__(1)
+	const title = $('.title-field');
+	const body = $('.body-field');
+	const search = $('.search-field');
+	let ideaArray = JSON.parse(localStorage.getItem('newUserIdea')) || [];
 
 	$('document').ready(function(){
 	  getStorage();
 	});
 
 	$('.save-button').on('click', function(){
-	  var titleInput = title.val();
-	  var bodyInput = body.val();
-	  var newUserIdea = new CreateIdea(titleInput, bodyInput);
-	  var id = newUserIdea.id;
-	  var quality = newUserIdea.quality;
+	  let titleInput = title.val();
+	  let bodyInput = body.val();
+	  let newUserIdea = new CreateIdea(titleInput, bodyInput);
+	  let id = newUserIdea.id;
+	  let quality = newUserIdea.quality;
 	  displayIdea(titleInput, bodyInput, id, quality);
 	  ideaArray.push(newUserIdea);
 	  saveToStorage(newUserIdea);
@@ -67,28 +67,28 @@
 	})
 
 	$('ul').on('click', '.delete', function(){
-	  var id = this.closest('li').id
+	  let id = this.closest('li').id
 	  removeIdea(id);
 	  $(this).closest('li').remove();
 	})
 
 	$('ul').on('blur', '.title-input', function(){
-	  var id = this.closest('li').id;
-	  var newTitle = $(this).text();
+	  let id = this.closest('li').id;
+	  let newTitle = $(this).text();
 	  editTitle(id, newTitle);
 	})
 
 	$('ul').on('blur', '.body-input', function(){
-	  var id = this.closest('li').id;
-	  var newBody = $(this).text();
-	  editBody(id, newBody);
+	  let id = this.closest('li').id;
+	  let newbody = $(this).text();
+	  editbody(id, newbody);
 	})
 
 	$('ul').on('click', '.up-vote', function() {
-	  var quality = $(this).closest("li").find(".user-quality").text();
-	  var newQuality = upVote(quality);
-	  var id = this.closest('li').id
-	  for(var i = 0; i < ideaArray.length; i ++){
+	  let quality = $(this).closest("li").find(".user-quality").text();
+	  let newQuality = upVote(quality);
+	  let id = this.closest('li').id
+	  for(let i = 0; i < ideaArray.length; i ++){
 	    if(ideaArray[i].id == id){
 	      ideaArray[i].quality = newQuality;
 	      ideaArray.splice(i, 1, ideaArray[i]);
@@ -99,10 +99,10 @@
 	})
 
 	$('ul').on('click', '.down-vote', function() {
-	  var quality = $(this).closest("li").find(".user-quality").text();
-	  var newQuality = downVote(quality);
-	  var id = this.closest('li').id
-	  for(var i = 0; i < ideaArray.length; i ++){
+	  let quality = $(this).closest("li").find(".user-quality").text();
+	  let newQuality = downVote(quality);
+	  let id = this.closest('li').id
+	  for(let i = 0; i < ideaArray.length; i ++){
 	    if(ideaArray[i].id == id){
 	      ideaArray[i].quality = newQuality;
 	      ideaArray.splice(i, 1, ideaArray[i]);
@@ -113,7 +113,7 @@
 	})
 
 	search.on('keyup', function(id, title){
-	  var search = $(this).val();
+	  let search = $(this).val();
 	  $('h2:contains(' + search + ')').closest('.new-idea').show();
 	  $('h2:not(:contains(' + search + '))').closest('.new-idea').hide();
 	  $('h3:contains(' + search + ')').closest('.new-idea').show();
@@ -141,6 +141,7 @@
 	    <button class="up-vote" type="button" name="up-vote" img src="images/upvote.svg"></button>
 	    <button class="down-vote" type="button" name="down-vote" img src="images/downvote.svg"></button>
 	    <p class="rating">quality: <span class="user-quality">${quality}</span></p>
+	    <button class="completed" type="button" name="completed">Done!</button>
 	    </li>`
 	  );
 	}
@@ -150,24 +151,24 @@
 	}
 
 	function getStorage(){
-	  var storedIdeas = JSON.parse(localStorage.getItem('newUserIdea'));
+	  let storedIdeas = JSON.parse(localStorage.getItem('newUserIdea'));
 	  if (storedIdeas){
 	    for (i = 0; i < storedIdeas.length; i++){
-	      var idea = storedIdeas[i];
+	      let idea = storedIdeas[i];
 	      displayIdea(idea.title, idea.body, idea.id, idea.quality);
 	    }
 	  }
 	}
 
 	function clearInputFields(){
-	  var titleInput = title.val('');
-	  var bodyInput = body.val('');
+	  let titleInput = title.val('');
+	  let bodyInput = body.val('');
 	  $('.save-button').prop('disabled', true);
 	  $('.save-button').css('opacity', .5);
 	}
 
 	function editTitle(id, newTitle){
-	  for(var i = 0; i < ideaArray.length; i++){
+	  for(let i = 0; i < ideaArray.length; i++){
 	    if(ideaArray[i].id === parseInt(id)){
 	      ideaArray[i].title = newTitle;
 	      ideaArray.splice(i, 1, ideaArray[i]);
@@ -176,8 +177,8 @@
 	  saveToStorage();
 	}
 
-	function editBody(id, newBody){
-	  for(var i = 0; i < ideaArray.length; i++){
+	function editbody(id, newbody){
+	  for(let i = 0; i < ideaArray.length; i++){
 	    if(ideaArray[i].id === parseInt(id)){
 	      ideaArray[i].body = newBody;
 	      ideaArray.splice(i, 1, ideaArray[i]);
@@ -187,7 +188,7 @@
 	}
 
 	function removeIdea(id, index){
-	  for(var i = 0; i < ideaArray.length; i++){
+	  for(let i = 0; i < ideaArray.length; i++){
 	    if(ideaArray[i].id === parseInt(id)){
 	      ideaArray.splice(i, 1);
 	    }
