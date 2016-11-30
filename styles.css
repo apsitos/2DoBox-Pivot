@@ -43,10 +43,21 @@ textarea {
   resize: none;
 }
 
-.search-field{
-  display: block;
+.search-field, .show-completed {
+  display: inline-block;
+  align-items: top;
   margin: 15px auto;
-  width: 40%;
+  width: 30%;
+}
+
+.show-completed {
+  background-color: #00A79D;
+  border: none;
+  color: #FFFFFF;
+  font-size: 10pt;
+  width: 10%;
+  height: 25px;
+  margin-left: 30%;
 }
 
 ul {
@@ -89,12 +100,12 @@ ul {
   display: inline-block;
 }
 
-.save-button{
+.save-button {
   background-color: #00A79D;
   border: none;
   color: #FFFFFF;
   margin-bottom: 30px;
-  opacity: .5;
+  /*opacity: .5;*/
 }
 
 .save-button:hover {
