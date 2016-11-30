@@ -4,6 +4,8 @@
   "description": "2dobox",
   "main": "script.js",
   "scripts": {
+    "start": "webpack-dev-server --hot --inline",
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
