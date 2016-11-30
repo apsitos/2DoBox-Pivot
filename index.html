@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <title>2DoBox</title>
@@ -11,12 +11,12 @@
   <body>
     <header>
       <h1 class="project-title">2do<span class="box">box</span></h1>
-      <input type="text" name="title-field" placeholder="Title" class="title-field">
-      <textarea type="text" name="body-field" class="body-field"  placeholder="body"></textarea>
+      <input aria-label="title-field" type="text" name="title-field" placeholder="Title" class="title-field">
+      <textarea aria-label="body-field" type="text" name="body-field" class="body-field"  placeholder="body"></textarea>
       <button type="button" name="save" disabled="true" class="save-button">save</button>
     </header>
     <button type="button" name="show-completed" class="show-completed">show completed</button>
-    <input type="text" name="search" placeholder="search" class="search-field">
+    <input aria-label="search-field" type="text" name="search" placeholder="search" class="search-field">
     <ul class="idea-list"></ul>
   </body>
   <script src="main.bundle.js"></script>
