@@ -62,6 +62,10 @@ ul {
   width: 40%;
 }
 
+.new-idea-done {
+  background-color: #F5F5F5;
+}
+
 .title-input {
   color: #6D6E71;
   display: inline-block;
