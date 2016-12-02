@@ -11,7 +11,7 @@ header {
 }
 
 h1 {
-  color: #00A79D;
+  color: #004e49;
   font-family: 'Roboto Slab', serif;
   font-size: 35pt;
   font-weight: 700;
@@ -51,7 +51,7 @@ textarea {
 }
 
 .show-completed {
-  background-color: #00A79D;
+  background-color: #004e49;
   border: none;
   color: #FFFFFF;
   font-size: 10pt;
@@ -78,7 +78,7 @@ ul {
 }
 
 .title-input {
-  color: #6D6E71;
+  color: #4f5053;
   display: inline-block;
   font-size: 18pt;
   height: inherit;
@@ -88,7 +88,7 @@ ul {
 }
 
 .body-input {
-  color: #939598;
+  color: #4f5053;
   font-size: 12pt;
   height: inherit;
   margin-top: 10px;
@@ -96,12 +96,12 @@ ul {
 }
 
 .rating {
-  color: #6D6E71;
+  color: #4f5053;
   display: inline-block;
 }
 
 .save-button {
-  background-color: #00A79D;
+  background-color: #004e49;
   border: none;
   color: #FFFFFF;
   margin-bottom: 30px;
