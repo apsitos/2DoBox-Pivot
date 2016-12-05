@@ -104,6 +104,10 @@ text-align: center;
   margin-top: 10px;
 }
 
+.completed{
+  color: black;
+}
+
 .completed:hover{
   background-color: #448C5D;
 }

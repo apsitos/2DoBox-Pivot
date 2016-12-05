@@ -48,7 +48,7 @@
 	if(typeof window !== 'undefined' && window.initMochaPhantomJS) { window.initMochaPhantomJS(); }
 	mocha.setup({"ui":"bdd"});
 	__webpack_require__(13)
-	__webpack_require__(311);
+	__webpack_require__(350);
 	if(false) {
 		module.hot.accept();
 		module.hot.dispose(function() {
@@ -471,733 +471,815 @@
 
 	'use strict';
 
-	/*jshint esversion: 6 */
-	var assert = __webpack_require__(14);
-	var webdriver = __webpack_require__(19);
-	var test = __webpack_require__(310);
-
-	test.describe('testing 2dobox', function () {
-	  this.timeout(10000);
-
-	  test.it('should allow me to add a title and description', function () {
-	    var driver = new webdriver.Builder().forBrowser('chrome').build();
-
-	    driver.get('http://localhost:8080');
-
-	    // const title = driver.findElement({name: 'title'});
-	    // const description = driver.findElement({name: 'description'});
-	    //
-	    // title.sendKeys('this is a title').then(() => {
-	    //   return title.getAttribute('value');
-	    // }).then((value) => {assert.equal(value, 'this is a title');
-	    // });
-
-	    // description.sendKeys('this is a description').then(() => {
-	    //   return description.getAttribute('value')
-	    // }).then((value) => {
-	    //   assert.equal(value, 'this is a description');
-	    // });
-	    driver.quit();
-	  });
-	});
+	__webpack_require__(14);
+	__webpack_require__(56);
 
 /***/ },
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
-	// compare and isBuffer taken from https://github.com/feross/buffer/blob/680e9e5e488f22aac27599a57dc844a6315928dd/index.js
-	// original notice:
+	var assert = __webpack_require__(15).assert;
+	var idea = __webpack_require__(55);
 
-	/*!
-	 * The buffer module from node.js, for the browser.
-	 *
-	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
-	 * @license  MIT
-	 */
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	function compare(a, b) {
-	  if (a === b) {
-	    return 0;
-	  }
-
-	  var x = a.length;
-	  var y = b.length;
-
-	  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
-	    if (a[i] !== b[i]) {
-	      x = a[i];
-	      y = b[i];
-	      break;
-	    }
-	  }
-
-	  if (x < y) {
-	    return -1;
-	  }
-	  if (y < x) {
-	    return 1;
-	  }
-	  return 0;
-	}
-	function isBuffer(b) {
-	  if (global.Buffer && typeof global.Buffer.isBuffer === 'function') {
-	    return global.Buffer.isBuffer(b);
-	  }
-	  return !!(b != null && b._isBuffer);
-	}
-
-	// based on node assert, original notice:
-
-	// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
-	//
-	// THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
-	//
-	// Originally from narwhal.js (http://narwhaljs.org)
-	// Copyright (c) 2009 Thomas Robinson <280north.com>
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a copy
-	// of this software and associated documentation files (the 'Software'), to
-	// deal in the Software without restriction, including without limitation the
-	// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-	// sell copies of the Software, and to permit persons to whom the Software is
-	// furnished to do so, subject to the following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included in
-	// all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	// AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-	// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-	// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-	var util = __webpack_require__(15);
-	var hasOwn = Object.prototype.hasOwnProperty;
-	var pSlice = Array.prototype.slice;
-	var functionsHaveNames = function () {
-	  return function foo() {}.name === 'foo';
-	}();
-	function pToString(obj) {
-	  return Object.prototype.toString.call(obj);
-	}
-	function isView(arrbuf) {
-	  if (isBuffer(arrbuf)) {
-	    return false;
-	  }
-	  if (typeof global.ArrayBuffer !== 'function') {
-	    return false;
-	  }
-	  if (typeof ArrayBuffer.isView === 'function') {
-	    return ArrayBuffer.isView(arrbuf);
-	  }
-	  if (!arrbuf) {
-	    return false;
-	  }
-	  if (arrbuf instanceof DataView) {
-	    return true;
-	  }
-	  if (arrbuf.buffer && arrbuf.buffer instanceof ArrayBuffer) {
-	    return true;
-	  }
-	  return false;
-	}
-	// 1. The assert module provides functions that throw
-	// AssertionError's when particular conditions are not met. The
-	// assert module must conform to the following interface.
-
-	var assert = module.exports = ok;
-
-	// 2. The AssertionError is defined in assert.
-	// new assert.AssertionError({ message: message,
-	//                             actual: actual,
-	//                             expected: expected })
-
-	var regex = /\s*function\s+([^\(\s]*)\s*/;
-	// based on https://github.com/ljharb/function.prototype.name/blob/adeeeec8bfcc6068b187d7d9fb3d5bb1d3a30899/implementation.js
-	function getName(func) {
-	  if (!util.isFunction(func)) {
-	    return;
-	  }
-	  if (functionsHaveNames) {
-	    return func.name;
-	  }
-	  var str = func.toString();
-	  var match = str.match(regex);
-	  return match && match[1];
-	}
-	assert.AssertionError = function AssertionError(options) {
-	  this.name = 'AssertionError';
-	  this.actual = options.actual;
-	  this.expected = options.expected;
-	  this.operator = options.operator;
-	  if (options.message) {
-	    this.message = options.message;
-	    this.generatedMessage = false;
-	  } else {
-	    this.message = getMessage(this);
-	    this.generatedMessage = true;
-	  }
-	  var stackStartFunction = options.stackStartFunction || fail;
-	  if (Error.captureStackTrace) {
-	    Error.captureStackTrace(this, stackStartFunction);
-	  } else {
-	    // non v8 browsers so we can have a stacktrace
-	    var err = new Error();
-	    if (err.stack) {
-	      var out = err.stack;
-
-	      // try to strip useless frames
-	      var fn_name = getName(stackStartFunction);
-	      var idx = out.indexOf('\n' + fn_name);
-	      if (idx >= 0) {
-	        // once we have located the function frame
-	        // we need to strip out everything before it (and its line)
-	        var next_line = out.indexOf('\n', idx + 1);
-	        out = out.substring(next_line + 1);
-	      }
-
-	      this.stack = out;
-	    }
-	  }
-	};
-
-	// assert.AssertionError instanceof Error
-	util.inherits(assert.AssertionError, Error);
-
-	function truncate(s, n) {
-	  if (typeof s === 'string') {
-	    return s.length < n ? s : s.slice(0, n);
-	  } else {
-	    return s;
-	  }
-	}
-	function inspect(something) {
-	  if (functionsHaveNames || !util.isFunction(something)) {
-	    return util.inspect(something);
-	  }
-	  var rawname = getName(something);
-	  var name = rawname ? ': ' + rawname : '';
-	  return '[Function' + name + ']';
-	}
-	function getMessage(self) {
-	  return truncate(inspect(self.actual), 128) + ' ' + self.operator + ' ' + truncate(inspect(self.expected), 128);
-	}
-
-	// At present only the three keys mentioned above are used and
-	// understood by the spec. Implementations or sub modules can pass
-	// other keys to the AssertionError's constructor - they will be
-	// ignored.
-
-	// 3. All of the following functions must throw an AssertionError
-	// when a corresponding condition is not met, with a message that
-	// may be undefined if not provided.  All assertion methods provide
-	// both the actual and expected values to the assertion error for
-	// display purposes.
-
-	function fail(actual, expected, message, operator, stackStartFunction) {
-	  throw new assert.AssertionError({
-	    message: message,
-	    actual: actual,
-	    expected: expected,
-	    operator: operator,
-	    stackStartFunction: stackStartFunction
+	describe('Create Idea', function () {
+	  it('should be a function', function () {
+	    assert.isFunction(CreateIdea);
 	  });
-	}
-
-	// EXTENSION! allows for well behaved errors defined elsewhere.
-	assert.fail = fail;
-
-	// 4. Pure assertion tests whether a value is truthy, as determined
-	// by !!guard.
-	// assert.ok(guard, message_opt);
-	// This statement is equivalent to assert.equal(true, !!guard,
-	// message_opt);. To test strictly for the value true, use
-	// assert.strictEqual(true, guard, message_opt);.
-
-	function ok(value, message) {
-	  if (!value) fail(value, true, message, '==', assert.ok);
-	}
-	assert.ok = ok;
-
-	// 5. The equality assertion tests shallow, coercive equality with
-	// ==.
-	// assert.equal(actual, expected, message_opt);
-
-	assert.equal = function equal(actual, expected, message) {
-	  if (actual != expected) fail(actual, expected, message, '==', assert.equal);
-	};
-
-	// 6. The non-equality assertion tests for whether two objects are not equal
-	// with != assert.notEqual(actual, expected, message_opt);
-
-	assert.notEqual = function notEqual(actual, expected, message) {
-	  if (actual == expected) {
-	    fail(actual, expected, message, '!=', assert.notEqual);
-	  }
-	};
-
-	// 7. The equivalence assertion tests a deep equality relation.
-	// assert.deepEqual(actual, expected, message_opt);
-
-	assert.deepEqual = function deepEqual(actual, expected, message) {
-	  if (!_deepEqual(actual, expected, false)) {
-	    fail(actual, expected, message, 'deepEqual', assert.deepEqual);
-	  }
-	};
-
-	assert.deepStrictEqual = function deepStrictEqual(actual, expected, message) {
-	  if (!_deepEqual(actual, expected, true)) {
-	    fail(actual, expected, message, 'deepStrictEqual', assert.deepStrictEqual);
-	  }
-	};
-
-	function _deepEqual(actual, expected, strict, memos) {
-	  // 7.1. All identical values are equivalent, as determined by ===.
-	  if (actual === expected) {
-	    return true;
-	  } else if (isBuffer(actual) && isBuffer(expected)) {
-	    return compare(actual, expected) === 0;
-
-	    // 7.2. If the expected value is a Date object, the actual value is
-	    // equivalent if it is also a Date object that refers to the same time.
-	  } else if (util.isDate(actual) && util.isDate(expected)) {
-	    return actual.getTime() === expected.getTime();
-
-	    // 7.3 If the expected value is a RegExp object, the actual value is
-	    // equivalent if it is also a RegExp object with the same source and
-	    // properties (`global`, `multiline`, `lastIndex`, `ignoreCase`).
-	  } else if (util.isRegExp(actual) && util.isRegExp(expected)) {
-	    return actual.source === expected.source && actual.global === expected.global && actual.multiline === expected.multiline && actual.lastIndex === expected.lastIndex && actual.ignoreCase === expected.ignoreCase;
-
-	    // 7.4. Other pairs that do not both pass typeof value == 'object',
-	    // equivalence is determined by ==.
-	  } else if ((actual === null || (typeof actual === 'undefined' ? 'undefined' : _typeof(actual)) !== 'object') && (expected === null || (typeof expected === 'undefined' ? 'undefined' : _typeof(expected)) !== 'object')) {
-	    return strict ? actual === expected : actual == expected;
-
-	    // If both values are instances of typed arrays, wrap their underlying
-	    // ArrayBuffers in a Buffer each to increase performance
-	    // This optimization requires the arrays to have the same type as checked by
-	    // Object.prototype.toString (aka pToString). Never perform binary
-	    // comparisons for Float*Arrays, though, since e.g. +0 === -0 but their
-	    // bit patterns are not identical.
-	  } else if (isView(actual) && isView(expected) && pToString(actual) === pToString(expected) && !(actual instanceof Float32Array || actual instanceof Float64Array)) {
-	    return compare(new Uint8Array(actual.buffer), new Uint8Array(expected.buffer)) === 0;
-
-	    // 7.5 For all other Object pairs, including Array objects, equivalence is
-	    // determined by having the same number of owned properties (as verified
-	    // with Object.prototype.hasOwnProperty.call), the same set of keys
-	    // (although not necessarily the same order), equivalent values for every
-	    // corresponding key, and an identical 'prototype' property. Note: this
-	    // accounts for both named and indexed properties on Arrays.
-	  } else if (isBuffer(actual) !== isBuffer(expected)) {
-	    return false;
-	  } else {
-	    memos = memos || { actual: [], expected: [] };
-
-	    var actualIndex = memos.actual.indexOf(actual);
-	    if (actualIndex !== -1) {
-	      if (actualIndex === memos.expected.indexOf(expected)) {
-	        return true;
-	      }
-	    }
-
-	    memos.actual.push(actual);
-	    memos.expected.push(expected);
-
-	    return objEquiv(actual, expected, strict, memos);
-	  }
-	}
-
-	function isArguments(object) {
-	  return Object.prototype.toString.call(object) == '[object Arguments]';
-	}
-
-	function objEquiv(a, b, strict, actualVisitedObjects) {
-	  if (a === null || a === undefined || b === null || b === undefined) return false;
-	  // if one is a primitive, the other must be same
-	  if (util.isPrimitive(a) || util.isPrimitive(b)) return a === b;
-	  if (strict && Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) return false;
-	  var aIsArgs = isArguments(a);
-	  var bIsArgs = isArguments(b);
-	  if (aIsArgs && !bIsArgs || !aIsArgs && bIsArgs) return false;
-	  if (aIsArgs) {
-	    a = pSlice.call(a);
-	    b = pSlice.call(b);
-	    return _deepEqual(a, b, strict);
-	  }
-	  var ka = objectKeys(a);
-	  var kb = objectKeys(b);
-	  var key, i;
-	  // having the same number of owned properties (keys incorporates
-	  // hasOwnProperty)
-	  if (ka.length !== kb.length) return false;
-	  //the same set of keys (although not necessarily the same order),
-	  ka.sort();
-	  kb.sort();
-	  //~~~cheap key test
-	  for (i = ka.length - 1; i >= 0; i--) {
-	    if (ka[i] !== kb[i]) return false;
-	  }
-	  //equivalent values for every corresponding key, and
-	  //~~~possibly expensive deep test
-	  for (i = ka.length - 1; i >= 0; i--) {
-	    key = ka[i];
-	    if (!_deepEqual(a[key], b[key], strict, actualVisitedObjects)) return false;
-	  }
-	  return true;
-	}
-
-	// 8. The non-equivalence assertion tests for any deep inequality.
-	// assert.notDeepEqual(actual, expected, message_opt);
-
-	assert.notDeepEqual = function notDeepEqual(actual, expected, message) {
-	  if (_deepEqual(actual, expected, false)) {
-	    fail(actual, expected, message, 'notDeepEqual', assert.notDeepEqual);
-	  }
-	};
-
-	assert.notDeepStrictEqual = notDeepStrictEqual;
-	function notDeepStrictEqual(actual, expected, message) {
-	  if (_deepEqual(actual, expected, true)) {
-	    fail(actual, expected, message, 'notDeepStrictEqual', notDeepStrictEqual);
-	  }
-	}
-
-	// 9. The strict equality assertion tests strict equality, as determined by ===.
-	// assert.strictEqual(actual, expected, message_opt);
-
-	assert.strictEqual = function strictEqual(actual, expected, message) {
-	  if (actual !== expected) {
-	    fail(actual, expected, message, '===', assert.strictEqual);
-	  }
-	};
-
-	// 10. The strict non-equality assertion tests for strict inequality, as
-	// determined by !==.  assert.notStrictEqual(actual, expected, message_opt);
-
-	assert.notStrictEqual = function notStrictEqual(actual, expected, message) {
-	  if (actual === expected) {
-	    fail(actual, expected, message, '!==', assert.notStrictEqual);
-	  }
-	};
-
-	function expectedException(actual, expected) {
-	  if (!actual || !expected) {
-	    return false;
-	  }
-
-	  if (Object.prototype.toString.call(expected) == '[object RegExp]') {
-	    return expected.test(actual);
-	  }
-
-	  try {
-	    if (actual instanceof expected) {
-	      return true;
-	    }
-	  } catch (e) {
-	    // Ignore.  The instanceof check doesn't work for arrow functions.
-	  }
-
-	  if (Error.isPrototypeOf(expected)) {
-	    return false;
-	  }
-
-	  return expected.call({}, actual) === true;
-	}
-
-	function _tryBlock(block) {
-	  var error;
-	  try {
-	    block();
-	  } catch (e) {
-	    error = e;
-	  }
-	  return error;
-	}
-
-	function _throws(shouldThrow, block, expected, message) {
-	  var actual;
-
-	  if (typeof block !== 'function') {
-	    throw new TypeError('"block" argument must be a function');
-	  }
-
-	  if (typeof expected === 'string') {
-	    message = expected;
-	    expected = null;
-	  }
-
-	  actual = _tryBlock(block);
-
-	  message = (expected && expected.name ? ' (' + expected.name + ').' : '.') + (message ? ' ' + message : '.');
-
-	  if (shouldThrow && !actual) {
-	    fail(actual, expected, 'Missing expected exception' + message);
-	  }
-
-	  var userProvidedMessage = typeof message === 'string';
-	  var isUnwantedException = !shouldThrow && util.isError(actual);
-	  var isUnexpectedException = !shouldThrow && actual && !expected;
-
-	  if (isUnwantedException && userProvidedMessage && expectedException(actual, expected) || isUnexpectedException) {
-	    fail(actual, expected, 'Got unwanted exception' + message);
-	  }
-
-	  if (shouldThrow && actual && expected && !expectedException(actual, expected) || !shouldThrow && actual) {
-	    throw actual;
-	  }
-	}
-
-	// 11. Expected to throw an error:
-	// assert.throws(block, Error_opt, message_opt);
-
-	assert.throws = function (block, /*optional*/error, /*optional*/message) {
-	  _throws(true, block, error, message);
-	};
-
-	// EXTENSION! This is annoying to write outside this module.
-	assert.doesNotThrow = function (block, /*optional*/error, /*optional*/message) {
-	  _throws(false, block, error, message);
-	};
-
-	assert.ifError = function (err) {
-	  if (err) throw err;
-	};
-
-	var objectKeys = Object.keys || function (obj) {
-	  var keys = [];
-	  for (var key in obj) {
-	    if (hasOwn.call(obj, key)) keys.push(key);
-	  }
-	  return keys;
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	});
 
 /***/ },
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global, process) {'use strict';
+	'use strict';
+
+	module.exports = __webpack_require__(16);
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * chai
+	 * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	var used = [],
+	    _exports = module.exports = {};
+
+	/*!
+	 * Chai version
+	 */
+
+	_exports.version = '3.5.0';
+
+	/*!
+	 * Assertion Error
+	 */
+
+	_exports.AssertionError = __webpack_require__(17);
+
+	/*!
+	 * Utils for plugins (not exported)
+	 */
+
+	var util = __webpack_require__(18);
+
+	/**
+	 * # .use(function)
+	 *
+	 * Provides a way to extend the internals of Chai
+	 *
+	 * @param {Function}
+	 * @returns {this} for chaining
+	 * @api public
+	 */
+
+	_exports.use = function (fn) {
+	  if (!~used.indexOf(fn)) {
+	    fn(this, util);
+	    used.push(fn);
+	  }
+
+	  return this;
+	};
+
+	/*!
+	 * Utility Functions
+	 */
+
+	_exports.util = util;
+
+	/*!
+	 * Configuration
+	 */
+
+	var config = __webpack_require__(31);
+	_exports.config = config;
+
+	/*!
+	 * Primary `Assertion` prototype
+	 */
+
+	var assertion = __webpack_require__(50);
+	_exports.use(assertion);
+
+	/*!
+	 * Core Assertions
+	 */
+
+	var core = __webpack_require__(51);
+	_exports.use(core);
+
+	/*!
+	 * Expect interface
+	 */
+
+	var expect = __webpack_require__(52);
+	_exports.use(expect);
+
+	/*!
+	 * Should interface
+	 */
+
+	var should = __webpack_require__(53);
+	_exports.use(should);
+
+	/*!
+	 * Assert interface
+	 */
+
+	var assert = __webpack_require__(54);
+	_exports.use(assert);
+
+/***/ },
+/* 17 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/*!
+	 * assertion-error
+	 * Copyright(c) 2013 Jake Luer <jake@qualiancy.com>
+	 * MIT Licensed
+	 */
+
+	/*!
+	 * Return a function that will copy properties from
+	 * one object to another excluding any originally
+	 * listed. Returned function will create a new `{}`.
+	 *
+	 * @param {String} excluded properties ...
+	 * @return {Function}
+	 */
+
+	function exclude() {
+	  var excludes = [].slice.call(arguments);
+
+	  function excludeProps(res, obj) {
+	    Object.keys(obj).forEach(function (key) {
+	      if (!~excludes.indexOf(key)) res[key] = obj[key];
+	    });
+	  }
+
+	  return function extendExclude() {
+	    var args = [].slice.call(arguments),
+	        i = 0,
+	        res = {};
+
+	    for (; i < args.length; i++) {
+	      excludeProps(res, args[i]);
+	    }
+
+	    return res;
+	  };
+	};
+
+	/*!
+	 * Primary Exports
+	 */
+
+	module.exports = AssertionError;
+
+	/**
+	 * ### AssertionError
+	 *
+	 * An extension of the JavaScript `Error` constructor for
+	 * assertion and validation scenarios.
+	 *
+	 * @param {String} message
+	 * @param {Object} properties to include (optional)
+	 * @param {callee} start stack function (optional)
+	 */
+
+	function AssertionError(message, _props, ssf) {
+	  var extend = exclude('name', 'message', 'stack', 'constructor', 'toJSON'),
+	      props = extend(_props || {});
+
+	  // default values
+	  this.message = message || 'Unspecified AssertionError';
+	  this.showDiff = false;
+
+	  // copy from properties
+	  for (var key in props) {
+	    this[key] = props[key];
+	  }
+
+	  // capture stack trace
+	  ssf = ssf || arguments.callee;
+	  if (ssf && Error.captureStackTrace) {
+	    Error.captureStackTrace(this, ssf);
+	  } else {
+	    try {
+	      throw new Error();
+	    } catch (e) {
+	      this.stack = e.stack;
+	    }
+	  }
+	}
+
+	/*!
+	 * Inherit from Error.prototype
+	 */
+
+	AssertionError.prototype = Object.create(Error.prototype);
+
+	/*!
+	 * Statically set name
+	 */
+
+	AssertionError.prototype.name = 'AssertionError';
+
+	/*!
+	 * Ensure correct constructor
+	 */
+
+	AssertionError.prototype.constructor = AssertionError;
+
+	/**
+	 * Allow errors to be converted to JSON for static transfer.
+	 *
+	 * @param {Boolean} include stack (default: `true`)
+	 * @return {Object} object that can be `JSON.stringify`
+	 */
+
+	AssertionError.prototype.toJSON = function (stack) {
+	  var extend = exclude('constructor', 'toJSON', 'stack'),
+	      props = extend({ name: this.name }, this);
+
+	  // include stack if exists and not turned off
+	  if (false !== stack && this.stack) {
+	    props.stack = this.stack;
+	  }
+
+	  return props;
+	};
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * chai
+	 * Copyright(c) 2011 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/*!
+	 * Main exports
+	 */
+
+	var _exports = module.exports = {};
+
+	/*!
+	 * test utility
+	 */
+
+	_exports.test = __webpack_require__(19);
+
+	/*!
+	 * type utility
+	 */
+
+	_exports.type = __webpack_require__(21);
+
+	/*!
+	 * expectTypes utility
+	 */
+	_exports.expectTypes = __webpack_require__(23);
+
+	/*!
+	 * message utility
+	 */
+
+	_exports.getMessage = __webpack_require__(24);
+
+	/*!
+	 * actual utility
+	 */
+
+	_exports.getActual = __webpack_require__(25);
+
+	/*!
+	 * Inspect util
+	 */
+
+	_exports.inspect = __webpack_require__(26);
+
+	/*!
+	 * Object Display util
+	 */
+
+	_exports.objDisplay = __webpack_require__(30);
+
+	/*!
+	 * Flag utility
+	 */
+
+	_exports.flag = __webpack_require__(20);
+
+	/*!
+	 * Flag transferring utility
+	 */
+
+	_exports.transferFlags = __webpack_require__(32);
+
+	/*!
+	 * Deep equal utility
+	 */
+
+	_exports.eql = __webpack_require__(33);
+
+	/*!
+	 * Deep path value
+	 */
+
+	_exports.getPathValue = __webpack_require__(41);
+
+	/*!
+	 * Deep path info
+	 */
+
+	_exports.getPathInfo = __webpack_require__(42);
+
+	/*!
+	 * Check if a property exists
+	 */
+
+	_exports.hasProperty = __webpack_require__(43);
+
+	/*!
+	 * Function name
+	 */
+
+	_exports.getName = __webpack_require__(27);
+
+	/*!
+	 * add Property
+	 */
+
+	_exports.addProperty = __webpack_require__(44);
+
+	/*!
+	 * add Method
+	 */
+
+	_exports.addMethod = __webpack_require__(45);
+
+	/*!
+	 * overwrite Property
+	 */
+
+	_exports.overwriteProperty = __webpack_require__(46);
+
+	/*!
+	 * overwrite Method
+	 */
+
+	_exports.overwriteMethod = __webpack_require__(47);
+
+	/*!
+	 * Add a chainable method
+	 */
+
+	_exports.addChainableMethod = __webpack_require__(48);
+
+	/*!
+	 * Overwrite chainable method
+	 */
+
+	_exports.overwriteChainableMethod = __webpack_require__(49);
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * Chai - test utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/*!
+	 * Module dependancies
+	 */
+
+	var flag = __webpack_require__(20);
+
+	/**
+	 * # test(object, expression)
+	 *
+	 * Test and object for expression.
+	 *
+	 * @param {Object} object (constructed Assertion)
+	 * @param {Arguments} chai.Assertion.prototype.assert arguments
+	 * @namespace Utils
+	 * @name test
+	 */
+
+	module.exports = function (obj, args) {
+	  var negate = flag(obj, 'negate'),
+	      expr = args[0];
+	  return negate ? !expr : expr;
+	};
+
+/***/ },
+/* 20 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	/*!
+	 * Chai - flag utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/**
+	 * ### flag(object, key, [value])
+	 *
+	 * Get or set a flag value on an object. If a
+	 * value is provided it will be set, else it will
+	 * return the currently set value or `undefined` if
+	 * the value is not set.
+	 *
+	 *     utils.flag(this, 'foo', 'bar'); // setter
+	 *     utils.flag(this, 'foo'); // getter, returns `bar`
+	 *
+	 * @param {Object} object constructed Assertion
+	 * @param {String} key
+	 * @param {Mixed} value (optional)
+	 * @namespace Utils
+	 * @name flag
+	 * @api private
+	 */
+
+	module.exports = function (obj, key, value) {
+	  var flags = obj.__flags || (obj.__flags = Object.create(null));
+	  if (arguments.length === 3) {
+	    flags[key] = value;
+	  } else {
+	    return flags[key];
+	  }
+	};
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = __webpack_require__(22);
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/*!
+	 * type-detect
+	 * Copyright(c) 2013 jake luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/*!
+	 * Primary Exports
+	 */
+
+	var _exports = module.exports = getType;
+
+	/**
+	 * ### typeOf (obj)
+	 *
+	 * Use several different techniques to determine
+	 * the type of object being tested.
+	 *
+	 *
+	 * @param {Mixed} object
+	 * @return {String} object type
+	 * @api public
+	 */
+	var objectTypeRegexp = /^\[object (.*)\]$/;
+
+	function getType(obj) {
+	  var type = Object.prototype.toString.call(obj).match(objectTypeRegexp)[1].toLowerCase();
+	  // Let "new String('')" return 'object'
+	  if (typeof Promise === 'function' && obj instanceof Promise) return 'promise';
+	  // PhantomJS has type "DOMWindow" for null
+	  if (obj === null) return 'null';
+	  // PhantomJS has type "DOMWindow" for undefined
+	  if (obj === undefined) return 'undefined';
+	  return type;
+	}
+
+	_exports.Library = Library;
+
+	/**
+	 * ### Library
+	 *
+	 * Create a repository for custom type detection.
+	 *
+	 * ```js
+	 * var lib = new type.Library;
+	 * ```
+	 *
+	 */
+
+	function Library() {
+	  if (!(this instanceof Library)) return new Library();
+	  this.tests = {};
+	}
+
+	/**
+	 * #### .of (obj)
+	 *
+	 * Expose replacement `typeof` detection to the library.
+	 *
+	 * ```js
+	 * if ('string' === lib.of('hello world')) {
+	 *   // ...
+	 * }
+	 * ```
+	 *
+	 * @param {Mixed} object to test
+	 * @return {String} type
+	 */
+
+	Library.prototype.of = getType;
+
+	/**
+	 * #### .define (type, test)
+	 *
+	 * Add a test to for the `.test()` assertion.
+	 *
+	 * Can be defined as a regular expression:
+	 *
+	 * ```js
+	 * lib.define('int', /^[0-9]+$/);
+	 * ```
+	 *
+	 * ... or as a function:
+	 *
+	 * ```js
+	 * lib.define('bln', function (obj) {
+	 *   if ('boolean' === lib.of(obj)) return true;
+	 *   var blns = [ 'yes', 'no', 'true', 'false', 1, 0 ];
+	 *   if ('string' === lib.of(obj)) obj = obj.toLowerCase();
+	 *   return !! ~blns.indexOf(obj);
+	 * });
+	 * ```
+	 *
+	 * @param {String} type
+	 * @param {RegExp|Function} test
+	 * @api public
+	 */
+
+	Library.prototype.define = function (type, test) {
+	  if (arguments.length === 1) return this.tests[type];
+	  this.tests[type] = test;
+	  return this;
+	};
+
+	/**
+	 * #### .test (obj, test)
+	 *
+	 * Assert that an object is of type. Will first
+	 * check natives, and if that does not pass it will
+	 * use the user defined custom tests.
+	 *
+	 * ```js
+	 * assert(lib.test('1', 'int'));
+	 * assert(lib.test('yes', 'bln'));
+	 * ```
+	 *
+	 * @param {Mixed} object
+	 * @param {String} type
+	 * @return {Boolean} result
+	 * @api public
+	 */
+
+	Library.prototype.test = function (obj, type) {
+	  if (type === getType(obj)) return true;
+	  var test = this.tests[type];
+
+	  if (test && 'regexp' === getType(test)) {
+	    return test.test(obj);
+	  } else if (test && 'function' === getType(test)) {
+	    return test(obj);
+	  } else {
+	    throw new ReferenceError('Type test "' + type + '" not defined or invalid.');
+	  }
+	};
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * Chai - expectTypes utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/**
+	 * ### expectTypes(obj, types)
+	 *
+	 * Ensures that the object being tested against is of a valid type.
+	 *
+	 *     utils.expectTypes(this, ['array', 'object', 'string']);
+	 *
+	 * @param {Mixed} obj constructed Assertion
+	 * @param {Array} type A list of allowed types for this assertion
+	 * @namespace Utils
+	 * @name expectTypes
+	 * @api public
+	 */
+
+	var AssertionError = __webpack_require__(17);
+	var flag = __webpack_require__(20);
+	var type = __webpack_require__(21);
+
+	module.exports = function (obj, types) {
+	  var obj = flag(obj, 'object');
+	  types = types.map(function (t) {
+	    return t.toLowerCase();
+	  });
+	  types.sort();
+
+	  // Transforms ['lorem', 'ipsum'] into 'a lirum, or an ipsum'
+	  var str = types.map(function (t, index) {
+	    var art = ~['a', 'e', 'i', 'o', 'u'].indexOf(t.charAt(0)) ? 'an' : 'a';
+	    var or = types.length > 1 && index === types.length - 1 ? 'or ' : '';
+	    return or + art + ' ' + t;
+	  }).join(', ');
+
+	  if (!types.some(function (expected) {
+	    return type(obj) === expected;
+	  })) {
+	    throw new AssertionError('object tested must be ' + str + ', but ' + type(obj) + ' given');
+	  }
+	};
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * Chai - message composition utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/*!
+	 * Module dependancies
+	 */
+
+	var flag = __webpack_require__(20),
+	    getActual = __webpack_require__(25),
+	    inspect = __webpack_require__(26),
+	    objDisplay = __webpack_require__(30);
+
+	/**
+	 * ### .getMessage(object, message, negateMessage)
+	 *
+	 * Construct the error message based on flags
+	 * and template tags. Template tags will return
+	 * a stringified inspection of the object referenced.
+	 *
+	 * Message template tags:
+	 * - `#{this}` current asserted object
+	 * - `#{act}` actual value
+	 * - `#{exp}` expected value
+	 *
+	 * @param {Object} object (constructed Assertion)
+	 * @param {Arguments} chai.Assertion.prototype.assert arguments
+	 * @namespace Utils
+	 * @name getMessage
+	 * @api public
+	 */
+
+	module.exports = function (obj, args) {
+	  var negate = flag(obj, 'negate'),
+	      val = flag(obj, 'object'),
+	      expected = args[3],
+	      actual = getActual(obj, args),
+	      msg = negate ? args[2] : args[1],
+	      flagMsg = flag(obj, 'message');
+
+	  if (typeof msg === "function") msg = msg();
+	  msg = msg || '';
+	  msg = msg.replace(/#\{this\}/g, function () {
+	    return objDisplay(val);
+	  }).replace(/#\{act\}/g, function () {
+	    return objDisplay(actual);
+	  }).replace(/#\{exp\}/g, function () {
+	    return objDisplay(expected);
+	  });
+
+	  return flagMsg ? flagMsg + ': ' + msg : msg;
+	};
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	/*!
+	 * Chai - getActual utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/**
+	 * # getActual(object, [actual])
+	 *
+	 * Returns the `actual` value for an Assertion
+	 *
+	 * @param {Object} object (constructed Assertion)
+	 * @param {Arguments} chai.Assertion.prototype.assert arguments
+	 * @namespace Utils
+	 * @name getActual
+	 */
+
+	module.exports = function (obj, args) {
+	  return args.length > 4 ? args[4] : obj._obj;
+	};
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	// Copyright Joyent, Inc. and other Node contributors.
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a
-	// copy of this software and associated documentation files (the
-	// "Software"), to deal in the Software without restriction, including
-	// without limitation the rights to use, copy, modify, merge, publish,
-	// distribute, sublicense, and/or sell copies of the Software, and to permit
-	// persons to whom the Software is furnished to do so, subject to the
-	// following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included
-	// in all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-	// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-	// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-	// USE OR OTHER DEALINGS IN THE SOFTWARE.
+	// This is (almost) directly from Node.js utils
+	// https://github.com/joyent/node/blob/f8c335d0caf47f16d31413f89aa28eda3878e3aa/lib/util.js
 
-	var formatRegExp = /%[sdj%]/g;
-	exports.format = function (f) {
-	  if (!isString(f)) {
-	    var objects = [];
-	    for (var i = 0; i < arguments.length; i++) {
-	      objects.push(inspect(arguments[i]));
-	    }
-	    return objects.join(' ');
-	  }
+	var getName = __webpack_require__(27);
+	var getProperties = __webpack_require__(28);
+	var getEnumerableProperties = __webpack_require__(29);
 
-	  var i = 1;
-	  var args = arguments;
-	  var len = args.length;
-	  var str = String(f).replace(formatRegExp, function (x) {
-	    if (x === '%%') return '%';
-	    if (i >= len) return x;
-	    switch (x) {
-	      case '%s':
-	        return String(args[i++]);
-	      case '%d':
-	        return Number(args[i++]);
-	      case '%j':
-	        try {
-	          return JSON.stringify(args[i++]);
-	        } catch (_) {
-	          return '[Circular]';
-	        }
-	      default:
-	        return x;
-	    }
-	  });
-	  for (var x = args[i]; i < len; x = args[++i]) {
-	    if (isNull(x) || !isObject(x)) {
-	      str += ' ' + x;
-	    } else {
-	      str += ' ' + inspect(x);
-	    }
-	  }
-	  return str;
-	};
-
-	// Mark that a method should not be used.
-	// Returns a modified function which warns once by default.
-	// If --no-deprecation is set, then it is a no-op.
-	exports.deprecate = function (fn, msg) {
-	  // Allow for deprecating things in the process of starting up.
-	  if (isUndefined(global.process)) {
-	    return function () {
-	      return exports.deprecate(fn, msg).apply(this, arguments);
-	    };
-	  }
-
-	  if (process.noDeprecation === true) {
-	    return fn;
-	  }
-
-	  var warned = false;
-	  function deprecated() {
-	    if (!warned) {
-	      if (process.throwDeprecation) {
-	        throw new Error(msg);
-	      } else if (process.traceDeprecation) {
-	        console.trace(msg);
-	      } else {
-	        console.error(msg);
-	      }
-	      warned = true;
-	    }
-	    return fn.apply(this, arguments);
-	  }
-
-	  return deprecated;
-	};
-
-	var debugs = {};
-	var debugEnviron;
-	exports.debuglog = function (set) {
-	  if (isUndefined(debugEnviron)) debugEnviron = process.env.NODE_DEBUG || '';
-	  set = set.toUpperCase();
-	  if (!debugs[set]) {
-	    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
-	      var pid = process.pid;
-	      debugs[set] = function () {
-	        var msg = exports.format.apply(exports, arguments);
-	        console.error('%s %d: %s', set, pid, msg);
-	      };
-	    } else {
-	      debugs[set] = function () {};
-	    }
-	  }
-	  return debugs[set];
-	};
+	module.exports = inspect;
 
 	/**
 	 * Echos the value of a value. Trys to print the value out
 	 * in the best way possible given the different types.
 	 *
 	 * @param {Object} obj The object to print out.
-	 * @param {Object} opts Optional options object that alters the output.
+	 * @param {Boolean} showHidden Flag that shows hidden (not enumerable)
+	 *    properties of objects.
+	 * @param {Number} depth Depth in which to descend in object. Default is 2.
+	 * @param {Boolean} colors Flag to turn on ANSI escape codes to color the
+	 *    output. Default is false (no coloring).
+	 * @namespace Utils
+	 * @name inspect
 	 */
-	/* legacy: obj, showHidden, depth, colors*/
-	function inspect(obj, opts) {
-	  // default options
+	function inspect(obj, showHidden, depth, colors) {
 	  var ctx = {
+	    showHidden: showHidden,
 	    seen: [],
-	    stylize: stylizeNoColor
+	    stylize: function stylize(str) {
+	      return str;
+	    }
 	  };
-	  // legacy...
-	  if (arguments.length >= 3) ctx.depth = arguments[2];
-	  if (arguments.length >= 4) ctx.colors = arguments[3];
-	  if (isBoolean(opts)) {
-	    // legacy...
-	    ctx.showHidden = opts;
-	  } else if (opts) {
-	    // got an "options" object
-	    exports._extend(ctx, opts);
-	  }
-	  // set default options
-	  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
-	  if (isUndefined(ctx.depth)) ctx.depth = 2;
-	  if (isUndefined(ctx.colors)) ctx.colors = false;
-	  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
-	  if (ctx.colors) ctx.stylize = stylizeWithColor;
-	  return formatValue(ctx, obj, ctx.depth);
+	  return formatValue(ctx, obj, typeof depth === 'undefined' ? 2 : depth);
 	}
-	exports.inspect = inspect;
 
-	// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
-	inspect.colors = {
-	  'bold': [1, 22],
-	  'italic': [3, 23],
-	  'underline': [4, 24],
-	  'inverse': [7, 27],
-	  'white': [37, 39],
-	  'grey': [90, 39],
-	  'black': [30, 39],
-	  'blue': [34, 39],
-	  'cyan': [36, 39],
-	  'green': [32, 39],
-	  'magenta': [35, 39],
-	  'red': [31, 39],
-	  'yellow': [33, 39]
-	};
-
-	// Don't use 'blue' not visible on cmd.exe
-	inspect.styles = {
-	  'special': 'cyan',
-	  'number': 'yellow',
-	  'boolean': 'yellow',
-	  'undefined': 'grey',
-	  'null': 'bold',
-	  'string': 'green',
-	  'date': 'magenta',
-	  // "name": intentionally not styling
-	  'regexp': 'red'
-	};
-
-	function stylizeWithColor(str, styleType) {
-	  var style = inspect.styles[styleType];
-
-	  if (style) {
-	    return '\x1B[' + inspect.colors[style][0] + 'm' + str + '\x1B[' + inspect.colors[style][1] + 'm';
+	// Returns true if object is a DOM element.
+	var isDOMElement = function isDOMElement(object) {
+	  if ((typeof HTMLElement === 'undefined' ? 'undefined' : _typeof(HTMLElement)) === 'object') {
+	    return object instanceof HTMLElement;
 	  } else {
-	    return str;
+	    return object && (typeof object === 'undefined' ? 'undefined' : _typeof(object)) === 'object' && object.nodeType === 1 && typeof object.nodeName === 'string';
 	  }
-	}
-
-	function stylizeNoColor(str, styleType) {
-	  return str;
-	}
-
-	function arrayToHash(array) {
-	  var hash = {};
-
-	  array.forEach(function (val, idx) {
-	    hash[val] = true;
-	  });
-
-	  return hash;
-	}
+	};
 
 	function formatValue(ctx, value, recurseTimes) {
 	  // Provide a hook for user-specified inspect functions.
 	  // Check that value is an object with an inspect function on it
-	  if (ctx.customInspect && value && isFunction(value.inspect) &&
+	  if (value && typeof value.inspect === 'function' &&
 	  // Filter out the util module, it's inspect function is special
 	  value.inspect !== exports.inspect &&
 	  // Also filter out any prototype objects using the circular check.
 	  !(value.constructor && value.constructor.prototype === value)) {
-	    var ret = value.inspect(recurseTimes, ctx);
-	    if (!isString(ret)) {
+	    var ret = value.inspect(recurseTimes);
+	    if (typeof ret !== 'string') {
 	      ret = formatValue(ctx, ret, recurseTimes);
 	    }
 	    return ret;
@@ -1209,31 +1291,56 @@
 	    return primitive;
 	  }
 
+	  // If this is a DOM element, try to get the outer HTML.
+	  if (isDOMElement(value)) {
+	    if ('outerHTML' in value) {
+	      return value.outerHTML;
+	      // This value does not have an outerHTML attribute,
+	      //   it could still be an XML element
+	    } else {
+	      // Attempt to serialize it
+	      try {
+	        if (document.xmlVersion) {
+	          var xmlSerializer = new XMLSerializer();
+	          return xmlSerializer.serializeToString(value);
+	        } else {
+	          // Firefox 11- do not support outerHTML
+	          //   It does, however, support innerHTML
+	          //   Use the following to render the element
+	          var ns = "http://www.w3.org/1999/xhtml";
+	          var container = document.createElementNS(ns, '_');
+
+	          container.appendChild(value.cloneNode(false));
+	          html = container.innerHTML.replace('><', '>' + value.innerHTML + '<');
+	          container.innerHTML = '';
+	          return html;
+	        }
+	      } catch (err) {
+	        // This could be a non-native DOM implementation,
+	        //   continue with the normal flow:
+	        //   printing the element as if it is an object.
+	      }
+	    }
+	  }
+
 	  // Look up the keys of the object.
-	  var keys = Object.keys(value);
-	  var visibleKeys = arrayToHash(keys);
-
-	  if (ctx.showHidden) {
-	    keys = Object.getOwnPropertyNames(value);
-	  }
-
-	  // IE doesn't make error fields non-enumerable
-	  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
-	  if (isError(value) && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
-	    return formatError(value);
-	  }
+	  var visibleKeys = getEnumerableProperties(value);
+	  var keys = ctx.showHidden ? getProperties(value) : visibleKeys;
 
 	  // Some type of object without properties can be shortcutted.
-	  if (keys.length === 0) {
-	    if (isFunction(value)) {
-	      var name = value.name ? ': ' + value.name : '';
-	      return ctx.stylize('[Function' + name + ']', 'special');
+	  // In IE, errors have a single `stack` property, or if they are vanilla `Error`,
+	  // a `stack` plus `description` property; ignore those for consistency.
+	  if (keys.length === 0 || isError(value) && (keys.length === 1 && keys[0] === 'stack' || keys.length === 2 && keys[0] === 'description' && keys[1] === 'stack')) {
+	    if (typeof value === 'function') {
+	      var name = getName(value);
+	      var nameSuffix = name ? ': ' + name : '';
+	      return ctx.stylize('[Function' + nameSuffix + ']', 'special');
 	    }
 	    if (isRegExp(value)) {
 	      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
 	    }
 	    if (isDate(value)) {
-	      return ctx.stylize(Date.prototype.toString.call(value), 'date');
+	      return ctx.stylize(Date.prototype.toUTCString.call(value), 'date');
 	    }
 	    if (isError(value)) {
 	      return formatError(value);
@@ -1251,9 +1358,10 @@
 	  }
 
 	  // Make functions say that they are functions
-	  if (isFunction(value)) {
-	    var n = value.name ? ': ' + value.name : '';
-	    base = ' [Function' + n + ']';
+	  if (typeof value === 'function') {
+	    var name = getName(value);
+	    var nameSuffix = name ? ': ' + name : '';
+	    base = ' [Function' + nameSuffix + ']';
 	  }
 
 	  // Make RegExps say that they are RegExps
@@ -1268,7 +1376,7 @@
 
 	  // Make error with message first say the error
 	  if (isError(value)) {
-	    base = ' ' + formatError(value);
+	    return formatError(value);
 	  }
 
 	  if (keys.length === 0 && (!array || value.length == 0)) {
@@ -1300,15 +1408,27 @@
 	}
 
 	function formatPrimitive(ctx, value) {
-	  if (isUndefined(value)) return ctx.stylize('undefined', 'undefined');
-	  if (isString(value)) {
-	    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '').replace(/'/g, "\\'").replace(/\\"/g, '"') + '\'';
-	    return ctx.stylize(simple, 'string');
+	  switch (typeof value === 'undefined' ? 'undefined' : _typeof(value)) {
+	    case 'undefined':
+	      return ctx.stylize('undefined', 'undefined');
+
+	    case 'string':
+	      var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '').replace(/'/g, "\\'").replace(/\\"/g, '"') + '\'';
+	      return ctx.stylize(simple, 'string');
+
+	    case 'number':
+	      if (value === 0 && 1 / value === -Infinity) {
+	        return ctx.stylize('-0', 'number');
+	      }
+	      return ctx.stylize('' + value, 'number');
+
+	    case 'boolean':
+	      return ctx.stylize('' + value, 'boolean');
 	  }
-	  if (isNumber(value)) return ctx.stylize('' + value, 'number');
-	  if (isBoolean(value)) return ctx.stylize('' + value, 'boolean');
 	  // For some reason typeof null is "object", so special case here.
-	  if (isNull(value)) return ctx.stylize('null', 'null');
+	  if (value === null) {
+	    return ctx.stylize('null', 'null');
+	  }
 	}
 
 	function formatError(value) {
@@ -1318,7 +1438,7 @@
 	function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
 	  var output = [];
 	  for (var i = 0, l = value.length; i < l; ++i) {
-	    if (hasOwnProperty(value, String(i))) {
+	    if (Object.prototype.hasOwnProperty.call(value, String(i))) {
 	      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys, String(i), true));
 	    } else {
 	      output.push('');
@@ -1333,28 +1453,29 @@
 	}
 
 	function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
-	  var name, str, desc;
-	  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
-	  if (desc.get) {
-	    if (desc.set) {
-	      str = ctx.stylize('[Getter/Setter]', 'special');
+	  var name, str;
+	  if (value.__lookupGetter__) {
+	    if (value.__lookupGetter__(key)) {
+	      if (value.__lookupSetter__(key)) {
+	        str = ctx.stylize('[Getter/Setter]', 'special');
+	      } else {
+	        str = ctx.stylize('[Getter]', 'special');
+	      }
 	    } else {
-	      str = ctx.stylize('[Getter]', 'special');
-	    }
-	  } else {
-	    if (desc.set) {
-	      str = ctx.stylize('[Setter]', 'special');
+	      if (value.__lookupSetter__(key)) {
+	        str = ctx.stylize('[Setter]', 'special');
+	      }
 	    }
 	  }
-	  if (!hasOwnProperty(visibleKeys, key)) {
+	  if (visibleKeys.indexOf(key) < 0) {
 	    name = '[' + key + ']';
 	  }
 	  if (!str) {
-	    if (ctx.seen.indexOf(desc.value) < 0) {
-	      if (isNull(recurseTimes)) {
-	        str = formatValue(ctx, desc.value, null);
+	    if (ctx.seen.indexOf(value[key]) < 0) {
+	      if (recurseTimes === null) {
+	        str = formatValue(ctx, value[key], null);
 	      } else {
-	        str = formatValue(ctx, desc.value, recurseTimes - 1);
+	        str = formatValue(ctx, value[key], recurseTimes - 1);
 	      }
 	      if (str.indexOf('\n') > -1) {
 	        if (array) {
@@ -1371,7 +1492,7 @@
 	      str = ctx.stylize('[Circular]', 'special');
 	    }
 	  }
-	  if (isUndefined(name)) {
+	  if (typeof name === 'undefined') {
 	    if (array && key.match(/^\d+$/)) {
 	      return str;
 	    }
@@ -1393,7 +1514,7 @@
 	  var length = output.reduce(function (prev, cur) {
 	    numLinesEst++;
 	    if (cur.indexOf('\n') >= 0) numLinesEst++;
-	    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
+	    return prev + cur.length + 1;
 	  }, 0);
 
 	  if (length > 60) {
@@ -1403,2024 +1524,732 @@
 	  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
 	}
 
-	// NOTE: These type checking functions intentionally don't use `instanceof`
-	// because it is fragile and can be easily faked with `Object.create()`.
 	function isArray(ar) {
-	  return Array.isArray(ar);
+	  return Array.isArray(ar) || (typeof ar === 'undefined' ? 'undefined' : _typeof(ar)) === 'object' && objectToString(ar) === '[object Array]';
 	}
-	exports.isArray = isArray;
-
-	function isBoolean(arg) {
-	  return typeof arg === 'boolean';
-	}
-	exports.isBoolean = isBoolean;
-
-	function isNull(arg) {
-	  return arg === null;
-	}
-	exports.isNull = isNull;
-
-	function isNullOrUndefined(arg) {
-	  return arg == null;
-	}
-	exports.isNullOrUndefined = isNullOrUndefined;
-
-	function isNumber(arg) {
-	  return typeof arg === 'number';
-	}
-	exports.isNumber = isNumber;
-
-	function isString(arg) {
-	  return typeof arg === 'string';
-	}
-	exports.isString = isString;
-
-	function isSymbol(arg) {
-	  return (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) === 'symbol';
-	}
-	exports.isSymbol = isSymbol;
-
-	function isUndefined(arg) {
-	  return arg === void 0;
-	}
-	exports.isUndefined = isUndefined;
 
 	function isRegExp(re) {
-	  return isObject(re) && objectToString(re) === '[object RegExp]';
+	  return (typeof re === 'undefined' ? 'undefined' : _typeof(re)) === 'object' && objectToString(re) === '[object RegExp]';
 	}
-	exports.isRegExp = isRegExp;
-
-	function isObject(arg) {
-	  return (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) === 'object' && arg !== null;
-	}
-	exports.isObject = isObject;
 
 	function isDate(d) {
-	  return isObject(d) && objectToString(d) === '[object Date]';
+	  return (typeof d === 'undefined' ? 'undefined' : _typeof(d)) === 'object' && objectToString(d) === '[object Date]';
 	}
-	exports.isDate = isDate;
 
 	function isError(e) {
-	  return isObject(e) && (objectToString(e) === '[object Error]' || e instanceof Error);
+	  return (typeof e === 'undefined' ? 'undefined' : _typeof(e)) === 'object' && objectToString(e) === '[object Error]';
 	}
-	exports.isError = isError;
-
-	function isFunction(arg) {
-	  return typeof arg === 'function';
-	}
-	exports.isFunction = isFunction;
-
-	function isPrimitive(arg) {
-	  return arg === null || typeof arg === 'boolean' || typeof arg === 'number' || typeof arg === 'string' || (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) === 'symbol' || // ES6 symbol
-	  typeof arg === 'undefined';
-	}
-	exports.isPrimitive = isPrimitive;
-
-	exports.isBuffer = __webpack_require__(17);
 
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
 	}
 
-	function pad(n) {
-	  return n < 10 ? '0' + n.toString(10) : n.toString(10);
-	}
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
 
-	var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	"use strict";
 
-	// 26 Feb 16:19:34
-	function timestamp() {
-	  var d = new Date();
-	  var time = [pad(d.getHours()), pad(d.getMinutes()), pad(d.getSeconds())].join(':');
-	  return [d.getDate(), months[d.getMonth()], time].join(' ');
-	}
-
-	// log is just a thin wrapper to console.log that prepends a timestamp
-	exports.log = function () {
-	  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
-	};
+	/*!
+	 * Chai - getName utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
 
 	/**
-	 * Inherit the prototype methods from one constructor into another.
+	 * # getName(func)
 	 *
-	 * The Function.prototype.inherits from lang.js rewritten as a standalone
-	 * function (not on Function.prototype). NOTE: If this file is to be loaded
-	 * during bootstrapping this function needs to be rewritten using some native
-	 * functions as prototype setup using normal JavaScript does not work as
-	 * expected during bootstrapping (see mirror.js in r114903).
+	 * Gets the name of a function, in a cross-browser way.
 	 *
-	 * @param {function} ctor Constructor function which needs to inherit the
-	 *     prototype.
-	 * @param {function} superCtor Constructor function to inherit prototype from.
+	 * @param {Function} a function (usually a constructor)
+	 * @namespace Utils
+	 * @name getName
 	 */
-	exports.inherits = __webpack_require__(18);
 
-	exports._extend = function (origin, add) {
-	  // Don't do anything if add isn't an object
-	  if (!add || !isObject(add)) return origin;
+	module.exports = function (func) {
+	  if (func.name) return func.name;
 
-	  var keys = Object.keys(add);
-	  var i = keys.length;
-	  while (i--) {
-	    origin[keys[i]] = add[keys[i]];
-	  }
-	  return origin;
+	  var match = /^\s?function ([^(]*)\(/.exec(func);
+	  return match && match[1] ? match[1] : "";
 	};
 
-	function hasOwnProperty(obj, prop) {
-	  return Object.prototype.hasOwnProperty.call(obj, prop);
-	}
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(16)))
+/***/ },
+/* 28 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	/*!
+	 * Chai - getProperties utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/**
+	 * ### .getProperties(object)
+	 *
+	 * This allows the retrieval of property names of an object, enumerable or not,
+	 * inherited or not.
+	 *
+	 * @param {Object} object
+	 * @returns {Array}
+	 * @namespace Utils
+	 * @name getProperties
+	 * @api public
+	 */
+
+	module.exports = function getProperties(object) {
+	  var result = Object.getOwnPropertyNames(object);
+
+	  function addProperty(property) {
+	    if (result.indexOf(property) === -1) {
+	      result.push(property);
+	    }
+	  }
+
+	  var proto = Object.getPrototypeOf(object);
+	  while (proto !== null) {
+	    Object.getOwnPropertyNames(proto).forEach(addProperty);
+	    proto = Object.getPrototypeOf(proto);
+	  }
+
+	  return result;
+	};
 
 /***/ },
-/* 16 */
+/* 29 */
 /***/ function(module, exports) {
+
+	"use strict";
+
+	/*!
+	 * Chai - getEnumerableProperties utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/**
+	 * ### .getEnumerableProperties(object)
+	 *
+	 * This allows the retrieval of enumerable property names of an object,
+	 * inherited or not.
+	 *
+	 * @param {Object} object
+	 * @returns {Array}
+	 * @namespace Utils
+	 * @name getEnumerableProperties
+	 * @api public
+	 */
+
+	module.exports = function getEnumerableProperties(object) {
+	  var result = [];
+	  for (var name in object) {
+	    result.push(name);
+	  }
+	  return result;
+	};
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	// shim for using process in browser
-	var process = module.exports = {};
+	/*!
+	 * Chai - flag utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
 
-	// cached from whatever global is present so that test runners that stub it
-	// don't break things.  But we need to wrap it in a try catch in case it is
-	// wrapped in strict mode code which doesn't define any globals.  It's inside a
-	// function because try/catches deoptimize in certain engines.
+	/*!
+	 * Module dependancies
+	 */
 
-	var cachedSetTimeout;
-	var cachedClearTimeout;
+	var inspect = __webpack_require__(26);
+	var config = __webpack_require__(31);
 
-	function defaultSetTimout() {
-	    throw new Error('setTimeout has not been defined');
-	}
-	function defaultClearTimeout() {
-	    throw new Error('clearTimeout has not been defined');
-	}
-	(function () {
-	    try {
-	        if (typeof setTimeout === 'function') {
-	            cachedSetTimeout = setTimeout;
-	        } else {
-	            cachedSetTimeout = defaultSetTimout;
-	        }
-	    } catch (e) {
-	        cachedSetTimeout = defaultSetTimout;
-	    }
-	    try {
-	        if (typeof clearTimeout === 'function') {
-	            cachedClearTimeout = clearTimeout;
-	        } else {
-	            cachedClearTimeout = defaultClearTimeout;
-	        }
-	    } catch (e) {
-	        cachedClearTimeout = defaultClearTimeout;
-	    }
-	})();
-	function runTimeout(fun) {
-	    if (cachedSetTimeout === setTimeout) {
-	        //normal enviroments in sane situations
-	        return setTimeout(fun, 0);
-	    }
-	    // if setTimeout wasn't available but was latter defined
-	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-	        cachedSetTimeout = setTimeout;
-	        return setTimeout(fun, 0);
-	    }
-	    try {
-	        // when when somebody has screwed with setTimeout but no I.E. maddness
-	        return cachedSetTimeout(fun, 0);
-	    } catch (e) {
-	        try {
-	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-	            return cachedSetTimeout.call(null, fun, 0);
-	        } catch (e) {
-	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-	            return cachedSetTimeout.call(this, fun, 0);
-	        }
-	    }
-	}
-	function runClearTimeout(marker) {
-	    if (cachedClearTimeout === clearTimeout) {
-	        //normal enviroments in sane situations
-	        return clearTimeout(marker);
-	    }
-	    // if clearTimeout wasn't available but was latter defined
-	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-	        cachedClearTimeout = clearTimeout;
-	        return clearTimeout(marker);
-	    }
-	    try {
-	        // when when somebody has screwed with setTimeout but no I.E. maddness
-	        return cachedClearTimeout(marker);
-	    } catch (e) {
-	        try {
-	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-	            return cachedClearTimeout.call(null, marker);
-	        } catch (e) {
-	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-	            return cachedClearTimeout.call(this, marker);
-	        }
-	    }
-	}
-	var queue = [];
-	var draining = false;
-	var currentQueue;
-	var queueIndex = -1;
+	/**
+	 * ### .objDisplay (object)
+	 *
+	 * Determines if an object or an array matches
+	 * criteria to be inspected in-line for error
+	 * messages or should be truncated.
+	 *
+	 * @param {Mixed} javascript object to inspect
+	 * @name objDisplay
+	 * @namespace Utils
+	 * @api public
+	 */
 
-	function cleanUpNextTick() {
-	    if (!draining || !currentQueue) {
-	        return;
-	    }
-	    draining = false;
-	    if (currentQueue.length) {
-	        queue = currentQueue.concat(queue);
+	module.exports = function (obj) {
+	  var str = inspect(obj),
+	      type = Object.prototype.toString.call(obj);
+
+	  if (config.truncateThreshold && str.length >= config.truncateThreshold) {
+	    if (type === '[object Function]') {
+	      return !obj.name || obj.name === '' ? '[Function]' : '[Function: ' + obj.name + ']';
+	    } else if (type === '[object Array]') {
+	      return '[ Array(' + obj.length + ') ]';
+	    } else if (type === '[object Object]') {
+	      var keys = Object.keys(obj),
+	          kstr = keys.length > 2 ? keys.splice(0, 2).join(', ') + ', ...' : keys.join(', ');
+	      return '{ Object (' + kstr + ') }';
 	    } else {
-	        queueIndex = -1;
+	      return str;
 	    }
-	    if (queue.length) {
-	        drainQueue();
-	    }
-	}
-
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    var timeout = runTimeout(cleanUpNextTick);
-	    draining = true;
-
-	    var len = queue.length;
-	    while (len) {
-	        currentQueue = queue;
-	        queue = [];
-	        while (++queueIndex < len) {
-	            if (currentQueue) {
-	                currentQueue[queueIndex].run();
-	            }
-	        }
-	        queueIndex = -1;
-	        len = queue.length;
-	    }
-	    currentQueue = null;
-	    draining = false;
-	    runClearTimeout(timeout);
-	}
-
-	process.nextTick = function (fun) {
-	    var args = new Array(arguments.length - 1);
-	    if (arguments.length > 1) {
-	        for (var i = 1; i < arguments.length; i++) {
-	            args[i - 1] = arguments[i];
-	        }
-	    }
-	    queue.push(new Item(fun, args));
-	    if (queue.length === 1 && !draining) {
-	        runTimeout(drainQueue);
-	    }
-	};
-
-	// v8 likes predictible objects
-	function Item(fun, array) {
-	    this.fun = fun;
-	    this.array = array;
-	}
-	Item.prototype.run = function () {
-	    this.fun.apply(null, this.array);
-	};
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-
-	function noop() {}
-
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-
-	process.cwd = function () {
-	    return '/';
-	};
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function () {
-	    return 0;
+	  } else {
+	    return str;
+	  }
 	};
 
 /***/ },
-/* 17 */
+/* 31 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = {
+
+	  /**
+	   * ### config.includeStack
+	   *
+	   * User configurable property, influences whether stack trace
+	   * is included in Assertion error message. Default of false
+	   * suppresses stack trace in the error message.
+	   *
+	   *     chai.config.includeStack = true;  // enable stack on error
+	   *
+	   * @param {Boolean}
+	   * @api public
+	   */
+
+	  includeStack: false,
+
+	  /**
+	   * ### config.showDiff
+	   *
+	   * User configurable property, influences whether or not
+	   * the `showDiff` flag should be included in the thrown
+	   * AssertionErrors. `false` will always be `false`; `true`
+	   * will be true when the assertion has requested a diff
+	   * be shown.
+	   *
+	   * @param {Boolean}
+	   * @api public
+	   */
+
+	  showDiff: true,
+
+	  /**
+	   * ### config.truncateThreshold
+	   *
+	   * User configurable property, sets length threshold for actual and
+	   * expected values in assertion errors. If this threshold is exceeded, for
+	   * example for large data structures, the value is replaced with something
+	   * like `[ Array(3) ]` or `{ Object (prop1, prop2) }`.
+	   *
+	   * Set it to zero if you want to disable truncating altogether.
+	   *
+	   * This is especially userful when doing assertions on arrays: having this
+	   * set to a reasonable large value makes the failure messages readily
+	   * inspectable.
+	   *
+	   *     chai.config.truncateThreshold = 0;  // disable truncating
+	   *
+	   * @param {Number}
+	   * @api public
+	   */
+
+	  truncateThreshold: 40
+
+	};
+
+/***/ },
+/* 32 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/*!
+	 * Chai - transferFlags utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/**
+	 * ### transferFlags(assertion, object, includeAll = true)
+	 *
+	 * Transfer all the flags for `assertion` to `object`. If
+	 * `includeAll` is set to `false`, then the base Chai
+	 * assertion flags (namely `object`, `ssfi`, and `message`)
+	 * will not be transferred.
+	 *
+	 *
+	 *     var newAssertion = new Assertion();
+	 *     utils.transferFlags(assertion, newAssertion);
+	 *
+	 *     var anotherAsseriton = new Assertion(myObj);
+	 *     utils.transferFlags(assertion, anotherAssertion, false);
+	 *
+	 * @param {Assertion} assertion the assertion to transfer the flags from
+	 * @param {Object} object the object to transfer the flags to; usually a new assertion
+	 * @param {Boolean} includeAll
+	 * @namespace Utils
+	 * @name transferFlags
+	 * @api private
+	 */
+
+	module.exports = function (assertion, object, includeAll) {
+	  var flags = assertion.__flags || (assertion.__flags = Object.create(null));
+
+	  if (!object.__flags) {
+	    object.__flags = Object.create(null);
+	  }
+
+	  includeAll = arguments.length === 3 ? includeAll : true;
+
+	  for (var flag in flags) {
+	    if (includeAll || flag !== 'object' && flag !== 'ssfi' && flag != 'message') {
+	      object.__flags[flag] = flags[flag];
+	    }
+	  }
+	};
+
+/***/ },
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = __webpack_require__(34);
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * deep-eql
+	 * Copyright(c) 2013 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/*!
+	 * Module dependencies
+	 */
+
+	var type = __webpack_require__(35);
+
+	/*!
+	 * Buffer.isBuffer browser shim
+	 */
+
+	var Buffer;
+	try {
+	  Buffer = __webpack_require__(37).Buffer;
+	} catch (ex) {
+	  Buffer = {};
+	  Buffer.isBuffer = function () {
+	    return false;
+	  };
+	}
+
+	/*!
+	 * Primary Export
+	 */
+
+	module.exports = deepEqual;
+
+	/**
+	 * Assert super-strict (egal) equality between
+	 * two objects of any type.
+	 *
+	 * @param {Mixed} a
+	 * @param {Mixed} b
+	 * @param {Array} memoised (optional)
+	 * @return {Boolean} equal match
+	 */
+
+	function deepEqual(a, b, m) {
+	  if (sameValue(a, b)) {
+	    return true;
+	  } else if ('date' === type(a)) {
+	    return dateEqual(a, b);
+	  } else if ('regexp' === type(a)) {
+	    return regexpEqual(a, b);
+	  } else if (Buffer.isBuffer(a)) {
+	    return bufferEqual(a, b);
+	  } else if ('arguments' === type(a)) {
+	    return argumentsEqual(a, b, m);
+	  } else if (!typeEqual(a, b)) {
+	    return false;
+	  } else if ('object' !== type(a) && 'object' !== type(b) && 'array' !== type(a) && 'array' !== type(b)) {
+	    return sameValue(a, b);
+	  } else {
+	    return objectEqual(a, b, m);
+	  }
+	}
+
+	/*!
+	 * Strict (egal) equality test. Ensures that NaN always
+	 * equals NaN and `-0` does not equal `+0`.
+	 *
+	 * @param {Mixed} a
+	 * @param {Mixed} b
+	 * @return {Boolean} equal match
+	 */
+
+	function sameValue(a, b) {
+	  if (a === b) return a !== 0 || 1 / a === 1 / b;
+	  return a !== a && b !== b;
+	}
+
+	/*!
+	 * Compare the types of two given objects and
+	 * return if they are equal. Note that an Array
+	 * has a type of `array` (not `object`) and arguments
+	 * have a type of `arguments` (not `array`/`object`).
+	 *
+	 * @param {Mixed} a
+	 * @param {Mixed} b
+	 * @return {Boolean} result
+	 */
+
+	function typeEqual(a, b) {
+	  return type(a) === type(b);
+	}
+
+	/*!
+	 * Compare two Date objects by asserting that
+	 * the time values are equal using `saveValue`.
+	 *
+	 * @param {Date} a
+	 * @param {Date} b
+	 * @return {Boolean} result
+	 */
+
+	function dateEqual(a, b) {
+	  if ('date' !== type(b)) return false;
+	  return sameValue(a.getTime(), b.getTime());
+	}
+
+	/*!
+	 * Compare two regular expressions by converting them
+	 * to string and checking for `sameValue`.
+	 *
+	 * @param {RegExp} a
+	 * @param {RegExp} b
+	 * @return {Boolean} result
+	 */
+
+	function regexpEqual(a, b) {
+	  if ('regexp' !== type(b)) return false;
+	  return sameValue(a.toString(), b.toString());
+	}
+
+	/*!
+	 * Assert deep equality of two `arguments` objects.
+	 * Unfortunately, these must be sliced to arrays
+	 * prior to test to ensure no bad behavior.
+	 *
+	 * @param {Arguments} a
+	 * @param {Arguments} b
+	 * @param {Array} memoize (optional)
+	 * @return {Boolean} result
+	 */
+
+	function argumentsEqual(a, b, m) {
+	  if ('arguments' !== type(b)) return false;
+	  a = [].slice.call(a);
+	  b = [].slice.call(b);
+	  return deepEqual(a, b, m);
+	}
+
+	/*!
+	 * Get enumerable properties of a given object.
+	 *
+	 * @param {Object} a
+	 * @return {Array} property names
+	 */
+
+	function enumerable(a) {
+	  var res = [];
+	  for (var key in a) {
+	    res.push(key);
+	  }return res;
+	}
+
+	/*!
+	 * Simple equality for flat iterable objects
+	 * such as Arrays or Node.js buffers.
+	 *
+	 * @param {Iterable} a
+	 * @param {Iterable} b
+	 * @return {Boolean} result
+	 */
+
+	function iterableEqual(a, b) {
+	  if (a.length !== b.length) return false;
+
+	  var i = 0;
+	  var match = true;
+
+	  for (; i < a.length; i++) {
+	    if (a[i] !== b[i]) {
+	      match = false;
+	      break;
+	    }
+	  }
+
+	  return match;
+	}
+
+	/*!
+	 * Extension to `iterableEqual` specifically
+	 * for Node.js Buffers.
+	 *
+	 * @param {Buffer} a
+	 * @param {Mixed} b
+	 * @return {Boolean} result
+	 */
+
+	function bufferEqual(a, b) {
+	  if (!Buffer.isBuffer(b)) return false;
+	  return iterableEqual(a, b);
+	}
+
+	/*!
+	 * Block for `objectEqual` ensuring non-existing
+	 * values don't get in.
+	 *
+	 * @param {Mixed} object
+	 * @return {Boolean} result
+	 */
+
+	function isValue(a) {
+	  return a !== null && a !== undefined;
+	}
+
+	/*!
+	 * Recursively check the equality of two objects.
+	 * Once basic sameness has been established it will
+	 * defer to `deepEqual` for each enumerable key
+	 * in the object.
+	 *
+	 * @param {Mixed} a
+	 * @param {Mixed} b
+	 * @return {Boolean} result
+	 */
+
+	function objectEqual(a, b, m) {
+	  if (!isValue(a) || !isValue(b)) {
+	    return false;
+	  }
+
+	  if (a.prototype !== b.prototype) {
+	    return false;
+	  }
+
+	  var i;
+	  if (m) {
+	    for (i = 0; i < m.length; i++) {
+	      if (m[i][0] === a && m[i][1] === b || m[i][0] === b && m[i][1] === a) {
+	        return true;
+	      }
+	    }
+	  } else {
+	    m = [];
+	  }
+
+	  try {
+	    var ka = enumerable(a);
+	    var kb = enumerable(b);
+	  } catch (ex) {
+	    return false;
+	  }
+
+	  ka.sort();
+	  kb.sort();
+
+	  if (!iterableEqual(ka, kb)) {
+	    return false;
+	  }
+
+	  m.push([a, b]);
+
+	  var key;
+	  for (i = ka.length - 1; i >= 0; i--) {
+	    key = ka[i];
+	    if (!deepEqual(a[key], b[key], m)) {
+	      return false;
+	    }
+	  }
+
+	  return true;
+	}
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = __webpack_require__(36);
+
+/***/ },
+/* 36 */
 /***/ function(module, exports) {
 
 	'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	module.exports = function isBuffer(arg) {
-	  return arg && (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) === 'object' && typeof arg.copy === 'function' && typeof arg.fill === 'function' && typeof arg.readUInt8 === 'function';
-	};
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	if (typeof Object.create === 'function') {
-	  // implementation from standard node.js 'util' module
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor;
-	    ctor.prototype = Object.create(superCtor.prototype, {
-	      constructor: {
-	        value: ctor,
-	        enumerable: false,
-	        writable: true,
-	        configurable: true
-	      }
-	    });
-	  };
-	} else {
-	  // old school shim for old browsers
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor;
-	    var TempCtor = function TempCtor() {};
-	    TempCtor.prototype = superCtor.prototype;
-	    ctor.prototype = new TempCtor();
-	    ctor.prototype.constructor = ctor;
-	  };
-	}
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {// Licensed to the Software Freedom Conservancy (SFC) under one
-	// or more contributor license agreements.  See the NOTICE file
-	// distributed with this work for additional information
-	// regarding copyright ownership.  The SFC licenses this file
-	// to you under the Apache License, Version 2.0 (the
-	// "License"); you may not use this file except in compliance
-	// with the License.  You may obtain a copy of the License at
-	//
-	//   http://www.apache.org/licenses/LICENSE-2.0
-	//
-	// Unless required by applicable law or agreed to in writing,
-	// software distributed under the License is distributed on an
-	// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-	// KIND, either express or implied.  See the License for the
-	// specific language governing permissions and limitations
-	// under the License.
-
-	/**
-	 * @fileoverview The main user facing module. Exports WebDriver's primary
-	 * public API and provides convenience assessors to certain sub-modules.
+	/*!
+	 * type-detect
+	 * Copyright(c) 2013 jake luer <jake@alogicalparadox.com>
+	 * MIT Licensed
 	 */
 
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var chrome = __webpack_require__(20);
-	var edge = __webpack_require__(142);
-	var firefox = __webpack_require__(143);
-	var _http = __webpack_require__(26);
-	var ie = __webpack_require__(305);
-	var actions = __webpack_require__(67);
-	var by = __webpack_require__(69);
-	var capabilities = __webpack_require__(64);
-	var command = __webpack_require__(57);
-	var error = __webpack_require__(59);
-	var events = __webpack_require__(62);
-	var input = __webpack_require__(68);
-	var logging = __webpack_require__(60);
-	var promise = __webpack_require__(61);
-	var session = __webpack_require__(63);
-	var until = __webpack_require__(306);
-	var webdriver = __webpack_require__(66);
-	var opera = __webpack_require__(307);
-	var phantomjs = __webpack_require__(308);
-	var remote = __webpack_require__(103);
-	var safari = __webpack_require__(309);
-
-	var Browser = capabilities.Browser;
-	var Capabilities = capabilities.Capabilities;
-	var Capability = capabilities.Capability;
-	var Session = session.Session;
-	var WebDriver = webdriver.WebDriver;
-
-	var seleniumServer;
-
-	/**
-	 * Starts an instance of the Selenium server if not yet running.
-	 * @param {string} jar Path to the server jar to use.
-	 * @return {!Promise<string>} A promise for the server's
-	 *     addrss once started.
-	 */
-	function startSeleniumServer(jar) {
-	  if (!seleniumServer) {
-	    seleniumServer = new remote.SeleniumServer(jar);
-	  }
-	  return seleniumServer.start();
-	}
-
-	/**
-	 * {@linkplain webdriver.WebDriver#setFileDetector WebDriver's setFileDetector}
-	 * method uses a non-standard command to transfer files from the local client
-	 * to the remote end hosting the browser. Many of the WebDriver sub-types, like
-	 * the {@link chrome.Driver} and {@link firefox.Driver}, do not support this
-	 * command. Thus, these classes override the `setFileDetector` to no-op.
-	 *
-	 * This function uses a mixin to re-enable `setFileDetector` by calling the
-	 * original method on the WebDriver prototype directly. This is used only when
-	 * the builder creates a Chrome or Firefox instance that communicates with a
-	 * remote end (and thus, support for remote file detectors is unknown).
-	 *
-	 * @param {function(new: webdriver.WebDriver, ...?)} ctor
-	 * @return {function(new: webdriver.WebDriver, ...?)}
-	 */
-	function ensureFileDetectorsAreEnabled(ctor) {
-	  var mixin = function (_ctor) {
-	    _inherits(mixin, _ctor);
-
-	    function mixin() {
-	      _classCallCheck(this, mixin);
-
-	      return _possibleConstructorReturn(this, (mixin.__proto__ || Object.getPrototypeOf(mixin)).apply(this, arguments));
-	    }
-
-	    _createClass(mixin, [{
-	      key: 'setFileDetector',
-
-	      /** @param {input.FileDetector} detector */
-	      value: function setFileDetector(detector) {
-	        webdriver.WebDriver.prototype.setFileDetector.call(this, detector);
-	      }
-	    }]);
-
-	    return mixin;
-	  }(ctor);
-	  return mixin;
-	}
-
-	/**
-	 * A thenable wrapper around a {@linkplain webdriver.IWebDriver IWebDriver}
-	 * instance that allows commands to be issued directly instead of having to
-	 * repeatedly call `then`:
-	 *
-	 *     let driver = new Builder().build();
-	 *     driver.then(d => d.get(url));  // You can do this...
-	 *     driver.get(url);               // ...or this
-	 *
-	 * If the driver instance fails to resolve (e.g. the session cannot be created),
-	 * every issued command will fail.
-	 *
-	 * @extends {webdriver.IWebDriver}
-	 * @extends {promise.CancellableThenable<!webdriver.IWebDriver>}
-	 * @interface
+	/*!
+	 * Primary Exports
 	 */
 
-	var ThenableWebDriver = function () {
-	  function ThenableWebDriver() {
-	    _classCallCheck(this, ThenableWebDriver);
-	  }
+	var _exports = module.exports = getType;
 
-	  _createClass(ThenableWebDriver, null, [{
-	    key: 'createSession',
-
-	    /** @param {...?} args */
-	    value: function createSession() {}
-	  }]);
-
-	  return ThenableWebDriver;
-	}();
-
-	/**
-	 * @const {!Map<function(new: WebDriver, !IThenable<!Session>, ...?),
-	 *              function(new: ThenableWebDriver, !IThenable<!Session>, ...?)>}
+	/*!
+	 * Detectable javascript natives
 	 */
 
-
-	var THENABLE_DRIVERS = new Map();
-
-	/**
-	 * @param {function(new: WebDriver, !IThenable<!Session>, ...?)} ctor
-	 * @param {...?} args
-	 * @return {!ThenableWebDriver}
-	 */
-	function createDriver(ctor) {
-	  var _thenableWebDriverPro;
-
-	  var thenableWebDriverProxy = THENABLE_DRIVERS.get(ctor);
-	  if (!thenableWebDriverProxy) {
-	    /** @implements {ThenableWebDriver} */
-	    thenableWebDriverProxy = function (_ctor2) {
-	      _inherits(thenableWebDriverProxy, _ctor2);
-
-	      /**
-	       * @param {!IThenable<!Session>} session
-	       * @param {...?} rest
-	       */
-	      function thenableWebDriverProxy(session) {
-	        var _ref;
-
-	        for (var _len2 = arguments.length, rest = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-	          rest[_key2 - 1] = arguments[_key2];
-	        }
-
-	        _classCallCheck(this, thenableWebDriverProxy);
-
-	        var _this2 = _possibleConstructorReturn(this, (_ref = thenableWebDriverProxy.__proto__ || Object.getPrototypeOf(thenableWebDriverProxy)).call.apply(_ref, [this, session].concat(rest)));
-
-	        var pd = _this2.getSession().then(function (session) {
-	          return new (Function.prototype.bind.apply(ctor, [null].concat([session], rest)))();
-	        });
-
-	        /**
-	         * @param {(string|Error)=} opt_reason
-	         * @override
-	         */
-	        _this2.cancel = function (opt_reason) {
-	          if (promise.CancellableThenable.isImplementation(pd)) {
-	            /** @type {!promise.CancellableThenable} */pd.cancel(opt_reason);
-	          }
-	        };
-
-	        /** @override */
-	        _this2.then = pd.then.bind(pd);
-
-	        /** @override */
-	        _this2.catch = pd.then.bind(pd);
-	        return _this2;
-	      }
-
-	      return thenableWebDriverProxy;
-	    }(ctor);
-	    promise.CancellableThenable.addImplementation(thenableWebDriverProxy);
-	    THENABLE_DRIVERS.set(ctor, thenableWebDriverProxy);
-	  }
-
-	  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	    args[_key - 1] = arguments[_key];
-	  }
-
-	  return (_thenableWebDriverPro = thenableWebDriverProxy).createSession.apply(_thenableWebDriverPro, args);
-	}
-
-	/**
-	 * Creates new {@link webdriver.WebDriver WebDriver} instances. The environment
-	 * variables listed below may be used to override a builder's configuration,
-	 * allowing quick runtime changes.
-	 *
-	 * - {@code SELENIUM_BROWSER}: defines the target browser in the form
-	 *   {@code browser[:version][:platform]}.
-	 *
-	 * - {@code SELENIUM_REMOTE_URL}: defines the remote URL for all builder
-	 *   instances. This environment variable should be set to a fully qualified
-	 *   URL for a WebDriver server (e.g. http://localhost:4444/wd/hub). This
-	 *   option always takes precedence over {@code SELENIUM_SERVER_JAR}.
-	 *
-	 * - {@code SELENIUM_SERVER_JAR}: defines the path to the
-	 *   <a href="http://selenium-release.storage.googleapis.com/index.html">
-	 *   standalone Selenium server</a> jar to use. The server will be started the
-	 *   first time a WebDriver instance and be killed when the process exits.
-	 *
-	 * Suppose you had mytest.js that created WebDriver with
-	 *
-	 *     var driver = new webdriver.Builder()
-	 *         .forBrowser('chrome')
-	 *         .build();
-	 *
-	 * This test could be made to use Firefox on the local machine by running with
-	 * `SELENIUM_BROWSER=firefox node mytest.js`. Rather than change the code to
-	 * target Google Chrome on a remote machine, you can simply set the
-	 * `SELENIUM_BROWSER` and `SELENIUM_REMOTE_URL` environment variables:
-	 *
-	 *     SELENIUM_BROWSER=chrome:36:LINUX \
-	 *     SELENIUM_REMOTE_URL=http://www.example.com:4444/wd/hub \
-	 *     node mytest.js
-	 *
-	 * You could also use a local copy of the standalone Selenium server:
-	 *
-	 *     SELENIUM_BROWSER=chrome:36:LINUX \
-	 *     SELENIUM_SERVER_JAR=/path/to/selenium-server-standalone.jar \
-	 *     node mytest.js
-	 */
-
-	var Builder = function () {
-	  function Builder() {
-	    _classCallCheck(this, Builder);
-
-	    /** @private @const */
-	    this.log_ = logging.getLogger('webdriver.Builder');
-
-	    /** @private {promise.ControlFlow} */
-	    this.flow_ = null;
-
-	    /** @private {string} */
-	    this.url_ = '';
-
-	    /** @private {?string} */
-	    this.proxy_ = null;
-
-	    /** @private {!Capabilities} */
-	    this.capabilities_ = new Capabilities();
-
-	    /** @private {chrome.Options} */
-	    this.chromeOptions_ = null;
-
-	    /** @private {firefox.Options} */
-	    this.firefoxOptions_ = null;
-
-	    /** @private {opera.Options} */
-	    this.operaOptions_ = null;
-
-	    /** @private {ie.Options} */
-	    this.ieOptions_ = null;
-
-	    /** @private {safari.Options} */
-	    this.safariOptions_ = null;
-
-	    /** @private {edge.Options} */
-	    this.edgeOptions_ = null;
-
-	    /** @private {boolean} */
-	    this.ignoreEnv_ = false;
-
-	    /** @private {http.Agent} */
-	    this.agent_ = null;
-	  }
-
-	  /**
-	   * Configures this builder to ignore any environment variable overrides and to
-	   * only use the configuration specified through this instance's API.
-	   *
-	   * @return {!Builder} A self reference.
-	   */
-
-
-	  _createClass(Builder, [{
-	    key: 'disableEnvironmentOverrides',
-	    value: function disableEnvironmentOverrides() {
-	      this.ignoreEnv_ = true;
-	      return this;
-	    }
-
-	    /**
-	     * Sets the URL of a remote WebDriver server to use. Once a remote URL has
-	     * been specified, the builder direct all new clients to that server. If this
-	     * method is never called, the Builder will attempt to create all clients
-	     * locally.
-	     *
-	     * As an alternative to this method, you may also set the
-	     * `SELENIUM_REMOTE_URL` environment variable.
-	     *
-	     * @param {string} url The URL of a remote server to use.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'usingServer',
-	    value: function usingServer(url) {
-	      this.url_ = url;
-	      return this;
-	    }
-
-	    /**
-	     * @return {string} The URL of the WebDriver server this instance is
-	     *     configured to use.
-	     */
-
-	  }, {
-	    key: 'getServerUrl',
-	    value: function getServerUrl() {
-	      return this.url_;
-	    }
-
-	    /**
-	     * Sets the URL of the proxy to use for the WebDriver's HTTP connections.
-	     * If this method is never called, the Builder will create a connection
-	     * without a proxy.
-	     *
-	     * @param {string} proxy The URL of a proxy to use.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'usingWebDriverProxy',
-	    value: function usingWebDriverProxy(proxy) {
-	      this.proxy_ = proxy;
-	      return this;
-	    }
-
-	    /**
-	     * @return {?string} The URL of the proxy server to use for the WebDriver's
-	     *    HTTP connections, or `null` if not set.
-	     */
-
-	  }, {
-	    key: 'getWebDriverProxy',
-	    value: function getWebDriverProxy() {
-	      return this.proxy_;
-	    }
-
-	    /**
-	     * Sets the http agent to use for each request.
-	     * If this method is not called, the Builder will use http.globalAgent by default.
-	     *
-	     * @param {http.Agent} agent The agent to use for each request.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'usingHttpAgent',
-	    value: function usingHttpAgent(agent) {
-	      this.agent_ = agent;
-	      return this;
-	    }
-
-	    /**
-	     * @return {http.Agent} The http agent used for each request
-	     */
-
-	  }, {
-	    key: 'getHttpAgent',
-	    value: function getHttpAgent() {
-	      return this.agent_;
-	    }
-
-	    /**
-	     * Sets the desired capabilities when requesting a new session. This will
-	     * overwrite any previously set capabilities.
-	     * @param {!(Object|Capabilities)} capabilities The desired capabilities for
-	     *     a new session.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'withCapabilities',
-	    value: function withCapabilities(capabilities) {
-	      this.capabilities_ = new Capabilities(capabilities);
-	      return this;
-	    }
-
-	    /**
-	     * Returns the base set of capabilities this instance is currently configured
-	     * to use.
-	     * @return {!Capabilities} The current capabilities for this builder.
-	     */
-
-	  }, {
-	    key: 'getCapabilities',
-	    value: function getCapabilities() {
-	      return this.capabilities_;
-	    }
-
-	    /**
-	     * Configures the target browser for clients created by this instance.
-	     * Any calls to {@link #withCapabilities} after this function will
-	     * overwrite these settings.
-	     *
-	     * You may also define the target browser using the {@code SELENIUM_BROWSER}
-	     * environment variable. If set, this environment variable should be of the
-	     * form `browser[:[version][:platform]]`.
-	     *
-	     * @param {(string|Browser)} name The name of the target browser;
-	     *     common defaults are available on the {@link webdriver.Browser} enum.
-	     * @param {string=} opt_version A desired version; may be omitted if any
-	     *     version should be used.
-	     * @param {string=} opt_platform The desired platform; may be omitted if any
-	     *     version may be used.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'forBrowser',
-	    value: function forBrowser(name, opt_version, opt_platform) {
-	      this.capabilities_.set(Capability.BROWSER_NAME, name);
-	      this.capabilities_.set(Capability.VERSION, opt_version || null);
-	      this.capabilities_.set(Capability.PLATFORM, opt_platform || null);
-	      return this;
-	    }
-
-	    /**
-	     * Sets the proxy configuration for the target browser.
-	     * Any calls to {@link #withCapabilities} after this function will
-	     * overwrite these settings.
-	     *
-	     * @param {!capabilities.ProxyConfig} config The configuration to use.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setProxy',
-	    value: function setProxy(config) {
-	      this.capabilities_.setProxy(config);
-	      return this;
-	    }
-
-	    /**
-	     * Sets the logging preferences for the created session. Preferences may be
-	     * changed by repeated calls, or by calling {@link #withCapabilities}.
-	     * @param {!(./lib/logging.Preferences|Object<string, string>)} prefs The
-	     *     desired logging preferences.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setLoggingPrefs',
-	    value: function setLoggingPrefs(prefs) {
-	      this.capabilities_.setLoggingPrefs(prefs);
-	      return this;
-	    }
-
-	    /**
-	     * Sets whether native events should be used.
-	     * @param {boolean} enabled Whether to enable native events.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setEnableNativeEvents',
-	    value: function setEnableNativeEvents(enabled) {
-	      this.capabilities_.setEnableNativeEvents(enabled);
-	      return this;
-	    }
-
-	    /**
-	     * Sets how elements should be scrolled into view for interaction.
-	     * @param {number} behavior The desired scroll behavior: either 0 to align
-	     *     with the top of the viewport or 1 to align with the bottom.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setScrollBehavior',
-	    value: function setScrollBehavior(behavior) {
-	      this.capabilities_.setScrollBehavior(behavior);
-	      return this;
-	    }
-
-	    /**
-	     * Sets the default action to take with an unexpected alert before returning
-	     * an error.
-	     * @param {string} behavior The desired behavior; should be "accept",
-	     *     "dismiss", or "ignore". Defaults to "dismiss".
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setAlertBehavior',
-	    value: function setAlertBehavior(behavior) {
-	      this.capabilities_.setAlertBehavior(behavior);
-	      return this;
-	    }
-
-	    /**
-	     * Sets Chrome specific {@linkplain chrome.Options options} for drivers
-	     * created by this builder. Any logging or proxy settings defined on the given
-	     * options will take precedence over those set through
-	     * {@link #setLoggingPrefs} and {@link #setProxy}, respectively.
-	     *
-	     * @param {!chrome.Options} options The ChromeDriver options to use.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setChromeOptions',
-	    value: function setChromeOptions(options) {
-	      this.chromeOptions_ = options;
-	      return this;
-	    }
-
-	    /**
-	     * Sets Firefox specific {@linkplain firefox.Options options} for drivers
-	     * created by this builder. Any logging or proxy settings defined on the given
-	     * options will take precedence over those set through
-	     * {@link #setLoggingPrefs} and {@link #setProxy}, respectively.
-	     *
-	     * @param {!firefox.Options} options The FirefoxDriver options to use.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setFirefoxOptions',
-	    value: function setFirefoxOptions(options) {
-	      this.firefoxOptions_ = options;
-	      return this;
-	    }
-
-	    /**
-	     * @return {firefox.Options} the Firefox specific options currently configured
-	     *     for this instance.
-	     */
-
-	  }, {
-	    key: 'getFirefoxOptions',
-	    value: function getFirefoxOptions() {
-	      return this.firefoxOptions_;
-	    }
-
-	    /**
-	     * Sets Opera specific {@linkplain opera.Options options} for drivers created
-	     * by this builder. Any logging or proxy settings defined on the given options
-	     * will take precedence over those set through {@link #setLoggingPrefs} and
-	     * {@link #setProxy}, respectively.
-	     *
-	     * @param {!opera.Options} options The OperaDriver options to use.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setOperaOptions',
-	    value: function setOperaOptions(options) {
-	      this.operaOptions_ = options;
-	      return this;
-	    }
-
-	    /**
-	     * Set Internet Explorer specific {@linkplain ie.Options options} for drivers
-	     * created by this builder. Any proxy settings defined on the given options
-	     * will take precedence over those set through {@link #setProxy}.
-	     *
-	     * @param {!ie.Options} options The IEDriver options to use.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setIeOptions',
-	    value: function setIeOptions(options) {
-	      this.ieOptions_ = options;
-	      return this;
-	    }
-
-	    /**
-	     * Set {@linkplain edge.Options options} specific to Microsoft's Edge browser
-	     * for drivers created by this builder. Any proxy settings defined on the
-	     * given options will take precedence over those set through
-	     * {@link #setProxy}.
-	     *
-	     * @param {!edge.Options} options The MicrosoftEdgeDriver options to use.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setEdgeOptions',
-	    value: function setEdgeOptions(options) {
-	      this.edgeOptions_ = options;
-	      return this;
-	    }
-
-	    /**
-	     * Sets Safari specific {@linkplain safari.Options options} for drivers
-	     * created by this builder. Any logging settings defined on the given options
-	     * will take precedence over those set through {@link #setLoggingPrefs}.
-	     *
-	     * @param {!safari.Options} options The Safari options to use.
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setSafariOptions',
-	    value: function setSafariOptions(options) {
-	      this.safariOptions_ = options;
-	      return this;
-	    }
-
-	    /**
-	     * @return {safari.Options} the Safari specific options currently configured
-	     *     for this instance.
-	     */
-
-	  }, {
-	    key: 'getSafariOptions',
-	    value: function getSafariOptions() {
-	      return this.safariOptions_;
-	    }
-
-	    /**
-	     * Sets the control flow that created drivers should execute actions in. If
-	     * the flow is never set, or is set to {@code null}, it will use the active
-	     * flow at the time {@link #build()} is called.
-	     * @param {promise.ControlFlow} flow The control flow to use, or
-	     *     {@code null} to
-	     * @return {!Builder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setControlFlow',
-	    value: function setControlFlow(flow) {
-	      this.flow_ = flow;
-	      return this;
-	    }
-
-	    /**
-	     * Creates a new WebDriver client based on this builder's current
-	     * configuration.
-	     *
-	     * This method will return a {@linkplain ThenableWebDriver} instance, allowing
-	     * users to issue commands directly without calling `then()`. The returned
-	     * thenable wraps a promise that will resolve to a concrete
-	     * {@linkplain webdriver.WebDriver WebDriver} instance. The promise will be
-	     * rejected if the remote end fails to create a new session.
-	     *
-	     * @return {!ThenableWebDriver} A new WebDriver instance.
-	     * @throws {Error} If the current configuration is invalid.
-	     */
-
-	  }, {
-	    key: 'build',
-	    value: function build() {
-	      var _this3 = this;
-
-	      // Create a copy for any changes we may need to make based on the current
-	      // environment.
-	      var capabilities = new Capabilities(this.capabilities_);
-
-	      var browser;
-	      if (!this.ignoreEnv_ && process.env.SELENIUM_BROWSER) {
-	        this.log_.fine('SELENIUM_BROWSER=' + process.env.SELENIUM_BROWSER);
-	        browser = process.env.SELENIUM_BROWSER.split(/:/, 3);
-	        capabilities.set(Capability.BROWSER_NAME, browser[0]);
-	        capabilities.set(Capability.VERSION, browser[1] || null);
-	        capabilities.set(Capability.PLATFORM, browser[2] || null);
-	      }
-
-	      browser = capabilities.get(Capability.BROWSER_NAME);
-
-	      if (typeof browser !== 'string') {
-	        throw TypeError('Target browser must be a string, but is <' + (typeof browser === 'undefined' ? 'undefined' : _typeof(browser)) + '>;' + ' did you forget to call forBrowser()?');
-	      }
-
-	      if (browser === 'ie') {
-	        browser = Browser.INTERNET_EXPLORER;
-	      }
-
-	      // Apply browser specific overrides.
-	      if (browser === Browser.CHROME && this.chromeOptions_) {
-	        capabilities.merge(this.chromeOptions_.toCapabilities());
-	      } else if (browser === Browser.FIREFOX && this.firefoxOptions_) {
-	        capabilities.merge(this.firefoxOptions_.toCapabilities());
-	      } else if (browser === Browser.INTERNET_EXPLORER && this.ieOptions_) {
-	        capabilities.merge(this.ieOptions_.toCapabilities());
-	      } else if (browser === Browser.OPERA && this.operaOptions_) {
-	        capabilities.merge(this.operaOptions_.toCapabilities());
-	      } else if (browser === Browser.SAFARI && this.safariOptions_) {
-	        capabilities.merge(this.safariOptions_.toCapabilities());
-	      } else if (browser === Browser.EDGE && this.edgeOptions_) {
-	        capabilities.merge(this.edgeOptions_.toCapabilities());
-	      }
-
-	      // Check for a remote browser.
-	      var url = this.url_;
-	      if (!this.ignoreEnv_) {
-	        if (process.env.SELENIUM_REMOTE_URL) {
-	          this.log_.fine('SELENIUM_REMOTE_URL=' + process.env.SELENIUM_REMOTE_URL);
-	          url = process.env.SELENIUM_REMOTE_URL;
-	        } else if (process.env.SELENIUM_SERVER_JAR) {
-	          this.log_.fine('SELENIUM_SERVER_JAR=' + process.env.SELENIUM_SERVER_JAR);
-	          url = startSeleniumServer(process.env.SELENIUM_SERVER_JAR);
-	        }
-	      }
-
-	      if (url) {
-	        this.log_.fine('Creating session on remote server');
-	        var client = Promise.resolve(url).then(function (url) {
-	          return new _http.HttpClient(url, _this3.agent_, _this3.proxy_);
-	        });
-	        var executor = new _http.Executor(client);
-
-	        if (browser === Browser.CHROME) {
-	          var driver = ensureFileDetectorsAreEnabled(chrome.Driver);
-	          return createDriver(driver, capabilities, executor, this.flow_);
-	        }
-
-	        if (browser === Browser.FIREFOX) {
-	          var _driver = ensureFileDetectorsAreEnabled(firefox.Driver);
-	          return createDriver(_driver, capabilities, executor, this.flow_);
-	        }
-	        return createDriver(WebDriver, executor, capabilities, this.flow_);
-	      }
-
-	      // Check for a native browser.
-	      switch (browser) {
-	        case Browser.CHROME:
-	          return createDriver(chrome.Driver, capabilities, null, this.flow_);
-
-	        case Browser.FIREFOX:
-	          return createDriver(firefox.Driver, capabilities, null, this.flow_);
-
-	        case Browser.INTERNET_EXPLORER:
-	          return createDriver(ie.Driver, capabilities, this.flow_);
-
-	        case Browser.EDGE:
-	          return createDriver(edge.Driver, capabilities, null, this.flow_);
-
-	        case Browser.OPERA:
-	          return createDriver(opera.Driver, capabilities, null, this.flow_);
-
-	        case Browser.PHANTOM_JS:
-	          return createDriver(phantomjs.Driver, capabilities, this.flow_);
-
-	        case Browser.SAFARI:
-	          return createDriver(safari.Driver, capabilities, this.flow_);
-
-	        default:
-	          throw new Error('Do not know how to build driver: ' + browser + '; did you forget to call usingServer(url)?');
-	      }
-	    }
-	  }]);
-
-	  return Builder;
-	}();
-
-	// PUBLIC API
-
-
-	exports.ActionSequence = actions.ActionSequence;
-	exports.Browser = capabilities.Browser;
-	exports.Builder = Builder;
-	exports.Button = input.Button;
-	exports.By = by.By;
-	exports.Capabilities = capabilities.Capabilities;
-	exports.Capability = capabilities.Capability;
-	exports.Condition = webdriver.Condition;
-	exports.EventEmitter = events.EventEmitter;
-	exports.FileDetector = input.FileDetector;
-	exports.Key = input.Key;
-	exports.Session = session.Session;
-	exports.ThenableWebDriver = ThenableWebDriver;
-	exports.TouchSequence = actions.TouchSequence;
-	exports.WebDriver = webdriver.WebDriver;
-	exports.WebElement = webdriver.WebElement;
-	exports.WebElementCondition = webdriver.WebElementCondition;
-	exports.WebElementPromise = webdriver.WebElementPromise;
-	exports.error = error;
-	exports.logging = logging;
-	exports.promise = promise;
-	exports.until = until;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
-
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process, Buffer) {// Licensed to the Software Freedom Conservancy (SFC) under one
-	// or more contributor license agreements.  See the NOTICE file
-	// distributed with this work for additional information
-	// regarding copyright ownership.  The SFC licenses this file
-	// to you under the Apache License, Version 2.0 (the
-	// "License"); you may not use this file except in compliance
-	// with the License.  You may obtain a copy of the License at
-	//
-	//   http://www.apache.org/licenses/LICENSE-2.0
-	//
-	// Unless required by applicable law or agreed to in writing,
-	// software distributed under the License is distributed on an
-	// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-	// KIND, either express or implied.  See the License for the
-	// specific language governing permissions and limitations
-	// under the License.
-
-	/**
-	 * @fileoverview Defines a {@linkplain Driver WebDriver} client for the Chrome
-	 * web browser. Before using this module, you must download the latest
-	 * [ChromeDriver release] and ensure it can be found on your system [PATH].
-	 *
-	 * There are three primary classes exported by this module:
-	 *
-	 * 1. {@linkplain ServiceBuilder}: configures the
-	 *     {@link selenium-webdriver/remote.DriverService remote.DriverService}
-	 *     that manages the [ChromeDriver] child process.
-	 *
-	 * 2. {@linkplain Options}: defines configuration options for each new Chrome
-	 *     session, such as which {@linkplain Options#setProxy proxy} to use,
-	 *     what {@linkplain Options#addExtensions extensions} to install, or
-	 *     what {@linkplain Options#addArguments command-line switches} to use when
-	 *     starting the browser.
-	 *
-	 * 3. {@linkplain Driver}: the WebDriver client; each new instance will control
-	 *     a unique browser session with a clean user profile (unless otherwise
-	 *     configured through the {@link Options} class).
-	 *
-	 * __Customizing the ChromeDriver Server__ <a id="custom-server"></a>
-	 *
-	 * By default, every Chrome session will use a single driver service, which is
-	 * started the first time a {@link Driver} instance is created and terminated
-	 * when this process exits. The default service will inherit its environment
-	 * from the current process and direct all output to /dev/null. You may obtain
-	 * a handle to this default service using
-	 * {@link #getDefaultService getDefaultService()} and change its configuration
-	 * with {@link #setDefaultService setDefaultService()}.
-	 *
-	 * You may also create a {@link Driver} with its own driver service. This is
-	 * useful if you need to capture the server's log output for a specific session:
-	 *
-	 *     let chrome = require('selenium-webdriver/chrome');
-	 *
-	 *     let service = new chrome.ServiceBuilder()
-	 *         .loggingTo('/my/log/file.txt')
-	 *         .enableVerboseLogging()
-	 *         .build();
-	 *
-	 *     let options = new chrome.Options();
-	 *     // configure browser options ...
-	 *
-	 *     let driver = new chrome.Driver(options, service);
-	 *
-	 * Users should only instantiate the {@link Driver} class directly when they
-	 * need a custom driver service configuration (as shown above). For normal
-	 * operation, users should start Chrome using the
-	 * {@link selenium-webdriver.Builder}.
-	 *
-	 * __Working with Android__ <a id="android"></a>
-	 *
-	 * The [ChromeDriver][android] supports running tests on the Chrome browser as
-	 * well as [WebView apps][webview] starting in Android 4.4 (KitKat). In order to
-	 * work with Android, you must first start the adb
-	 *
-	 *     adb start-server
-	 *
-	 * By default, adb will start on port 5037. You may change this port, but this
-	 * will require configuring a [custom server](#custom-server) that will connect
-	 * to adb on the {@linkplain ServiceBuilder#setAdbPort correct port}:
-	 *
-	 *     let service = new chrome.ServiceBuilder()
-	 *         .setAdbPort(1234)
-	 *         build();
-	 *     // etc.
-	 *
-	 * The ChromeDriver may be configured to launch Chrome on Android using
-	 * {@link Options#androidChrome()}:
-	 *
-	 *     let driver = new Builder()
-	 *         .forBrowser('chrome')
-	 *         .setChromeOptions(new chrome.Options().androidChrome())
-	 *         .build();
-	 *
-	 * Alternatively, you can configure the ChromeDriver to launch an app with a
-	 * Chrome-WebView by setting the {@linkplain Options#androidActivity
-	 * androidActivity} option:
-	 *
-	 *     let driver = new Builder()
-	 *         .forBrowser('chrome')
-	 *         .setChromeOptions(new chrome.Options()
-	 *             .androidPackage('com.example')
-	 *             .androidActivity('com.example.Activity'))
-	 *         .build();
-	 *
-	 * [Refer to the ChromeDriver site] for more information on using the
-	 * [ChromeDriver with Android][android].
-	 *
-	 * [ChromeDriver]: https://sites.google.com/a/chromium.org/chromedriver/
-	 * [ChromeDriver release]: http://chromedriver.storage.googleapis.com/index.html
-	 * [PATH]: http://en.wikipedia.org/wiki/PATH_%28variable%29
-	 * [android]: https://sites.google.com/a/chromium.org/chromedriver/getting-started/getting-started---android
-	 * [webview]: https://developer.chrome.com/multidevice/webview/overview
-	 */
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var fs = __webpack_require__(25),
-	    util = __webpack_require__(15);
-
-	var http = __webpack_require__(26),
-	    io = __webpack_require__(70),
-	    _require = __webpack_require__(64),
-	    Capabilities = _require.Capabilities,
-	    Capability = _require.Capability,
-	    command = __webpack_require__(57),
-	    logging = __webpack_require__(60),
-	    promise = __webpack_require__(61),
-	    Symbols = __webpack_require__(65),
-	    webdriver = __webpack_require__(66),
-	    portprober = __webpack_require__(102),
-	    remote = __webpack_require__(103);
-
-	/**
-	 * Name of the ChromeDriver executable.
-	 * @type {string}
-	 * @const
-	 */
-	var CHROMEDRIVER_EXE = process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver';
-
-	/**
-	 * Custom command names supported by ChromeDriver.
-	 * @enum {string}
-	 */
-	var Command = {
-	  LAUNCH_APP: 'launchApp'
+	var natives = {
+	  '[object Array]': 'array',
+	  '[object RegExp]': 'regexp',
+	  '[object Function]': 'function',
+	  '[object Arguments]': 'arguments',
+	  '[object Date]': 'date'
 	};
 
 	/**
-	 * Creates a command executor with support for ChromeDriver's custom commands.
-	 * @param {!Promise<string>} url The server's URL.
-	 * @return {!command.Executor} The new command executor.
+	 * ### typeOf (obj)
+	 *
+	 * Use several different techniques to determine
+	 * the type of object being tested.
+	 *
+	 *
+	 * @param {Mixed} object
+	 * @return {String} object type
+	 * @api public
 	 */
-	function createExecutor(url) {
-	  var client = url.then(function (url) {
-	    return new http.HttpClient(url);
-	  });
-	  var executor = new http.Executor(client);
-	  configureExecutor(executor);
-	  return executor;
+
+	function getType(obj) {
+	  var str = Object.prototype.toString.call(obj);
+	  if (natives[str]) return natives[str];
+	  if (obj === null) return 'null';
+	  if (obj === undefined) return 'undefined';
+	  if (obj === Object(obj)) return 'object';
+	  return typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
+	}
+
+	_exports.Library = Library;
+
+	/**
+	 * ### Library
+	 *
+	 * Create a repository for custom type detection.
+	 *
+	 * ```js
+	 * var lib = new type.Library;
+	 * ```
+	 *
+	 */
+
+	function Library() {
+	  this.tests = {};
 	}
 
 	/**
-	 * Configures the given executor with Chrome-specific commands.
-	 * @param {!http.Executor} executor the executor to configure.
+	 * #### .of (obj)
+	 *
+	 * Expose replacement `typeof` detection to the library.
+	 *
+	 * ```js
+	 * if ('string' === lib.of('hello world')) {
+	 *   // ...
+	 * }
+	 * ```
+	 *
+	 * @param {Mixed} object to test
+	 * @return {String} type
 	 */
-	function configureExecutor(executor) {
-	  executor.defineCommand(Command.LAUNCH_APP, 'POST', '/session/:sessionId/chromium/launch_app');
-	}
+
+	Library.prototype.of = getType;
 
 	/**
-	 * Creates {@link selenium-webdriver/remote.DriverService} instances that manage
-	 * a [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/)
-	 * server in a child process.
+	 * #### .define (type, test)
+	 *
+	 * Add a test to for the `.test()` assertion.
+	 *
+	 * Can be defined as a regular expression:
+	 *
+	 * ```js
+	 * lib.define('int', /^[0-9]+$/);
+	 * ```
+	 *
+	 * ... or as a function:
+	 *
+	 * ```js
+	 * lib.define('bln', function (obj) {
+	 *   if ('boolean' === lib.of(obj)) return true;
+	 *   var blns = [ 'yes', 'no', 'true', 'false', 1, 0 ];
+	 *   if ('string' === lib.of(obj)) obj = obj.toLowerCase();
+	 *   return !! ~blns.indexOf(obj);
+	 * });
+	 * ```
+	 *
+	 * @param {String} type
+	 * @param {RegExp|Function} test
+	 * @api public
 	 */
 
-	var ServiceBuilder = function (_remote$DriverService) {
-	  _inherits(ServiceBuilder, _remote$DriverService);
+	Library.prototype.define = function (type, test) {
+	  if (arguments.length === 1) return this.tests[type];
+	  this.tests[type] = test;
+	  return this;
+	};
 
-	  /**
-	   * @param {string=} opt_exe Path to the server executable to use. If omitted,
-	   *     the builder will attempt to locate the chromedriver on the current
-	   *     PATH.
-	   * @throws {Error} If provided executable does not exist, or the chromedriver
-	   *     cannot be found on the PATH.
-	   */
-	  function ServiceBuilder(opt_exe) {
-	    _classCallCheck(this, ServiceBuilder);
+	/**
+	 * #### .test (obj, test)
+	 *
+	 * Assert that an object is of type. Will first
+	 * check natives, and if that does not pass it will
+	 * use the user defined custom tests.
+	 *
+	 * ```js
+	 * assert(lib.test('1', 'int'));
+	 * assert(lib.test('yes', 'bln'));
+	 * ```
+	 *
+	 * @param {Mixed} object
+	 * @param {String} type
+	 * @return {Boolean} result
+	 * @api public
+	 */
 
-	    var exe = opt_exe || io.findInPath(CHROMEDRIVER_EXE, true);
-	    if (!exe) {
-	      throw Error('The ChromeDriver could not be found on the current PATH. Please ' + 'download the latest version of the ChromeDriver from ' + 'http://chromedriver.storage.googleapis.com/index.html and ensure ' + 'it can be found on your PATH.');
-	    }
+	Library.prototype.test = function (obj, type) {
+	  if (type === getType(obj)) return true;
+	  var test = this.tests[type];
 
-	    var _this = _possibleConstructorReturn(this, (ServiceBuilder.__proto__ || Object.getPrototypeOf(ServiceBuilder)).call(this, exe));
-
-	    _this.setLoopback(true); // Required
-	    return _this;
+	  if (test && 'regexp' === getType(test)) {
+	    return test.test(obj);
+	  } else if (test && 'function' === getType(test)) {
+	    return test(obj);
+	  } else {
+	    throw new ReferenceError('Type test "' + type + '" not defined or invalid.');
 	  }
-
-	  /**
-	   * Sets which port adb is listening to. _The ChromeDriver will connect to adb
-	   * if an {@linkplain Options#androidPackage Android session} is requested, but
-	   * adb **must** be started beforehand._
-	   *
-	   * @param {number} port Which port adb is running on.
-	   * @return {!ServiceBuilder} A self reference.
-	   */
-
-
-	  _createClass(ServiceBuilder, [{
-	    key: 'setAdbPort',
-	    value: function setAdbPort(port) {
-	      return this.addArguments('--adb-port=' + port);
-	    }
-
-	    /**
-	     * Sets the path of the log file the driver should log to. If a log file is
-	     * not specified, the driver will log to stderr.
-	     * @param {string} path Path of the log file to use.
-	     * @return {!ServiceBuilder} A self reference.
-	     */
-
-	  }, {
-	    key: 'loggingTo',
-	    value: function loggingTo(path) {
-	      return this.addArguments('--log-path=' + path);
-	    }
-
-	    /**
-	     * Enables verbose logging.
-	     * @return {!ServiceBuilder} A self reference.
-	     */
-
-	  }, {
-	    key: 'enableVerboseLogging',
-	    value: function enableVerboseLogging() {
-	      return this.addArguments('--verbose');
-	    }
-
-	    /**
-	     * Sets the number of threads the driver should use to manage HTTP requests.
-	     * By default, the driver will use 4 threads.
-	     * @param {number} n The number of threads to use.
-	     * @return {!ServiceBuilder} A self reference.
-	     */
-
-	  }, {
-	    key: 'setNumHttpThreads',
-	    value: function setNumHttpThreads(n) {
-	      return this.addArguments('--http-threads=' + n);
-	    }
-
-	    /**
-	     * @override
-	     */
-
-	  }, {
-	    key: 'setPath',
-	    value: function setPath(path) {
-	      _get(ServiceBuilder.prototype.__proto__ || Object.getPrototypeOf(ServiceBuilder.prototype), 'setPath', this).call(this, path);
-	      return this.addArguments('--url-base=' + path);
-	    }
-	  }]);
-
-	  return ServiceBuilder;
-	}(remote.DriverService.Builder);
-
-	/** @type {remote.DriverService} */
-
-
-	var defaultService = null;
-
-	/**
-	 * Sets the default service to use for new ChromeDriver instances.
-	 * @param {!remote.DriverService} service The service to use.
-	 * @throws {Error} If the default service is currently running.
-	 */
-	function setDefaultService(service) {
-	  if (defaultService && defaultService.isRunning()) {
-	    throw Error('The previously configured ChromeDriver service is still running. ' + 'You must shut it down before you may adjust its configuration.');
-	  }
-	  defaultService = service;
-	}
-
-	/**
-	 * Returns the default ChromeDriver service. If such a service has not been
-	 * configured, one will be constructed using the default configuration for
-	 * a ChromeDriver executable found on the system PATH.
-	 * @return {!remote.DriverService} The default ChromeDriver service.
-	 */
-	function getDefaultService() {
-	  if (!defaultService) {
-	    defaultService = new ServiceBuilder().build();
-	  }
-	  return defaultService;
-	}
-
-	/**
-	 * @type {string}
-	 * @const
-	 */
-	var OPTIONS_CAPABILITY_KEY = 'chromeOptions';
-
-	/**
-	 * Class for managing ChromeDriver specific options.
-	 */
-
-	var Options = function () {
-	  function Options() {
-	    _classCallCheck(this, Options);
-
-	    /** @private {!Object} */
-	    this.options_ = {};
-
-	    /** @private {!Array<(string|!Buffer)>} */
-	    this.extensions_ = [];
-
-	    /** @private {?logging.Preferences} */
-	    this.logPrefs_ = null;
-
-	    /** @private {?./lib/capabilities.ProxyConfig} */
-	    this.proxy_ = null;
-	  }
-
-	  /**
-	   * Extracts the ChromeDriver specific options from the given capabilities
-	   * object.
-	   * @param {!Capabilities} caps The capabilities object.
-	   * @return {!Options} The ChromeDriver options.
-	   */
-
-
-	  _createClass(Options, [{
-	    key: 'addArguments',
-
-
-	    /**
-	     * Add additional command line arguments to use when launching the Chrome
-	     * browser.  Each argument may be specified with or without the "--" prefix
-	     * (e.g. "--foo" and "foo"). Arguments with an associated value should be
-	     * delimited by an "=": "foo=bar".
-	     * @param {...(string|!Array<string>)} var_args The arguments to add.
-	     * @return {!Options} A self reference.
-	     */
-	    value: function addArguments(var_args) {
-	      var args = this.options_.args || [];
-	      args = args.concat.apply(args, arguments);
-	      if (args.length) {
-	        this.options_.args = args;
-	      }
-	      return this;
-	    }
-
-	    /**
-	     * List of Chrome command line switches to exclude that ChromeDriver by default
-	     * passes when starting Chrome.  Do not prefix switches with "--".
-	     *
-	     * @param {...(string|!Array<string>)} var_args The switches to exclude.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'excludeSwitches',
-	    value: function excludeSwitches(var_args) {
-	      var switches = this.options_.excludeSwitches || [];
-	      switches = switches.concat.apply(switches, arguments);
-	      if (switches.length) {
-	        this.options_.excludeSwitches = switches;
-	      }
-	      return this;
-	    }
-
-	    /**
-	     * Add additional extensions to install when launching Chrome. Each extension
-	     * should be specified as the path to the packed CRX file, or a Buffer for an
-	     * extension.
-	     * @param {...(string|!Buffer|!Array<(string|!Buffer)>)} var_args The
-	     *     extensions to add.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'addExtensions',
-	    value: function addExtensions(var_args) {
-	      this.extensions_ = this.extensions_.concat.apply(this.extensions_, arguments);
-	      return this;
-	    }
-
-	    /**
-	     * Sets the path to the Chrome binary to use. On Mac OS X, this path should
-	     * reference the actual Chrome executable, not just the application binary
-	     * (e.g. "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome").
-	     *
-	     * The binary path be absolute or relative to the chromedriver server
-	     * executable, but it must exist on the machine that will launch Chrome.
-	     *
-	     * @param {string} path The path to the Chrome binary to use.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'setChromeBinaryPath',
-	    value: function setChromeBinaryPath(path) {
-	      this.options_.binary = path;
-	      return this;
-	    }
-
-	    /**
-	     * Sets whether to leave the started Chrome browser running if the controlling
-	     * ChromeDriver service is killed before {@link webdriver.WebDriver#quit()} is
-	     * called.
-	     * @param {boolean} detach Whether to leave the browser running if the
-	     *     chromedriver service is killed before the session.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'detachDriver',
-	    value: function detachDriver(detach) {
-	      this.options_.detach = detach;
-	      return this;
-	    }
-
-	    /**
-	     * Sets the user preferences for Chrome's user profile. See the "Preferences"
-	     * file in Chrome's user data directory for examples.
-	     * @param {!Object} prefs Dictionary of user preferences to use.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'setUserPreferences',
-	    value: function setUserPreferences(prefs) {
-	      this.options_.prefs = prefs;
-	      return this;
-	    }
-
-	    /**
-	     * Sets the logging preferences for the new session.
-	     * @param {!logging.Preferences} prefs The logging preferences.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'setLoggingPrefs',
-	    value: function setLoggingPrefs(prefs) {
-	      this.logPrefs_ = prefs;
-	      return this;
-	    }
-
-	    /**
-	     * Sets the performance logging preferences. Options include:
-	     *
-	     * - `enableNetwork`: Whether or not to collect events from Network domain.
-	     * - `enablePage`: Whether or not to collect events from Page domain.
-	     * - `enableTimeline`: Whether or not to collect events from Timeline domain.
-	     *     Note: when tracing is enabled, Timeline domain is implicitly disabled,
-	     *     unless `enableTimeline` is explicitly set to true.
-	     * - `tracingCategories`: A comma-separated string of Chrome tracing
-	     *     categories for which trace events should be collected. An unspecified
-	     *     or empty string disables tracing.
-	     * - `bufferUsageReportingInterval`: The requested number of milliseconds
-	     *     between DevTools trace buffer usage events. For example, if 1000, then
-	     *     once per second, DevTools will report how full the trace buffer is. If
-	     *     a report indicates the buffer usage is 100%, a warning will be issued.
-	     *
-	     * @param {{enableNetwork: boolean,
-	     *          enablePage: boolean,
-	     *          enableTimeline: boolean,
-	     *          tracingCategories: string,
-	     *          bufferUsageReportingInterval: number}} prefs The performance
-	     *     logging preferences.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'setPerfLoggingPrefs',
-	    value: function setPerfLoggingPrefs(prefs) {
-	      this.options_.perfLoggingPrefs = prefs;
-	      return this;
-	    }
-
-	    /**
-	     * Sets preferences for the "Local State" file in Chrome's user data
-	     * directory.
-	     * @param {!Object} state Dictionary of local state preferences.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'setLocalState',
-	    value: function setLocalState(state) {
-	      this.options_.localState = state;
-	      return this;
-	    }
-
-	    /**
-	     * Sets the name of the activity hosting a Chrome-based Android WebView. This
-	     * option must be set to connect to an [Android WebView](
-	     * https://sites.google.com/a/chromium.org/chromedriver/getting-started/getting-started---android)
-	     *
-	     * @param {string} name The activity name.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'androidActivity',
-	    value: function androidActivity(name) {
-	      this.options_.androidActivity = name;
-	      return this;
-	    }
-
-	    /**
-	     * Sets the device serial number to connect to via ADB. If not specified, the
-	     * ChromeDriver will select an unused device at random. An error will be
-	     * returned if all devices already have active sessions.
-	     *
-	     * @param {string} serial The device serial number to connect to.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'androidDeviceSerial',
-	    value: function androidDeviceSerial(serial) {
-	      this.options_.androidDeviceSerial = serial;
-	      return this;
-	    }
-
-	    /**
-	     * Configures the ChromeDriver to launch Chrome on Android via adb. This
-	     * function is shorthand for
-	     * {@link #androidPackage options.androidPackage('com.android.chrome')}.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'androidChrome',
-	    value: function androidChrome() {
-	      return this.androidPackage('com.android.chrome');
-	    }
-
-	    /**
-	     * Sets the package name of the Chrome or WebView app.
-	     *
-	     * @param {?string} pkg The package to connect to, or `null` to disable Android
-	     *     and switch back to using desktop Chrome.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'androidPackage',
-	    value: function androidPackage(pkg) {
-	      this.options_.androidPackage = pkg;
-	      return this;
-	    }
-
-	    /**
-	     * Sets the process name of the Activity hosting the WebView (as given by
-	     * `ps`). If not specified, the process name is assumed to be the same as
-	     * {@link #androidPackage}.
-	     *
-	     * @param {string} processName The main activity name.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'androidProcess',
-	    value: function androidProcess(processName) {
-	      this.options_.androidProcess = processName;
-	      return this;
-	    }
-
-	    /**
-	     * Sets whether to connect to an already-running instead of the specified
-	     * {@linkplain #androidProcess app} instead of launching the app with a clean
-	     * data directory.
-	     *
-	     * @param {boolean} useRunning Whether to connect to a running instance.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'androidUseRunningApp',
-	    value: function androidUseRunningApp(useRunning) {
-	      this.options_.androidUseRunningApp = useRunning;
-	      return this;
-	    }
-
-	    /**
-	     * Sets the path to Chrome's log file. This path should exist on the machine
-	     * that will launch Chrome.
-	     * @param {string} path Path to the log file to use.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'setChromeLogFile',
-	    value: function setChromeLogFile(path) {
-	      this.options_.logPath = path;
-	      return this;
-	    }
-
-	    /**
-	     * Sets the directory to store Chrome minidumps in. This option is only
-	     * supported when ChromeDriver is running on Linux.
-	     * @param {string} path The directory path.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'setChromeMinidumpPath',
-	    value: function setChromeMinidumpPath(path) {
-	      this.options_.minidumpPath = path;
-	      return this;
-	    }
-
-	    /**
-	     * Configures Chrome to emulate a mobile device. For more information, refer
-	     * to the ChromeDriver project page on [mobile emulation][em]. Configuration
-	     * options include:
-	     *
-	     * - `deviceName`: The name of a pre-configured [emulated device][devem]
-	     * - `width`: screen width, in pixels
-	     * - `height`: screen height, in pixels
-	     * - `pixelRatio`: screen pixel ratio
-	     *
-	     * __Example 1: Using a Pre-configured Device__
-	     *
-	     *     let options = new chrome.Options().setMobileEmulation(
-	     *         {deviceName: 'Google Nexus 5'});
-	     *
-	     *     let driver = new chrome.Driver(options);
-	     *
-	     * __Example 2: Using Custom Screen Configuration__
-	     *
-	     *     let options = new chrome.Options().setMobileEmulation({
-	     *         width: 360,
-	     *         height: 640,
-	     *         pixelRatio: 3.0
-	     *     });
-	     *
-	     *     let driver = new chrome.Driver(options);
-	     *
-	     *
-	     * [em]: https://sites.google.com/a/chromium.org/chromedriver/mobile-emulation
-	     * [devem]: https://developer.chrome.com/devtools/docs/device-mode
-	     *
-	     * @param {?({deviceName: string}|
-	     *           {width: number, height: number, pixelRatio: number})} config The
-	     *     mobile emulation configuration, or `null` to disable emulation.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'setMobileEmulation',
-	    value: function setMobileEmulation(config) {
-	      this.options_.mobileEmulation = config;
-	      return this;
-	    }
-
-	    /**
-	     * Sets the proxy settings for the new session.
-	     * @param {./lib/capabilities.ProxyConfig} proxy The proxy configuration to
-	     *    use.
-	     * @return {!Options} A self reference.
-	     */
-
-	  }, {
-	    key: 'setProxy',
-	    value: function setProxy(proxy) {
-	      this.proxy_ = proxy;
-	      return this;
-	    }
-
-	    /**
-	     * Converts this options instance to a {@link Capabilities} object.
-	     * @param {Capabilities=} opt_capabilities The capabilities to merge
-	     *     these options into, if any.
-	     * @return {!Capabilities} The capabilities.
-	     */
-
-	  }, {
-	    key: 'toCapabilities',
-	    value: function toCapabilities(opt_capabilities) {
-	      var caps = opt_capabilities || Capabilities.chrome();
-	      caps.set(Capability.PROXY, this.proxy_).set(Capability.LOGGING_PREFS, this.logPrefs_).set(OPTIONS_CAPABILITY_KEY, this);
-	      return caps;
-	    }
-
-	    /**
-	     * Converts this instance to its JSON wire protocol representation. Note this
-	     * function is an implementation not intended for general use.
-	     * @return {!Object} The JSON wire protocol representation of this instance.
-	     */
-
-	  }, {
-	    key: Symbols.serialize,
-	    value: function value() {
-	      var json = {};
-	      for (var key in this.options_) {
-	        if (this.options_[key] != null) {
-	          json[key] = this.options_[key];
-	        }
-	      }
-	      if (this.extensions_.length) {
-	        json.extensions = this.extensions_.map(function (extension) {
-	          if (Buffer.isBuffer(extension)) {
-	            return extension.toString('base64');
-	          }
-	          return io.read( /** @type {string} */extension).then(function (buffer) {
-	            return buffer.toString('base64');
-	          });
-	        });
-	      }
-	      return json;
-	    }
-	  }], [{
-	    key: 'fromCapabilities',
-	    value: function fromCapabilities(caps) {
-	      var options = new Options();
-
-	      var o = caps.get(OPTIONS_CAPABILITY_KEY);
-	      if (o instanceof Options) {
-	        options = o;
-	      } else if (o) {
-	        options.addArguments(o.args || []).addExtensions(o.extensions || []).detachDriver(o.detach).excludeSwitches(o.excludeSwitches || []).setChromeBinaryPath(o.binary).setChromeLogFile(o.logPath).setChromeMinidumpPath(o.minidumpPath).setLocalState(o.localState).setMobileEmulation(o.mobileEmulation).setUserPreferences(o.prefs).setPerfLoggingPrefs(o.perfLoggingPrefs);
-	      }
-
-	      if (caps.has(Capability.PROXY)) {
-	        options.setProxy(caps.get(Capability.PROXY));
-	      }
-
-	      if (caps.has(Capability.LOGGING_PREFS)) {
-	        options.setLoggingPrefs(caps.get(Capability.LOGGING_PREFS));
-	      }
-
-	      return options;
-	    }
-	  }]);
-
-	  return Options;
-	}();
-
-	/**
-	 * Creates a new WebDriver client for Chrome.
-	 */
-
-
-	var Driver = function (_webdriver$WebDriver) {
-	  _inherits(Driver, _webdriver$WebDriver);
-
-	  function Driver() {
-	    _classCallCheck(this, Driver);
-
-	    return _possibleConstructorReturn(this, (Driver.__proto__ || Object.getPrototypeOf(Driver)).apply(this, arguments));
-	  }
-
-	  _createClass(Driver, [{
-	    key: 'setFileDetector',
-
-
-	    /**
-	     * This function is a no-op as file detectors are not supported by this
-	     * implementation.
-	     * @override
-	     */
-	    value: function setFileDetector() {}
-
-	    /**
-	     * Schedules a command to launch Chrome App with given ID.
-	     * @param {string} id ID of the App to launch.
-	     * @return {!promise.Thenable<void>} A promise that will be resolved
-	     *     when app is launched.
-	     */
-
-	  }, {
-	    key: 'launchApp',
-	    value: function launchApp(id) {
-	      return this.schedule(new command.Command(Command.LAUNCH_APP).setParameter('id', id), 'Driver.launchApp()');
-	    }
-	  }], [{
-	    key: 'createSession',
-
-
-	    /**
-	     * Creates a new session with the ChromeDriver.
-	     *
-	     * @param {(Capabilities|Options)=} opt_config The configuration options.
-	     * @param {(remote.DriverService|http.Executor)=} opt_serviceExecutor Either
-	     *     a  DriverService to use for the remote end, or a preconfigured executor
-	     *     for an externally managed endpoint. If neither is provided, the
-	     *     {@linkplain ##getDefaultService default service} will be used by
-	     *     default.
-	     * @param {promise.ControlFlow=} opt_flow The control flow to use, or `null`
-	     *     to use the currently active flow.
-	     * @return {!Driver} A new driver instance.
-	     */
-	    value: function createSession(opt_config, opt_serviceExecutor, opt_flow) {
-	      var executor = void 0;
-	      if (opt_serviceExecutor instanceof http.Executor) {
-	        executor = opt_serviceExecutor;
-	        configureExecutor(executor);
-	      } else {
-	        var service = opt_serviceExecutor || getDefaultService();
-	        executor = createExecutor(service.start());
-	      }
-
-	      var caps = opt_config instanceof Options ? opt_config.toCapabilities() : opt_config || Capabilities.chrome();
-
-	      return (/** @type {!Driver} */webdriver.WebDriver.createSession(executor, caps, opt_flow, this)
-	      );
-	    }
-	  }]);
-
-	  return Driver;
-	}(webdriver.WebDriver);
-
-	// PUBLIC API
-
-
-	exports.Driver = Driver;
-	exports.Options = Options;
-	exports.ServiceBuilder = ServiceBuilder;
-	exports.getDefaultService = getDefaultService;
-	exports.setDefaultService = setDefaultService;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16), __webpack_require__(21).Buffer))
+	};
 
 /***/ },
-/* 21 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
@@ -3433,9 +2262,9 @@
 
 	'use strict';
 
-	var base64 = __webpack_require__(22);
-	var ieee754 = __webpack_require__(23);
-	var isArray = __webpack_require__(24);
+	var base64 = __webpack_require__(38);
+	var ieee754 = __webpack_require__(39);
+	var isArray = __webpack_require__(40);
 
 	exports.Buffer = Buffer;
 	exports.SlowBuffer = SlowBuffer;
@@ -5160,10 +3989,10 @@
 	function isnan(val) {
 	  return val !== val; // eslint-disable-line no-self-compare
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 22 */
+/* 38 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -5282,7 +4111,7 @@
 	}
 
 /***/ },
-/* 23 */
+/* 39 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5373,7 +4202,7 @@
 	};
 
 /***/ },
-/* 24 */
+/* 40 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -5385,13 +4214,7358 @@
 	};
 
 /***/ },
-/* 25 */
+/* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * Chai - getPathValue utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * @see https://github.com/logicalparadox/filtr
+	 * MIT Licensed
+	 */
+
+	var getPathInfo = __webpack_require__(42);
+
+	/**
+	 * ### .getPathValue(path, object)
+	 *
+	 * This allows the retrieval of values in an
+	 * object given a string path.
+	 *
+	 *     var obj = {
+	 *         prop1: {
+	 *             arr: ['a', 'b', 'c']
+	 *           , str: 'Hello'
+	 *         }
+	 *       , prop2: {
+	 *             arr: [ { nested: 'Universe' } ]
+	 *           , str: 'Hello again!'
+	 *         }
+	 *     }
+	 *
+	 * The following would be the results.
+	 *
+	 *     getPathValue('prop1.str', obj); // Hello
+	 *     getPathValue('prop1.att[2]', obj); // b
+	 *     getPathValue('prop2.arr[0].nested', obj); // Universe
+	 *
+	 * @param {String} path
+	 * @param {Object} object
+	 * @returns {Object} value or `undefined`
+	 * @namespace Utils
+	 * @name getPathValue
+	 * @api public
+	 */
+	module.exports = function (path, obj) {
+	  var info = getPathInfo(path, obj);
+	  return info.value;
+	};
+
+/***/ },
+/* 42 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * Chai - getPathInfo utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	var hasProperty = __webpack_require__(43);
+
+	/**
+	 * ### .getPathInfo(path, object)
+	 *
+	 * This allows the retrieval of property info in an
+	 * object given a string path.
+	 *
+	 * The path info consists of an object with the
+	 * following properties:
+	 *
+	 * * parent - The parent object of the property referenced by `path`
+	 * * name - The name of the final property, a number if it was an array indexer
+	 * * value - The value of the property, if it exists, otherwise `undefined`
+	 * * exists - Whether the property exists or not
+	 *
+	 * @param {String} path
+	 * @param {Object} object
+	 * @returns {Object} info
+	 * @namespace Utils
+	 * @name getPathInfo
+	 * @api public
+	 */
+
+	module.exports = function getPathInfo(path, obj) {
+	  var parsed = parsePath(path),
+	      last = parsed[parsed.length - 1];
+
+	  var info = {
+	    parent: parsed.length > 1 ? _getPathValue(parsed, obj, parsed.length - 1) : obj,
+	    name: last.p || last.i,
+	    value: _getPathValue(parsed, obj)
+	  };
+	  info.exists = hasProperty(info.name, info.parent);
+
+	  return info;
+	};
+
+	/*!
+	 * ## parsePath(path)
+	 *
+	 * Helper function used to parse string object
+	 * paths. Use in conjunction with `_getPathValue`.
+	 *
+	 *      var parsed = parsePath('myobject.property.subprop');
+	 *
+	 * ### Paths:
+	 *
+	 * * Can be as near infinitely deep and nested
+	 * * Arrays are also valid using the formal `myobject.document[3].property`.
+	 * * Literal dots and brackets (not delimiter) must be backslash-escaped.
+	 *
+	 * @param {String} path
+	 * @returns {Object} parsed
+	 * @api private
+	 */
+
+	function parsePath(path) {
+	  var str = path.replace(/([^\\])\[/g, '$1.['),
+	      parts = str.match(/(\\\.|[^.]+?)+/g);
+	  return parts.map(function (value) {
+	    var re = /^\[(\d+)\]$/,
+	        mArr = re.exec(value);
+	    if (mArr) return { i: parseFloat(mArr[1]) };else return { p: value.replace(/\\([.\[\]])/g, '$1') };
+	  });
+	}
+
+	/*!
+	 * ## _getPathValue(parsed, obj)
+	 *
+	 * Helper companion function for `.parsePath` that returns
+	 * the value located at the parsed address.
+	 *
+	 *      var value = getPathValue(parsed, obj);
+	 *
+	 * @param {Object} parsed definition from `parsePath`.
+	 * @param {Object} object to search against
+	 * @param {Number} object to search against
+	 * @returns {Object|Undefined} value
+	 * @api private
+	 */
+
+	function _getPathValue(parsed, obj, index) {
+	  var tmp = obj,
+	      res;
+
+	  index = index === undefined ? parsed.length : index;
+
+	  for (var i = 0, l = index; i < l; i++) {
+	    var part = parsed[i];
+	    if (tmp) {
+	      if ('undefined' !== typeof part.p) tmp = tmp[part.p];else if ('undefined' !== typeof part.i) tmp = tmp[part.i];
+	      if (i == l - 1) res = tmp;
+	    } else {
+	      res = undefined;
+	    }
+	  }
+	  return res;
+	}
+
+/***/ },
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	/*!
+	 * Chai - hasProperty utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	var type = __webpack_require__(21);
+
+	/**
+	 * ### .hasProperty(object, name)
+	 *
+	 * This allows checking whether an object has
+	 * named property or numeric array index.
+	 *
+	 * Basically does the same thing as the `in`
+	 * operator but works properly with natives
+	 * and null/undefined values.
+	 *
+	 *     var obj = {
+	 *         arr: ['a', 'b', 'c']
+	 *       , str: 'Hello'
+	 *     }
+	 *
+	 * The following would be the results.
+	 *
+	 *     hasProperty('str', obj);  // true
+	 *     hasProperty('constructor', obj);  // true
+	 *     hasProperty('bar', obj);  // false
+	 *
+	 *     hasProperty('length', obj.str); // true
+	 *     hasProperty(1, obj.str);  // true
+	 *     hasProperty(5, obj.str);  // false
+	 *
+	 *     hasProperty('length', obj.arr);  // true
+	 *     hasProperty(2, obj.arr);  // true
+	 *     hasProperty(3, obj.arr);  // false
+	 *
+	 * @param {Objuect} object
+	 * @param {String|Number} name
+	 * @returns {Boolean} whether it exists
+	 * @namespace Utils
+	 * @name getPathInfo
+	 * @api public
+	 */
+
+	var literals = {
+	  'number': Number,
+	  'string': String
+	};
+
+	module.exports = function hasProperty(name, obj) {
+	  var ot = type(obj);
+
+	  // Bad Object, obviously no props at all
+	  if (ot === 'null' || ot === 'undefined') return false;
+
+	  // The `in` operator does not work with certain literals
+	  // box these before the check
+	  if (literals[ot] && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) !== 'object') obj = new literals[ot](obj);
+
+	  return name in obj;
+	};
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * Chai - addProperty utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	var config = __webpack_require__(31);
+	var flag = __webpack_require__(20);
+
+	/**
+	 * ### addProperty (ctx, name, getter)
+	 *
+	 * Adds a property to the prototype of an object.
+	 *
+	 *     utils.addProperty(chai.Assertion.prototype, 'foo', function () {
+	 *       var obj = utils.flag(this, 'object');
+	 *       new chai.Assertion(obj).to.be.instanceof(Foo);
+	 *     });
+	 *
+	 * Can also be accessed directly from `chai.Assertion`.
+	 *
+	 *     chai.Assertion.addProperty('foo', fn);
+	 *
+	 * Then can be used as any other assertion.
+	 *
+	 *     expect(myFoo).to.be.foo;
+	 *
+	 * @param {Object} ctx object to which the property is added
+	 * @param {String} name of property to add
+	 * @param {Function} getter function to be used for name
+	 * @namespace Utils
+	 * @name addProperty
+	 * @api public
+	 */
+
+	module.exports = function (ctx, name, getter) {
+	  Object.defineProperty(ctx, name, { get: function addProperty() {
+	      var old_ssfi = flag(this, 'ssfi');
+	      if (old_ssfi && config.includeStack === false) flag(this, 'ssfi', addProperty);
+
+	      var result = getter.call(this);
+	      return result === undefined ? this : result;
+	    },
+	    configurable: true
+	  });
+	};
+
+/***/ },
+/* 45 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * Chai - addMethod utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	var config = __webpack_require__(31);
+
+	/**
+	 * ### .addMethod (ctx, name, method)
+	 *
+	 * Adds a method to the prototype of an object.
+	 *
+	 *     utils.addMethod(chai.Assertion.prototype, 'foo', function (str) {
+	 *       var obj = utils.flag(this, 'object');
+	 *       new chai.Assertion(obj).to.be.equal(str);
+	 *     });
+	 *
+	 * Can also be accessed directly from `chai.Assertion`.
+	 *
+	 *     chai.Assertion.addMethod('foo', fn);
+	 *
+	 * Then can be used as any other assertion.
+	 *
+	 *     expect(fooStr).to.be.foo('bar');
+	 *
+	 * @param {Object} ctx object to which the method is added
+	 * @param {String} name of method to add
+	 * @param {Function} method function to be used for name
+	 * @namespace Utils
+	 * @name addMethod
+	 * @api public
+	 */
+	var flag = __webpack_require__(20);
+
+	module.exports = function (ctx, name, method) {
+	  ctx[name] = function () {
+	    var old_ssfi = flag(this, 'ssfi');
+	    if (old_ssfi && config.includeStack === false) flag(this, 'ssfi', ctx[name]);
+	    var result = method.apply(this, arguments);
+	    return result === undefined ? this : result;
+	  };
+	};
+
+/***/ },
+/* 46 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/*!
+	 * Chai - overwriteProperty utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/**
+	 * ### overwriteProperty (ctx, name, fn)
+	 *
+	 * Overwites an already existing property getter and provides
+	 * access to previous value. Must return function to use as getter.
+	 *
+	 *     utils.overwriteProperty(chai.Assertion.prototype, 'ok', function (_super) {
+	 *       return function () {
+	 *         var obj = utils.flag(this, 'object');
+	 *         if (obj instanceof Foo) {
+	 *           new chai.Assertion(obj.name).to.equal('bar');
+	 *         } else {
+	 *           _super.call(this);
+	 *         }
+	 *       }
+	 *     });
+	 *
+	 *
+	 * Can also be accessed directly from `chai.Assertion`.
+	 *
+	 *     chai.Assertion.overwriteProperty('foo', fn);
+	 *
+	 * Then can be used as any other assertion.
+	 *
+	 *     expect(myFoo).to.be.ok;
+	 *
+	 * @param {Object} ctx object whose property is to be overwritten
+	 * @param {String} name of property to overwrite
+	 * @param {Function} getter function that returns a getter function to be used for name
+	 * @namespace Utils
+	 * @name overwriteProperty
+	 * @api public
+	 */
+
+	module.exports = function (ctx, name, getter) {
+	  var _get = Object.getOwnPropertyDescriptor(ctx, name),
+	      _super = function _super() {};
+
+	  if (_get && 'function' === typeof _get.get) _super = _get.get;
+
+	  Object.defineProperty(ctx, name, { get: function get() {
+	      var result = getter(_super).call(this);
+	      return result === undefined ? this : result;
+	    },
+	    configurable: true
+	  });
+	};
+
+/***/ },
+/* 47 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/*!
+	 * Chai - overwriteMethod utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/**
+	 * ### overwriteMethod (ctx, name, fn)
+	 *
+	 * Overwites an already existing method and provides
+	 * access to previous function. Must return function
+	 * to be used for name.
+	 *
+	 *     utils.overwriteMethod(chai.Assertion.prototype, 'equal', function (_super) {
+	 *       return function (str) {
+	 *         var obj = utils.flag(this, 'object');
+	 *         if (obj instanceof Foo) {
+	 *           new chai.Assertion(obj.value).to.equal(str);
+	 *         } else {
+	 *           _super.apply(this, arguments);
+	 *         }
+	 *       }
+	 *     });
+	 *
+	 * Can also be accessed directly from `chai.Assertion`.
+	 *
+	 *     chai.Assertion.overwriteMethod('foo', fn);
+	 *
+	 * Then can be used as any other assertion.
+	 *
+	 *     expect(myFoo).to.equal('bar');
+	 *
+	 * @param {Object} ctx object whose method is to be overwritten
+	 * @param {String} name of method to overwrite
+	 * @param {Function} method function that returns a function to be used for name
+	 * @namespace Utils
+	 * @name overwriteMethod
+	 * @api public
+	 */
+
+	module.exports = function (ctx, name, method) {
+	  var _method = ctx[name],
+	      _super = function _super() {
+	    return this;
+	  };
+
+	  if (_method && 'function' === typeof _method) _super = _method;
+
+	  ctx[name] = function () {
+	    var result = method(_super).apply(this, arguments);
+	    return result === undefined ? this : result;
+	  };
+	};
+
+/***/ },
+/* 48 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * Chai - addChainingMethod utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/*!
+	 * Module dependencies
+	 */
+
+	var transferFlags = __webpack_require__(32);
+	var flag = __webpack_require__(20);
+	var config = __webpack_require__(31);
+
+	/*!
+	 * Module variables
+	 */
+
+	// Check whether `__proto__` is supported
+	var hasProtoSupport = '__proto__' in Object;
+
+	// Without `__proto__` support, this module will need to add properties to a function.
+	// However, some Function.prototype methods cannot be overwritten,
+	// and there seems no easy cross-platform way to detect them (@see chaijs/chai/issues/69).
+	var excludeNames = /^(?:length|name|arguments|caller)$/;
+
+	// Cache `Function` properties
+	var call = Function.prototype.call,
+	    apply = Function.prototype.apply;
+
+	/**
+	 * ### addChainableMethod (ctx, name, method, chainingBehavior)
+	 *
+	 * Adds a method to an object, such that the method can also be chained.
+	 *
+	 *     utils.addChainableMethod(chai.Assertion.prototype, 'foo', function (str) {
+	 *       var obj = utils.flag(this, 'object');
+	 *       new chai.Assertion(obj).to.be.equal(str);
+	 *     });
+	 *
+	 * Can also be accessed directly from `chai.Assertion`.
+	 *
+	 *     chai.Assertion.addChainableMethod('foo', fn, chainingBehavior);
+	 *
+	 * The result can then be used as both a method assertion, executing both `method` and
+	 * `chainingBehavior`, or as a language chain, which only executes `chainingBehavior`.
+	 *
+	 *     expect(fooStr).to.be.foo('bar');
+	 *     expect(fooStr).to.be.foo.equal('foo');
+	 *
+	 * @param {Object} ctx object to which the method is added
+	 * @param {String} name of method to add
+	 * @param {Function} method function to be used for `name`, when called
+	 * @param {Function} chainingBehavior function to be called every time the property is accessed
+	 * @namespace Utils
+	 * @name addChainableMethod
+	 * @api public
+	 */
+
+	module.exports = function (ctx, name, method, chainingBehavior) {
+	  if (typeof chainingBehavior !== 'function') {
+	    chainingBehavior = function chainingBehavior() {};
+	  }
+
+	  var chainableBehavior = {
+	    method: method,
+	    chainingBehavior: chainingBehavior
+	  };
+
+	  // save the methods so we can overwrite them later, if we need to.
+	  if (!ctx.__methods) {
+	    ctx.__methods = {};
+	  }
+	  ctx.__methods[name] = chainableBehavior;
+
+	  Object.defineProperty(ctx, name, { get: function get() {
+	      chainableBehavior.chainingBehavior.call(this);
+
+	      var assert = function assert() {
+	        var old_ssfi = flag(this, 'ssfi');
+	        if (old_ssfi && config.includeStack === false) flag(this, 'ssfi', assert);
+	        var result = chainableBehavior.method.apply(this, arguments);
+	        return result === undefined ? this : result;
+	      };
+
+	      // Use `__proto__` if available
+	      if (hasProtoSupport) {
+	        // Inherit all properties from the object by replacing the `Function` prototype
+	        var prototype = assert.__proto__ = Object.create(this);
+	        // Restore the `call` and `apply` methods from `Function`
+	        prototype.call = call;
+	        prototype.apply = apply;
+	      }
+	      // Otherwise, redefine all properties (slow!)
+	      else {
+	          var asserterNames = Object.getOwnPropertyNames(ctx);
+	          asserterNames.forEach(function (asserterName) {
+	            if (!excludeNames.test(asserterName)) {
+	              var pd = Object.getOwnPropertyDescriptor(ctx, asserterName);
+	              Object.defineProperty(assert, asserterName, pd);
+	            }
+	          });
+	        }
+
+	      transferFlags(this, assert);
+	      return assert;
+	    },
+	    configurable: true
+	  });
+	};
+
+/***/ },
+/* 49 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	/*!
+	 * Chai - overwriteChainableMethod utility
+	 * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	/**
+	 * ### overwriteChainableMethod (ctx, name, method, chainingBehavior)
+	 *
+	 * Overwites an already existing chainable method
+	 * and provides access to the previous function or
+	 * property.  Must return functions to be used for
+	 * name.
+	 *
+	 *     utils.overwriteChainableMethod(chai.Assertion.prototype, 'length',
+	 *       function (_super) {
+	 *       }
+	 *     , function (_super) {
+	 *       }
+	 *     );
+	 *
+	 * Can also be accessed directly from `chai.Assertion`.
+	 *
+	 *     chai.Assertion.overwriteChainableMethod('foo', fn, fn);
+	 *
+	 * Then can be used as any other assertion.
+	 *
+	 *     expect(myFoo).to.have.length(3);
+	 *     expect(myFoo).to.have.length.above(3);
+	 *
+	 * @param {Object} ctx object whose method / property is to be overwritten
+	 * @param {String} name of method / property to overwrite
+	 * @param {Function} method function that returns a function to be used for name
+	 * @param {Function} chainingBehavior function that returns a function to be used for property
+	 * @namespace Utils
+	 * @name overwriteChainableMethod
+	 * @api public
+	 */
+
+	module.exports = function (ctx, name, method, chainingBehavior) {
+	  var chainableBehavior = ctx.__methods[name];
+
+	  var _chainingBehavior = chainableBehavior.chainingBehavior;
+	  chainableBehavior.chainingBehavior = function () {
+	    var result = chainingBehavior(_chainingBehavior).call(this);
+	    return result === undefined ? this : result;
+	  };
+
+	  var _method = chainableBehavior.method;
+	  chainableBehavior.method = function () {
+	    var result = method(_method).apply(this, arguments);
+	    return result === undefined ? this : result;
+	  };
+	};
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*!
+	 * chai
+	 * http://chaijs.com
+	 * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	var config = __webpack_require__(31);
+
+	module.exports = function (_chai, util) {
+	  /*!
+	   * Module dependencies.
+	   */
+
+	  var AssertionError = _chai.AssertionError,
+	      flag = util.flag;
+
+	  /*!
+	   * Module export.
+	   */
+
+	  _chai.Assertion = Assertion;
+
+	  /*!
+	   * Assertion Constructor
+	   *
+	   * Creates object for chaining.
+	   *
+	   * @api private
+	   */
+
+	  function Assertion(obj, msg, stack) {
+	    flag(this, 'ssfi', stack || arguments.callee);
+	    flag(this, 'object', obj);
+	    flag(this, 'message', msg);
+	  }
+
+	  Object.defineProperty(Assertion, 'includeStack', {
+	    get: function get() {
+	      console.warn('Assertion.includeStack is deprecated, use chai.config.includeStack instead.');
+	      return config.includeStack;
+	    },
+	    set: function set(value) {
+	      console.warn('Assertion.includeStack is deprecated, use chai.config.includeStack instead.');
+	      config.includeStack = value;
+	    }
+	  });
+
+	  Object.defineProperty(Assertion, 'showDiff', {
+	    get: function get() {
+	      console.warn('Assertion.showDiff is deprecated, use chai.config.showDiff instead.');
+	      return config.showDiff;
+	    },
+	    set: function set(value) {
+	      console.warn('Assertion.showDiff is deprecated, use chai.config.showDiff instead.');
+	      config.showDiff = value;
+	    }
+	  });
+
+	  Assertion.addProperty = function (name, fn) {
+	    util.addProperty(this.prototype, name, fn);
+	  };
+
+	  Assertion.addMethod = function (name, fn) {
+	    util.addMethod(this.prototype, name, fn);
+	  };
+
+	  Assertion.addChainableMethod = function (name, fn, chainingBehavior) {
+	    util.addChainableMethod(this.prototype, name, fn, chainingBehavior);
+	  };
+
+	  Assertion.overwriteProperty = function (name, fn) {
+	    util.overwriteProperty(this.prototype, name, fn);
+	  };
+
+	  Assertion.overwriteMethod = function (name, fn) {
+	    util.overwriteMethod(this.prototype, name, fn);
+	  };
+
+	  Assertion.overwriteChainableMethod = function (name, fn, chainingBehavior) {
+	    util.overwriteChainableMethod(this.prototype, name, fn, chainingBehavior);
+	  };
+
+	  /**
+	   * ### .assert(expression, message, negateMessage, expected, actual, showDiff)
+	   *
+	   * Executes an expression and check expectations. Throws AssertionError for reporting if test doesn't pass.
+	   *
+	   * @name assert
+	   * @param {Philosophical} expression to be tested
+	   * @param {String|Function} message or function that returns message to display if expression fails
+	   * @param {String|Function} negatedMessage or function that returns negatedMessage to display if negated expression fails
+	   * @param {Mixed} expected value (remember to check for negation)
+	   * @param {Mixed} actual (optional) will default to `this.obj`
+	   * @param {Boolean} showDiff (optional) when set to `true`, assert will display a diff in addition to the message if expression fails
+	   * @api private
+	   */
+
+	  Assertion.prototype.assert = function (expr, msg, negateMsg, expected, _actual, showDiff) {
+	    var ok = util.test(this, arguments);
+	    if (true !== showDiff) showDiff = false;
+	    if (true !== config.showDiff) showDiff = false;
+
+	    if (!ok) {
+	      var msg = util.getMessage(this, arguments),
+	          actual = util.getActual(this, arguments);
+	      throw new AssertionError(msg, {
+	        actual: actual,
+	        expected: expected,
+	        showDiff: showDiff
+	      }, config.includeStack ? this.assert : flag(this, 'ssfi'));
+	    }
+	  };
+
+	  /*!
+	   * ### ._obj
+	   *
+	   * Quick reference to stored `actual` value for plugin developers.
+	   *
+	   * @api private
+	   */
+
+	  Object.defineProperty(Assertion.prototype, '_obj', { get: function get() {
+	      return flag(this, 'object');
+	    },
+	    set: function set(val) {
+	      flag(this, 'object', val);
+	    }
+	  });
+	};
+
+/***/ },
+/* 51 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	/*!
+	 * chai
+	 * http://chaijs.com
+	 * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	module.exports = function (chai, _) {
+	  var Assertion = chai.Assertion,
+	      toString = Object.prototype.toString,
+	      flag = _.flag;
+
+	  /**
+	   * ### Language Chains
+	   *
+	   * The following are provided as chainable getters to
+	   * improve the readability of your assertions. They
+	   * do not provide testing capabilities unless they
+	   * have been overwritten by a plugin.
+	   *
+	   * **Chains**
+	   *
+	   * - to
+	   * - be
+	   * - been
+	   * - is
+	   * - that
+	   * - which
+	   * - and
+	   * - has
+	   * - have
+	   * - with
+	   * - at
+	   * - of
+	   * - same
+	   *
+	   * @name language chains
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  ['to', 'be', 'been', 'is', 'and', 'has', 'have', 'with', 'that', 'which', 'at', 'of', 'same'].forEach(function (chain) {
+	    Assertion.addProperty(chain, function () {
+	      return this;
+	    });
+	  });
+
+	  /**
+	   * ### .not
+	   *
+	   * Negates any of assertions following in the chain.
+	   *
+	   *     expect(foo).to.not.equal('bar');
+	   *     expect(goodFn).to.not.throw(Error);
+	   *     expect({ foo: 'baz' }).to.have.property('foo')
+	   *       .and.not.equal('bar');
+	   *
+	   * @name not
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('not', function () {
+	    flag(this, 'negate', true);
+	  });
+
+	  /**
+	   * ### .deep
+	   *
+	   * Sets the `deep` flag, later used by the `equal` and
+	   * `property` assertions.
+	   *
+	   *     expect(foo).to.deep.equal({ bar: 'baz' });
+	   *     expect({ foo: { bar: { baz: 'quux' } } })
+	   *       .to.have.deep.property('foo.bar.baz', 'quux');
+	   *
+	   * `.deep.property` special characters can be escaped
+	   * by adding two slashes before the `.` or `[]`.
+	   *
+	   *     var deepCss = { '.link': { '[target]': 42 }};
+	   *     expect(deepCss).to.have.deep.property('\\.link.\\[target\\]', 42);
+	   *
+	   * @name deep
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('deep', function () {
+	    flag(this, 'deep', true);
+	  });
+
+	  /**
+	   * ### .any
+	   *
+	   * Sets the `any` flag, (opposite of the `all` flag)
+	   * later used in the `keys` assertion.
+	   *
+	   *     expect(foo).to.have.any.keys('bar', 'baz');
+	   *
+	   * @name any
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('any', function () {
+	    flag(this, 'any', true);
+	    flag(this, 'all', false);
+	  });
+
+	  /**
+	   * ### .all
+	   *
+	   * Sets the `all` flag (opposite of the `any` flag)
+	   * later used by the `keys` assertion.
+	   *
+	   *     expect(foo).to.have.all.keys('bar', 'baz');
+	   *
+	   * @name all
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('all', function () {
+	    flag(this, 'all', true);
+	    flag(this, 'any', false);
+	  });
+
+	  /**
+	   * ### .a(type)
+	   *
+	   * The `a` and `an` assertions are aliases that can be
+	   * used either as language chains or to assert a value's
+	   * type.
+	   *
+	   *     // typeof
+	   *     expect('test').to.be.a('string');
+	   *     expect({ foo: 'bar' }).to.be.an('object');
+	   *     expect(null).to.be.a('null');
+	   *     expect(undefined).to.be.an('undefined');
+	   *     expect(new Error).to.be.an('error');
+	   *     expect(new Promise).to.be.a('promise');
+	   *     expect(new Float32Array()).to.be.a('float32array');
+	   *     expect(Symbol()).to.be.a('symbol');
+	   *
+	   *     // es6 overrides
+	   *     expect({[Symbol.toStringTag]:()=>'foo'}).to.be.a('foo');
+	   *
+	   *     // language chain
+	   *     expect(foo).to.be.an.instanceof(Foo);
+	   *
+	   * @name a
+	   * @alias an
+	   * @param {String} type
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function an(type, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    type = type.toLowerCase();
+	    var obj = flag(this, 'object'),
+	        article = ~['a', 'e', 'i', 'o', 'u'].indexOf(type.charAt(0)) ? 'an ' : 'a ';
+
+	    this.assert(type === _.type(obj), 'expected #{this} to be ' + article + type, 'expected #{this} not to be ' + article + type);
+	  }
+
+	  Assertion.addChainableMethod('an', an);
+	  Assertion.addChainableMethod('a', an);
+
+	  /**
+	   * ### .include(value)
+	   *
+	   * The `include` and `contain` assertions can be used as either property
+	   * based language chains or as methods to assert the inclusion of an object
+	   * in an array or a substring in a string. When used as language chains,
+	   * they toggle the `contains` flag for the `keys` assertion.
+	   *
+	   *     expect([1,2,3]).to.include(2);
+	   *     expect('foobar').to.contain('foo');
+	   *     expect({ foo: 'bar', hello: 'universe' }).to.include.keys('foo');
+	   *
+	   * @name include
+	   * @alias contain
+	   * @alias includes
+	   * @alias contains
+	   * @param {Object|String|Number} obj
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function includeChainingBehavior() {
+	    flag(this, 'contains', true);
+	  }
+
+	  function include(val, msg) {
+	    _.expectTypes(this, ['array', 'object', 'string']);
+
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    var expected = false;
+
+	    if (_.type(obj) === 'array' && _.type(val) === 'object') {
+	      for (var i in obj) {
+	        if (_.eql(obj[i], val)) {
+	          expected = true;
+	          break;
+	        }
+	      }
+	    } else if (_.type(val) === 'object') {
+	      if (!flag(this, 'negate')) {
+	        for (var k in val) {
+	          new Assertion(obj).property(k, val[k]);
+	        }return;
+	      }
+	      var subset = {};
+	      for (var k in val) {
+	        subset[k] = obj[k];
+	      }expected = _.eql(subset, val);
+	    } else {
+	      expected = obj != undefined && ~obj.indexOf(val);
+	    }
+	    this.assert(expected, 'expected #{this} to include ' + _.inspect(val), 'expected #{this} to not include ' + _.inspect(val));
+	  }
+
+	  Assertion.addChainableMethod('include', include, includeChainingBehavior);
+	  Assertion.addChainableMethod('contain', include, includeChainingBehavior);
+	  Assertion.addChainableMethod('contains', include, includeChainingBehavior);
+	  Assertion.addChainableMethod('includes', include, includeChainingBehavior);
+
+	  /**
+	   * ### .ok
+	   *
+	   * Asserts that the target is truthy.
+	   *
+	   *     expect('everything').to.be.ok;
+	   *     expect(1).to.be.ok;
+	   *     expect(false).to.not.be.ok;
+	   *     expect(undefined).to.not.be.ok;
+	   *     expect(null).to.not.be.ok;
+	   *
+	   * @name ok
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('ok', function () {
+	    this.assert(flag(this, 'object'), 'expected #{this} to be truthy', 'expected #{this} to be falsy');
+	  });
+
+	  /**
+	   * ### .true
+	   *
+	   * Asserts that the target is `true`.
+	   *
+	   *     expect(true).to.be.true;
+	   *     expect(1).to.not.be.true;
+	   *
+	   * @name true
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('true', function () {
+	    this.assert(true === flag(this, 'object'), 'expected #{this} to be true', 'expected #{this} to be false', this.negate ? false : true);
+	  });
+
+	  /**
+	   * ### .false
+	   *
+	   * Asserts that the target is `false`.
+	   *
+	   *     expect(false).to.be.false;
+	   *     expect(0).to.not.be.false;
+	   *
+	   * @name false
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('false', function () {
+	    this.assert(false === flag(this, 'object'), 'expected #{this} to be false', 'expected #{this} to be true', this.negate ? true : false);
+	  });
+
+	  /**
+	   * ### .null
+	   *
+	   * Asserts that the target is `null`.
+	   *
+	   *     expect(null).to.be.null;
+	   *     expect(undefined).to.not.be.null;
+	   *
+	   * @name null
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('null', function () {
+	    this.assert(null === flag(this, 'object'), 'expected #{this} to be null', 'expected #{this} not to be null');
+	  });
+
+	  /**
+	   * ### .undefined
+	   *
+	   * Asserts that the target is `undefined`.
+	   *
+	   *     expect(undefined).to.be.undefined;
+	   *     expect(null).to.not.be.undefined;
+	   *
+	   * @name undefined
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('undefined', function () {
+	    this.assert(undefined === flag(this, 'object'), 'expected #{this} to be undefined', 'expected #{this} not to be undefined');
+	  });
+
+	  /**
+	   * ### .NaN
+	   * Asserts that the target is `NaN`.
+	   *
+	   *     expect('foo').to.be.NaN;
+	   *     expect(4).not.to.be.NaN;
+	   *
+	   * @name NaN
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('NaN', function () {
+	    this.assert(isNaN(flag(this, 'object')), 'expected #{this} to be NaN', 'expected #{this} not to be NaN');
+	  });
+
+	  /**
+	   * ### .exist
+	   *
+	   * Asserts that the target is neither `null` nor `undefined`.
+	   *
+	   *     var foo = 'hi'
+	   *       , bar = null
+	   *       , baz;
+	   *
+	   *     expect(foo).to.exist;
+	   *     expect(bar).to.not.exist;
+	   *     expect(baz).to.not.exist;
+	   *
+	   * @name exist
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('exist', function () {
+	    this.assert(null != flag(this, 'object'), 'expected #{this} to exist', 'expected #{this} to not exist');
+	  });
+
+	  /**
+	   * ### .empty
+	   *
+	   * Asserts that the target's length is `0`. For arrays and strings, it checks
+	   * the `length` property. For objects, it gets the count of
+	   * enumerable keys.
+	   *
+	   *     expect([]).to.be.empty;
+	   *     expect('').to.be.empty;
+	   *     expect({}).to.be.empty;
+	   *
+	   * @name empty
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('empty', function () {
+	    var obj = flag(this, 'object'),
+	        expected = obj;
+
+	    if (Array.isArray(obj) || 'string' === typeof object) {
+	      expected = obj.length;
+	    } else if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object') {
+	      expected = Object.keys(obj).length;
+	    }
+
+	    this.assert(!expected, 'expected #{this} to be empty', 'expected #{this} not to be empty');
+	  });
+
+	  /**
+	   * ### .arguments
+	   *
+	   * Asserts that the target is an arguments object.
+	   *
+	   *     function test () {
+	   *       expect(arguments).to.be.arguments;
+	   *     }
+	   *
+	   * @name arguments
+	   * @alias Arguments
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function checkArguments() {
+	    var obj = flag(this, 'object'),
+	        type = Object.prototype.toString.call(obj);
+	    this.assert('[object Arguments]' === type, 'expected #{this} to be arguments but got ' + type, 'expected #{this} to not be arguments');
+	  }
+
+	  Assertion.addProperty('arguments', checkArguments);
+	  Assertion.addProperty('Arguments', checkArguments);
+
+	  /**
+	   * ### .equal(value)
+	   *
+	   * Asserts that the target is strictly equal (`===`) to `value`.
+	   * Alternately, if the `deep` flag is set, asserts that
+	   * the target is deeply equal to `value`.
+	   *
+	   *     expect('hello').to.equal('hello');
+	   *     expect(42).to.equal(42);
+	   *     expect(1).to.not.equal(true);
+	   *     expect({ foo: 'bar' }).to.not.equal({ foo: 'bar' });
+	   *     expect({ foo: 'bar' }).to.deep.equal({ foo: 'bar' });
+	   *
+	   * @name equal
+	   * @alias equals
+	   * @alias eq
+	   * @alias deep.equal
+	   * @param {Mixed} value
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertEqual(val, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    if (flag(this, 'deep')) {
+	      return this.eql(val);
+	    } else {
+	      this.assert(val === obj, 'expected #{this} to equal #{exp}', 'expected #{this} to not equal #{exp}', val, this._obj, true);
+	    }
+	  }
+
+	  Assertion.addMethod('equal', assertEqual);
+	  Assertion.addMethod('equals', assertEqual);
+	  Assertion.addMethod('eq', assertEqual);
+
+	  /**
+	   * ### .eql(value)
+	   *
+	   * Asserts that the target is deeply equal to `value`.
+	   *
+	   *     expect({ foo: 'bar' }).to.eql({ foo: 'bar' });
+	   *     expect([ 1, 2, 3 ]).to.eql([ 1, 2, 3 ]);
+	   *
+	   * @name eql
+	   * @alias eqls
+	   * @param {Mixed} value
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertEql(obj, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    this.assert(_.eql(obj, flag(this, 'object')), 'expected #{this} to deeply equal #{exp}', 'expected #{this} to not deeply equal #{exp}', obj, this._obj, true);
+	  }
+
+	  Assertion.addMethod('eql', assertEql);
+	  Assertion.addMethod('eqls', assertEql);
+
+	  /**
+	   * ### .above(value)
+	   *
+	   * Asserts that the target is greater than `value`.
+	   *
+	   *     expect(10).to.be.above(5);
+	   *
+	   * Can also be used in conjunction with `length` to
+	   * assert a minimum length. The benefit being a
+	   * more informative error message than if the length
+	   * was supplied directly.
+	   *
+	   *     expect('foo').to.have.length.above(2);
+	   *     expect([ 1, 2, 3 ]).to.have.length.above(2);
+	   *
+	   * @name above
+	   * @alias gt
+	   * @alias greaterThan
+	   * @param {Number} value
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertAbove(n, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    if (flag(this, 'doLength')) {
+	      new Assertion(obj, msg).to.have.property('length');
+	      var len = obj.length;
+	      this.assert(len > n, 'expected #{this} to have a length above #{exp} but got #{act}', 'expected #{this} to not have a length above #{exp}', n, len);
+	    } else {
+	      this.assert(obj > n, 'expected #{this} to be above ' + n, 'expected #{this} to be at most ' + n);
+	    }
+	  }
+
+	  Assertion.addMethod('above', assertAbove);
+	  Assertion.addMethod('gt', assertAbove);
+	  Assertion.addMethod('greaterThan', assertAbove);
+
+	  /**
+	   * ### .least(value)
+	   *
+	   * Asserts that the target is greater than or equal to `value`.
+	   *
+	   *     expect(10).to.be.at.least(10);
+	   *
+	   * Can also be used in conjunction with `length` to
+	   * assert a minimum length. The benefit being a
+	   * more informative error message than if the length
+	   * was supplied directly.
+	   *
+	   *     expect('foo').to.have.length.of.at.least(2);
+	   *     expect([ 1, 2, 3 ]).to.have.length.of.at.least(3);
+	   *
+	   * @name least
+	   * @alias gte
+	   * @param {Number} value
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertLeast(n, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    if (flag(this, 'doLength')) {
+	      new Assertion(obj, msg).to.have.property('length');
+	      var len = obj.length;
+	      this.assert(len >= n, 'expected #{this} to have a length at least #{exp} but got #{act}', 'expected #{this} to have a length below #{exp}', n, len);
+	    } else {
+	      this.assert(obj >= n, 'expected #{this} to be at least ' + n, 'expected #{this} to be below ' + n);
+	    }
+	  }
+
+	  Assertion.addMethod('least', assertLeast);
+	  Assertion.addMethod('gte', assertLeast);
+
+	  /**
+	   * ### .below(value)
+	   *
+	   * Asserts that the target is less than `value`.
+	   *
+	   *     expect(5).to.be.below(10);
+	   *
+	   * Can also be used in conjunction with `length` to
+	   * assert a maximum length. The benefit being a
+	   * more informative error message than if the length
+	   * was supplied directly.
+	   *
+	   *     expect('foo').to.have.length.below(4);
+	   *     expect([ 1, 2, 3 ]).to.have.length.below(4);
+	   *
+	   * @name below
+	   * @alias lt
+	   * @alias lessThan
+	   * @param {Number} value
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertBelow(n, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    if (flag(this, 'doLength')) {
+	      new Assertion(obj, msg).to.have.property('length');
+	      var len = obj.length;
+	      this.assert(len < n, 'expected #{this} to have a length below #{exp} but got #{act}', 'expected #{this} to not have a length below #{exp}', n, len);
+	    } else {
+	      this.assert(obj < n, 'expected #{this} to be below ' + n, 'expected #{this} to be at least ' + n);
+	    }
+	  }
+
+	  Assertion.addMethod('below', assertBelow);
+	  Assertion.addMethod('lt', assertBelow);
+	  Assertion.addMethod('lessThan', assertBelow);
+
+	  /**
+	   * ### .most(value)
+	   *
+	   * Asserts that the target is less than or equal to `value`.
+	   *
+	   *     expect(5).to.be.at.most(5);
+	   *
+	   * Can also be used in conjunction with `length` to
+	   * assert a maximum length. The benefit being a
+	   * more informative error message than if the length
+	   * was supplied directly.
+	   *
+	   *     expect('foo').to.have.length.of.at.most(4);
+	   *     expect([ 1, 2, 3 ]).to.have.length.of.at.most(3);
+	   *
+	   * @name most
+	   * @alias lte
+	   * @param {Number} value
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertMost(n, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    if (flag(this, 'doLength')) {
+	      new Assertion(obj, msg).to.have.property('length');
+	      var len = obj.length;
+	      this.assert(len <= n, 'expected #{this} to have a length at most #{exp} but got #{act}', 'expected #{this} to have a length above #{exp}', n, len);
+	    } else {
+	      this.assert(obj <= n, 'expected #{this} to be at most ' + n, 'expected #{this} to be above ' + n);
+	    }
+	  }
+
+	  Assertion.addMethod('most', assertMost);
+	  Assertion.addMethod('lte', assertMost);
+
+	  /**
+	   * ### .within(start, finish)
+	   *
+	   * Asserts that the target is within a range.
+	   *
+	   *     expect(7).to.be.within(5,10);
+	   *
+	   * Can also be used in conjunction with `length` to
+	   * assert a length range. The benefit being a
+	   * more informative error message than if the length
+	   * was supplied directly.
+	   *
+	   *     expect('foo').to.have.length.within(2,4);
+	   *     expect([ 1, 2, 3 ]).to.have.length.within(2,4);
+	   *
+	   * @name within
+	   * @param {Number} start lowerbound inclusive
+	   * @param {Number} finish upperbound inclusive
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addMethod('within', function (start, finish, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object'),
+	        range = start + '..' + finish;
+	    if (flag(this, 'doLength')) {
+	      new Assertion(obj, msg).to.have.property('length');
+	      var len = obj.length;
+	      this.assert(len >= start && len <= finish, 'expected #{this} to have a length within ' + range, 'expected #{this} to not have a length within ' + range);
+	    } else {
+	      this.assert(obj >= start && obj <= finish, 'expected #{this} to be within ' + range, 'expected #{this} to not be within ' + range);
+	    }
+	  });
+
+	  /**
+	   * ### .instanceof(constructor)
+	   *
+	   * Asserts that the target is an instance of `constructor`.
+	   *
+	   *     var Tea = function (name) { this.name = name; }
+	   *       , Chai = new Tea('chai');
+	   *
+	   *     expect(Chai).to.be.an.instanceof(Tea);
+	   *     expect([ 1, 2, 3 ]).to.be.instanceof(Array);
+	   *
+	   * @name instanceof
+	   * @param {Constructor} constructor
+	   * @param {String} message _optional_
+	   * @alias instanceOf
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertInstanceOf(constructor, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var name = _.getName(constructor);
+	    this.assert(flag(this, 'object') instanceof constructor, 'expected #{this} to be an instance of ' + name, 'expected #{this} to not be an instance of ' + name);
+	  };
+
+	  Assertion.addMethod('instanceof', assertInstanceOf);
+	  Assertion.addMethod('instanceOf', assertInstanceOf);
+
+	  /**
+	   * ### .property(name, [value])
+	   *
+	   * Asserts that the target has a property `name`, optionally asserting that
+	   * the value of that property is strictly equal to  `value`.
+	   * If the `deep` flag is set, you can use dot- and bracket-notation for deep
+	   * references into objects and arrays.
+	   *
+	   *     // simple referencing
+	   *     var obj = { foo: 'bar' };
+	   *     expect(obj).to.have.property('foo');
+	   *     expect(obj).to.have.property('foo', 'bar');
+	   *
+	   *     // deep referencing
+	   *     var deepObj = {
+	   *         green: { tea: 'matcha' }
+	   *       , teas: [ 'chai', 'matcha', { tea: 'konacha' } ]
+	   *     };
+	   *
+	   *     expect(deepObj).to.have.deep.property('green.tea', 'matcha');
+	   *     expect(deepObj).to.have.deep.property('teas[1]', 'matcha');
+	   *     expect(deepObj).to.have.deep.property('teas[2].tea', 'konacha');
+	   *
+	   * You can also use an array as the starting point of a `deep.property`
+	   * assertion, or traverse nested arrays.
+	   *
+	   *     var arr = [
+	   *         [ 'chai', 'matcha', 'konacha' ]
+	   *       , [ { tea: 'chai' }
+	   *         , { tea: 'matcha' }
+	   *         , { tea: 'konacha' } ]
+	   *     ];
+	   *
+	   *     expect(arr).to.have.deep.property('[0][1]', 'matcha');
+	   *     expect(arr).to.have.deep.property('[1][2].tea', 'konacha');
+	   *
+	   * Furthermore, `property` changes the subject of the assertion
+	   * to be the value of that property from the original object. This
+	   * permits for further chainable assertions on that property.
+	   *
+	   *     expect(obj).to.have.property('foo')
+	   *       .that.is.a('string');
+	   *     expect(deepObj).to.have.property('green')
+	   *       .that.is.an('object')
+	   *       .that.deep.equals({ tea: 'matcha' });
+	   *     expect(deepObj).to.have.property('teas')
+	   *       .that.is.an('array')
+	   *       .with.deep.property('[2]')
+	   *         .that.deep.equals({ tea: 'konacha' });
+	   *
+	   * Note that dots and bracket in `name` must be backslash-escaped when
+	   * the `deep` flag is set, while they must NOT be escaped when the `deep`
+	   * flag is not set.
+	   *
+	   *     // simple referencing
+	   *     var css = { '.link[target]': 42 };
+	   *     expect(css).to.have.property('.link[target]', 42);
+	   *
+	   *     // deep referencing
+	   *     var deepCss = { '.link': { '[target]': 42 }};
+	   *     expect(deepCss).to.have.deep.property('\\.link.\\[target\\]', 42);
+	   *
+	   * @name property
+	   * @alias deep.property
+	   * @param {String} name
+	   * @param {Mixed} value (optional)
+	   * @param {String} message _optional_
+	   * @returns value of property for chaining
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addMethod('property', function (name, val, msg) {
+	    if (msg) flag(this, 'message', msg);
+
+	    var isDeep = !!flag(this, 'deep'),
+	        descriptor = isDeep ? 'deep property ' : 'property ',
+	        negate = flag(this, 'negate'),
+	        obj = flag(this, 'object'),
+	        pathInfo = isDeep ? _.getPathInfo(name, obj) : null,
+	        hasProperty = isDeep ? pathInfo.exists : _.hasProperty(name, obj),
+	        value = isDeep ? pathInfo.value : obj[name];
+
+	    if (negate && arguments.length > 1) {
+	      if (undefined === value) {
+	        msg = msg != null ? msg + ': ' : '';
+	        throw new Error(msg + _.inspect(obj) + ' has no ' + descriptor + _.inspect(name));
+	      }
+	    } else {
+	      this.assert(hasProperty, 'expected #{this} to have a ' + descriptor + _.inspect(name), 'expected #{this} to not have ' + descriptor + _.inspect(name));
+	    }
+
+	    if (arguments.length > 1) {
+	      this.assert(val === value, 'expected #{this} to have a ' + descriptor + _.inspect(name) + ' of #{exp}, but got #{act}', 'expected #{this} to not have a ' + descriptor + _.inspect(name) + ' of #{act}', val, value);
+	    }
+
+	    flag(this, 'object', value);
+	  });
+
+	  /**
+	   * ### .ownProperty(name)
+	   *
+	   * Asserts that the target has an own property `name`.
+	   *
+	   *     expect('test').to.have.ownProperty('length');
+	   *
+	   * @name ownProperty
+	   * @alias haveOwnProperty
+	   * @param {String} name
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertOwnProperty(name, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    this.assert(obj.hasOwnProperty(name), 'expected #{this} to have own property ' + _.inspect(name), 'expected #{this} to not have own property ' + _.inspect(name));
+	  }
+
+	  Assertion.addMethod('ownProperty', assertOwnProperty);
+	  Assertion.addMethod('haveOwnProperty', assertOwnProperty);
+
+	  /**
+	   * ### .ownPropertyDescriptor(name[, descriptor[, message]])
+	   *
+	   * Asserts that the target has an own property descriptor `name`, that optionally matches `descriptor`.
+	   *
+	   *     expect('test').to.have.ownPropertyDescriptor('length');
+	   *     expect('test').to.have.ownPropertyDescriptor('length', { enumerable: false, configurable: false, writable: false, value: 4 });
+	   *     expect('test').not.to.have.ownPropertyDescriptor('length', { enumerable: false, configurable: false, writable: false, value: 3 });
+	   *     expect('test').ownPropertyDescriptor('length').to.have.property('enumerable', false);
+	   *     expect('test').ownPropertyDescriptor('length').to.have.keys('value');
+	   *
+	   * @name ownPropertyDescriptor
+	   * @alias haveOwnPropertyDescriptor
+	   * @param {String} name
+	   * @param {Object} descriptor _optional_
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertOwnPropertyDescriptor(name, descriptor, msg) {
+	    if (typeof descriptor === 'string') {
+	      msg = descriptor;
+	      descriptor = null;
+	    }
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    var actualDescriptor = Object.getOwnPropertyDescriptor(Object(obj), name);
+	    if (actualDescriptor && descriptor) {
+	      this.assert(_.eql(descriptor, actualDescriptor), 'expected the own property descriptor for ' + _.inspect(name) + ' on #{this} to match ' + _.inspect(descriptor) + ', got ' + _.inspect(actualDescriptor), 'expected the own property descriptor for ' + _.inspect(name) + ' on #{this} to not match ' + _.inspect(descriptor), descriptor, actualDescriptor, true);
+	    } else {
+	      this.assert(actualDescriptor, 'expected #{this} to have an own property descriptor for ' + _.inspect(name), 'expected #{this} to not have an own property descriptor for ' + _.inspect(name));
+	    }
+	    flag(this, 'object', actualDescriptor);
+	  }
+
+	  Assertion.addMethod('ownPropertyDescriptor', assertOwnPropertyDescriptor);
+	  Assertion.addMethod('haveOwnPropertyDescriptor', assertOwnPropertyDescriptor);
+
+	  /**
+	   * ### .length
+	   *
+	   * Sets the `doLength` flag later used as a chain precursor to a value
+	   * comparison for the `length` property.
+	   *
+	   *     expect('foo').to.have.length.above(2);
+	   *     expect([ 1, 2, 3 ]).to.have.length.above(2);
+	   *     expect('foo').to.have.length.below(4);
+	   *     expect([ 1, 2, 3 ]).to.have.length.below(4);
+	   *     expect('foo').to.have.length.within(2,4);
+	   *     expect([ 1, 2, 3 ]).to.have.length.within(2,4);
+	   *
+	   * *Deprecation notice:* Using `length` as an assertion will be deprecated
+	   * in version 2.4.0 and removed in 3.0.0. Code using the old style of
+	   * asserting for `length` property value using `length(value)` should be
+	   * switched to use `lengthOf(value)` instead.
+	   *
+	   * @name length
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  /**
+	   * ### .lengthOf(value[, message])
+	   *
+	   * Asserts that the target's `length` property has
+	   * the expected value.
+	   *
+	   *     expect([ 1, 2, 3]).to.have.lengthOf(3);
+	   *     expect('foobar').to.have.lengthOf(6);
+	   *
+	   * @name lengthOf
+	   * @param {Number} length
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertLengthChain() {
+	    flag(this, 'doLength', true);
+	  }
+
+	  function assertLength(n, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    new Assertion(obj, msg).to.have.property('length');
+	    var len = obj.length;
+
+	    this.assert(len == n, 'expected #{this} to have a length of #{exp} but got #{act}', 'expected #{this} to not have a length of #{act}', n, len);
+	  }
+
+	  Assertion.addChainableMethod('length', assertLength, assertLengthChain);
+	  Assertion.addMethod('lengthOf', assertLength);
+
+	  /**
+	   * ### .match(regexp)
+	   *
+	   * Asserts that the target matches a regular expression.
+	   *
+	   *     expect('foobar').to.match(/^foo/);
+	   *
+	   * @name match
+	   * @alias matches
+	   * @param {RegExp} RegularExpression
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+	  function assertMatch(re, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    this.assert(re.exec(obj), 'expected #{this} to match ' + re, 'expected #{this} not to match ' + re);
+	  }
+
+	  Assertion.addMethod('match', assertMatch);
+	  Assertion.addMethod('matches', assertMatch);
+
+	  /**
+	   * ### .string(string)
+	   *
+	   * Asserts that the string target contains another string.
+	   *
+	   *     expect('foobar').to.have.string('bar');
+	   *
+	   * @name string
+	   * @param {String} string
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addMethod('string', function (str, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    new Assertion(obj, msg).is.a('string');
+
+	    this.assert(~obj.indexOf(str), 'expected #{this} to contain ' + _.inspect(str), 'expected #{this} to not contain ' + _.inspect(str));
+	  });
+
+	  /**
+	   * ### .keys(key1, [key2], [...])
+	   *
+	   * Asserts that the target contains any or all of the passed-in keys.
+	   * Use in combination with `any`, `all`, `contains`, or `have` will affect
+	   * what will pass.
+	   *
+	   * When used in conjunction with `any`, at least one key that is passed
+	   * in must exist in the target object. This is regardless whether or not
+	   * the `have` or `contain` qualifiers are used. Note, either `any` or `all`
+	   * should be used in the assertion. If neither are used, the assertion is
+	   * defaulted to `all`.
+	   *
+	   * When both `all` and `contain` are used, the target object must have at
+	   * least all of the passed-in keys but may have more keys not listed.
+	   *
+	   * When both `all` and `have` are used, the target object must both contain
+	   * all of the passed-in keys AND the number of keys in the target object must
+	   * match the number of keys passed in (in other words, a target object must
+	   * have all and only all of the passed-in keys).
+	   *
+	   *     expect({ foo: 1, bar: 2 }).to.have.any.keys('foo', 'baz');
+	   *     expect({ foo: 1, bar: 2 }).to.have.any.keys('foo');
+	   *     expect({ foo: 1, bar: 2 }).to.contain.any.keys('bar', 'baz');
+	   *     expect({ foo: 1, bar: 2 }).to.contain.any.keys(['foo']);
+	   *     expect({ foo: 1, bar: 2 }).to.contain.any.keys({'foo': 6});
+	   *     expect({ foo: 1, bar: 2 }).to.have.all.keys(['bar', 'foo']);
+	   *     expect({ foo: 1, bar: 2 }).to.have.all.keys({'bar': 6, 'foo': 7});
+	   *     expect({ foo: 1, bar: 2, baz: 3 }).to.contain.all.keys(['bar', 'foo']);
+	   *     expect({ foo: 1, bar: 2, baz: 3 }).to.contain.all.keys({'bar': 6});
+	   *
+	   *
+	   * @name keys
+	   * @alias key
+	   * @param {...String|Array|Object} keys
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertKeys(keys) {
+	    var obj = flag(this, 'object'),
+	        str,
+	        ok = true,
+	        mixedArgsMsg = 'keys must be given single argument of Array|Object|String, or multiple String arguments';
+
+	    switch (_.type(keys)) {
+	      case "array":
+	        if (arguments.length > 1) throw new Error(mixedArgsMsg);
+	        break;
+	      case "object":
+	        if (arguments.length > 1) throw new Error(mixedArgsMsg);
+	        keys = Object.keys(keys);
+	        break;
+	      default:
+	        keys = Array.prototype.slice.call(arguments);
+	    }
+
+	    if (!keys.length) throw new Error('keys required');
+
+	    var actual = Object.keys(obj),
+	        expected = keys,
+	        len = keys.length,
+	        any = flag(this, 'any'),
+	        all = flag(this, 'all');
+
+	    if (!any && !all) {
+	      all = true;
+	    }
+
+	    // Has any
+	    if (any) {
+	      var intersection = expected.filter(function (key) {
+	        return ~actual.indexOf(key);
+	      });
+	      ok = intersection.length > 0;
+	    }
+
+	    // Has all
+	    if (all) {
+	      ok = keys.every(function (key) {
+	        return ~actual.indexOf(key);
+	      });
+	      if (!flag(this, 'negate') && !flag(this, 'contains')) {
+	        ok = ok && keys.length == actual.length;
+	      }
+	    }
+
+	    // Key string
+	    if (len > 1) {
+	      keys = keys.map(function (key) {
+	        return _.inspect(key);
+	      });
+	      var last = keys.pop();
+	      if (all) {
+	        str = keys.join(', ') + ', and ' + last;
+	      }
+	      if (any) {
+	        str = keys.join(', ') + ', or ' + last;
+	      }
+	    } else {
+	      str = _.inspect(keys[0]);
+	    }
+
+	    // Form
+	    str = (len > 1 ? 'keys ' : 'key ') + str;
+
+	    // Have / include
+	    str = (flag(this, 'contains') ? 'contain ' : 'have ') + str;
+
+	    // Assertion
+	    this.assert(ok, 'expected #{this} to ' + str, 'expected #{this} to not ' + str, expected.slice(0).sort(), actual.sort(), true);
+	  }
+
+	  Assertion.addMethod('keys', assertKeys);
+	  Assertion.addMethod('key', assertKeys);
+
+	  /**
+	   * ### .throw(constructor)
+	   *
+	   * Asserts that the function target will throw a specific error, or specific type of error
+	   * (as determined using `instanceof`), optionally with a RegExp or string inclusion test
+	   * for the error's message.
+	   *
+	   *     var err = new ReferenceError('This is a bad function.');
+	   *     var fn = function () { throw err; }
+	   *     expect(fn).to.throw(ReferenceError);
+	   *     expect(fn).to.throw(Error);
+	   *     expect(fn).to.throw(/bad function/);
+	   *     expect(fn).to.not.throw('good function');
+	   *     expect(fn).to.throw(ReferenceError, /bad function/);
+	   *     expect(fn).to.throw(err);
+	   *
+	   * Please note that when a throw expectation is negated, it will check each
+	   * parameter independently, starting with error constructor type. The appropriate way
+	   * to check for the existence of a type of error but for a message that does not match
+	   * is to use `and`.
+	   *
+	   *     expect(fn).to.throw(ReferenceError)
+	   *        .and.not.throw(/good function/);
+	   *
+	   * @name throw
+	   * @alias throws
+	   * @alias Throw
+	   * @param {ErrorConstructor} constructor
+	   * @param {String|RegExp} expected error message
+	   * @param {String} message _optional_
+	   * @see https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error#Error_types
+	   * @returns error for chaining (null if no error)
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertThrows(constructor, errMsg, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    new Assertion(obj, msg).is.a('function');
+
+	    var thrown = false,
+	        desiredError = null,
+	        name = null,
+	        thrownError = null;
+
+	    if (arguments.length === 0) {
+	      errMsg = null;
+	      constructor = null;
+	    } else if (constructor && (constructor instanceof RegExp || 'string' === typeof constructor)) {
+	      errMsg = constructor;
+	      constructor = null;
+	    } else if (constructor && constructor instanceof Error) {
+	      desiredError = constructor;
+	      constructor = null;
+	      errMsg = null;
+	    } else if (typeof constructor === 'function') {
+	      name = constructor.prototype.name;
+	      if (!name || name === 'Error' && constructor !== Error) {
+	        name = constructor.name || new constructor().name;
+	      }
+	    } else {
+	      constructor = null;
+	    }
+
+	    try {
+	      obj();
+	    } catch (err) {
+	      // first, check desired error
+	      if (desiredError) {
+	        this.assert(err === desiredError, 'expected #{this} to throw #{exp} but #{act} was thrown', 'expected #{this} to not throw #{exp}', desiredError instanceof Error ? desiredError.toString() : desiredError, err instanceof Error ? err.toString() : err);
+
+	        flag(this, 'object', err);
+	        return this;
+	      }
+
+	      // next, check constructor
+	      if (constructor) {
+	        this.assert(err instanceof constructor, 'expected #{this} to throw #{exp} but #{act} was thrown', 'expected #{this} to not throw #{exp} but #{act} was thrown', name, err instanceof Error ? err.toString() : err);
+
+	        if (!errMsg) {
+	          flag(this, 'object', err);
+	          return this;
+	        }
+	      }
+
+	      // next, check message
+	      var message = 'error' === _.type(err) && "message" in err ? err.message : '' + err;
+
+	      if (message != null && errMsg && errMsg instanceof RegExp) {
+	        this.assert(errMsg.exec(message), 'expected #{this} to throw error matching #{exp} but got #{act}', 'expected #{this} to throw error not matching #{exp}', errMsg, message);
+
+	        flag(this, 'object', err);
+	        return this;
+	      } else if (message != null && errMsg && 'string' === typeof errMsg) {
+	        this.assert(~message.indexOf(errMsg), 'expected #{this} to throw error including #{exp} but got #{act}', 'expected #{this} to throw error not including #{act}', errMsg, message);
+
+	        flag(this, 'object', err);
+	        return this;
+	      } else {
+	        thrown = true;
+	        thrownError = err;
+	      }
+	    }
+
+	    var actuallyGot = '',
+	        expectedThrown = name !== null ? name : desiredError ? '#{exp}' //_.inspect(desiredError)
+	    : 'an error';
+
+	    if (thrown) {
+	      actuallyGot = ' but #{act} was thrown';
+	    }
+
+	    this.assert(thrown === true, 'expected #{this} to throw ' + expectedThrown + actuallyGot, 'expected #{this} to not throw ' + expectedThrown + actuallyGot, desiredError instanceof Error ? desiredError.toString() : desiredError, thrownError instanceof Error ? thrownError.toString() : thrownError);
+
+	    flag(this, 'object', thrownError);
+	  };
+
+	  Assertion.addMethod('throw', assertThrows);
+	  Assertion.addMethod('throws', assertThrows);
+	  Assertion.addMethod('Throw', assertThrows);
+
+	  /**
+	   * ### .respondTo(method)
+	   *
+	   * Asserts that the object or class target will respond to a method.
+	   *
+	   *     Klass.prototype.bar = function(){};
+	   *     expect(Klass).to.respondTo('bar');
+	   *     expect(obj).to.respondTo('bar');
+	   *
+	   * To check if a constructor will respond to a static function,
+	   * set the `itself` flag.
+	   *
+	   *     Klass.baz = function(){};
+	   *     expect(Klass).itself.to.respondTo('baz');
+	   *
+	   * @name respondTo
+	   * @alias respondsTo
+	   * @param {String} method
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function respondTo(method, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object'),
+	        itself = flag(this, 'itself'),
+	        context = 'function' === _.type(obj) && !itself ? obj.prototype[method] : obj[method];
+
+	    this.assert('function' === typeof context, 'expected #{this} to respond to ' + _.inspect(method), 'expected #{this} to not respond to ' + _.inspect(method));
+	  }
+
+	  Assertion.addMethod('respondTo', respondTo);
+	  Assertion.addMethod('respondsTo', respondTo);
+
+	  /**
+	   * ### .itself
+	   *
+	   * Sets the `itself` flag, later used by the `respondTo` assertion.
+	   *
+	   *     function Foo() {}
+	   *     Foo.bar = function() {}
+	   *     Foo.prototype.baz = function() {}
+	   *
+	   *     expect(Foo).itself.to.respondTo('bar');
+	   *     expect(Foo).itself.not.to.respondTo('baz');
+	   *
+	   * @name itself
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('itself', function () {
+	    flag(this, 'itself', true);
+	  });
+
+	  /**
+	   * ### .satisfy(method)
+	   *
+	   * Asserts that the target passes a given truth test.
+	   *
+	   *     expect(1).to.satisfy(function(num) { return num > 0; });
+	   *
+	   * @name satisfy
+	   * @alias satisfies
+	   * @param {Function} matcher
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function satisfy(matcher, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+	    var result = matcher(obj);
+	    this.assert(result, 'expected #{this} to satisfy ' + _.objDisplay(matcher), 'expected #{this} to not satisfy' + _.objDisplay(matcher), this.negate ? false : true, result);
+	  }
+
+	  Assertion.addMethod('satisfy', satisfy);
+	  Assertion.addMethod('satisfies', satisfy);
+
+	  /**
+	   * ### .closeTo(expected, delta)
+	   *
+	   * Asserts that the target is equal `expected`, to within a +/- `delta` range.
+	   *
+	   *     expect(1.5).to.be.closeTo(1, 0.5);
+	   *
+	   * @name closeTo
+	   * @alias approximately
+	   * @param {Number} expected
+	   * @param {Number} delta
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function closeTo(expected, delta, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+
+	    new Assertion(obj, msg).is.a('number');
+	    if (_.type(expected) !== 'number' || _.type(delta) !== 'number') {
+	      throw new Error('the arguments to closeTo or approximately must be numbers');
+	    }
+
+	    this.assert(Math.abs(obj - expected) <= delta, 'expected #{this} to be close to ' + expected + ' +/- ' + delta, 'expected #{this} not to be close to ' + expected + ' +/- ' + delta);
+	  }
+
+	  Assertion.addMethod('closeTo', closeTo);
+	  Assertion.addMethod('approximately', closeTo);
+
+	  function isSubsetOf(subset, superset, cmp) {
+	    return subset.every(function (elem) {
+	      if (!cmp) return superset.indexOf(elem) !== -1;
+
+	      return superset.some(function (elem2) {
+	        return cmp(elem, elem2);
+	      });
+	    });
+	  }
+
+	  /**
+	   * ### .members(set)
+	   *
+	   * Asserts that the target is a superset of `set`,
+	   * or that the target and `set` have the same strictly-equal (===) members.
+	   * Alternately, if the `deep` flag is set, set members are compared for deep
+	   * equality.
+	   *
+	   *     expect([1, 2, 3]).to.include.members([3, 2]);
+	   *     expect([1, 2, 3]).to.not.include.members([3, 2, 8]);
+	   *
+	   *     expect([4, 2]).to.have.members([2, 4]);
+	   *     expect([5, 2]).to.not.have.members([5, 2, 1]);
+	   *
+	   *     expect([{ id: 1 }]).to.deep.include.members([{ id: 1 }]);
+	   *
+	   * @name members
+	   * @param {Array} set
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addMethod('members', function (subset, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var obj = flag(this, 'object');
+
+	    new Assertion(obj).to.be.an('array');
+	    new Assertion(subset).to.be.an('array');
+
+	    var cmp = flag(this, 'deep') ? _.eql : undefined;
+
+	    if (flag(this, 'contains')) {
+	      return this.assert(isSubsetOf(subset, obj, cmp), 'expected #{this} to be a superset of #{act}', 'expected #{this} to not be a superset of #{act}', obj, subset);
+	    }
+
+	    this.assert(isSubsetOf(obj, subset, cmp) && isSubsetOf(subset, obj, cmp), 'expected #{this} to have the same members as #{act}', 'expected #{this} to not have the same members as #{act}', obj, subset);
+	  });
+
+	  /**
+	   * ### .oneOf(list)
+	   *
+	   * Assert that a value appears somewhere in the top level of array `list`.
+	   *
+	   *     expect('a').to.be.oneOf(['a', 'b', 'c']);
+	   *     expect(9).to.not.be.oneOf(['z']);
+	   *     expect([3]).to.not.be.oneOf([1, 2, [3]]);
+	   *
+	   *     var three = [3];
+	   *     // for object-types, contents are not compared
+	   *     expect(three).to.not.be.oneOf([1, 2, [3]]);
+	   *     // comparing references works
+	   *     expect(three).to.be.oneOf([1, 2, three]);
+	   *
+	   * @name oneOf
+	   * @param {Array<*>} list
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function oneOf(list, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var expected = flag(this, 'object');
+	    new Assertion(list).to.be.an('array');
+
+	    this.assert(list.indexOf(expected) > -1, 'expected #{this} to be one of #{exp}', 'expected #{this} to not be one of #{exp}', list, expected);
+	  }
+
+	  Assertion.addMethod('oneOf', oneOf);
+
+	  /**
+	   * ### .change(function)
+	   *
+	   * Asserts that a function changes an object property
+	   *
+	   *     var obj = { val: 10 };
+	   *     var fn = function() { obj.val += 3 };
+	   *     var noChangeFn = function() { return 'foo' + 'bar'; }
+	   *     expect(fn).to.change(obj, 'val');
+	   *     expect(noChangeFn).to.not.change(obj, 'val')
+	   *
+	   * @name change
+	   * @alias changes
+	   * @alias Change
+	   * @param {String} object
+	   * @param {String} property name
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertChanges(object, prop, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var fn = flag(this, 'object');
+	    new Assertion(object, msg).to.have.property(prop);
+	    new Assertion(fn).is.a('function');
+
+	    var initial = object[prop];
+	    fn();
+
+	    this.assert(initial !== object[prop], 'expected .' + prop + ' to change', 'expected .' + prop + ' to not change');
+	  }
+
+	  Assertion.addChainableMethod('change', assertChanges);
+	  Assertion.addChainableMethod('changes', assertChanges);
+
+	  /**
+	   * ### .increase(function)
+	   *
+	   * Asserts that a function increases an object property
+	   *
+	   *     var obj = { val: 10 };
+	   *     var fn = function() { obj.val = 15 };
+	   *     expect(fn).to.increase(obj, 'val');
+	   *
+	   * @name increase
+	   * @alias increases
+	   * @alias Increase
+	   * @param {String} object
+	   * @param {String} property name
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertIncreases(object, prop, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var fn = flag(this, 'object');
+	    new Assertion(object, msg).to.have.property(prop);
+	    new Assertion(fn).is.a('function');
+
+	    var initial = object[prop];
+	    fn();
+
+	    this.assert(object[prop] - initial > 0, 'expected .' + prop + ' to increase', 'expected .' + prop + ' to not increase');
+	  }
+
+	  Assertion.addChainableMethod('increase', assertIncreases);
+	  Assertion.addChainableMethod('increases', assertIncreases);
+
+	  /**
+	   * ### .decrease(function)
+	   *
+	   * Asserts that a function decreases an object property
+	   *
+	   *     var obj = { val: 10 };
+	   *     var fn = function() { obj.val = 5 };
+	   *     expect(fn).to.decrease(obj, 'val');
+	   *
+	   * @name decrease
+	   * @alias decreases
+	   * @alias Decrease
+	   * @param {String} object
+	   * @param {String} property name
+	   * @param {String} message _optional_
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  function assertDecreases(object, prop, msg) {
+	    if (msg) flag(this, 'message', msg);
+	    var fn = flag(this, 'object');
+	    new Assertion(object, msg).to.have.property(prop);
+	    new Assertion(fn).is.a('function');
+
+	    var initial = object[prop];
+	    fn();
+
+	    this.assert(object[prop] - initial < 0, 'expected .' + prop + ' to decrease', 'expected .' + prop + ' to not decrease');
+	  }
+
+	  Assertion.addChainableMethod('decrease', assertDecreases);
+	  Assertion.addChainableMethod('decreases', assertDecreases);
+
+	  /**
+	   * ### .extensible
+	   *
+	   * Asserts that the target is extensible (can have new properties added to
+	   * it).
+	   *
+	   *     var nonExtensibleObject = Object.preventExtensions({});
+	   *     var sealedObject = Object.seal({});
+	   *     var frozenObject = Object.freeze({});
+	   *
+	   *     expect({}).to.be.extensible;
+	   *     expect(nonExtensibleObject).to.not.be.extensible;
+	   *     expect(sealedObject).to.not.be.extensible;
+	   *     expect(frozenObject).to.not.be.extensible;
+	   *
+	   * @name extensible
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('extensible', function () {
+	    var obj = flag(this, 'object');
+
+	    // In ES5, if the argument to this method is not an object (a primitive), then it will cause a TypeError.
+	    // In ES6, a non-object argument will be treated as if it was a non-extensible ordinary object, simply return false.
+	    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isExtensible
+	    // The following provides ES6 behavior when a TypeError is thrown under ES5.
+
+	    var isExtensible;
+
+	    try {
+	      isExtensible = Object.isExtensible(obj);
+	    } catch (err) {
+	      if (err instanceof TypeError) isExtensible = false;else throw err;
+	    }
+
+	    this.assert(isExtensible, 'expected #{this} to be extensible', 'expected #{this} to not be extensible');
+	  });
+
+	  /**
+	   * ### .sealed
+	   *
+	   * Asserts that the target is sealed (cannot have new properties added to it
+	   * and its existing properties cannot be removed).
+	   *
+	   *     var sealedObject = Object.seal({});
+	   *     var frozenObject = Object.freeze({});
+	   *
+	   *     expect(sealedObject).to.be.sealed;
+	   *     expect(frozenObject).to.be.sealed;
+	   *     expect({}).to.not.be.sealed;
+	   *
+	   * @name sealed
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('sealed', function () {
+	    var obj = flag(this, 'object');
+
+	    // In ES5, if the argument to this method is not an object (a primitive), then it will cause a TypeError.
+	    // In ES6, a non-object argument will be treated as if it was a sealed ordinary object, simply return true.
+	    // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isSealed
+	    // The following provides ES6 behavior when a TypeError is thrown under ES5.
+
+	    var isSealed;
+
+	    try {
+	      isSealed = Object.isSealed(obj);
+	    } catch (err) {
+	      if (err instanceof TypeError) isSealed = true;else throw err;
+	    }
+
+	    this.assert(isSealed, 'expected #{this} to be sealed', 'expected #{this} to not be sealed');
+	  });
+
+	  /**
+	   * ### .frozen
+	   *
+	   * Asserts that the target is frozen (cannot have new properties added to it
+	   * and its existing properties cannot be modified).
+	   *
+	   *     var frozenObject = Object.freeze({});
+	   *
+	   *     expect(frozenObject).to.be.frozen;
+	   *     expect({}).to.not.be.frozen;
+	   *
+	   * @name frozen
+	   * @namespace BDD
+	   * @api public
+	   */
+
+	  Assertion.addProperty('frozen', function () {
+	    var obj = flag(this, 'object');
+
+	    // In ES5, if the argument to this method is not an object (a primitive), then it will cause a TypeError.
+	    // In ES6, a non-object argument will be treated as if it was a frozen ordinary object, simply return true.
+	    // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isFrozen
+	    // The following provides ES6 behavior when a TypeError is thrown under ES5.
+
+	    var isFrozen;
+
+	    try {
+	      isFrozen = Object.isFrozen(obj);
+	    } catch (err) {
+	      if (err instanceof TypeError) isFrozen = true;else throw err;
+	    }
+
+	    this.assert(isFrozen, 'expected #{this} to be frozen', 'expected #{this} to not be frozen');
+	  });
+	};
+
+/***/ },
+/* 52 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/*!
+	 * chai
+	 * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	module.exports = function (chai, util) {
+	  chai.expect = function (val, message) {
+	    return new chai.Assertion(val, message);
+	  };
+
+	  /**
+	   * ### .fail(actual, expected, [message], [operator])
+	   *
+	   * Throw a failure.
+	   *
+	   * @name fail
+	   * @param {Mixed} actual
+	   * @param {Mixed} expected
+	   * @param {String} message
+	   * @param {String} operator
+	   * @namespace Expect
+	   * @api public
+	   */
+
+	  chai.expect.fail = function (actual, expected, message, operator) {
+	    message = message || 'expect.fail()';
+	    throw new chai.AssertionError(message, {
+	      actual: actual,
+	      expected: expected,
+	      operator: operator
+	    }, chai.expect.fail);
+	  };
+	};
+
+/***/ },
+/* 53 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/*!
+	 * chai
+	 * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	module.exports = function (chai, util) {
+	  var Assertion = chai.Assertion;
+
+	  function loadShould() {
+	    // explicitly define this method as function as to have it's name to include as `ssfi`
+	    function shouldGetter() {
+	      if (this instanceof String || this instanceof Number || this instanceof Boolean) {
+	        return new Assertion(this.valueOf(), null, shouldGetter);
+	      }
+	      return new Assertion(this, null, shouldGetter);
+	    }
+	    function shouldSetter(value) {
+	      // See https://github.com/chaijs/chai/issues/86: this makes
+	      // `whatever.should = someValue` actually set `someValue`, which is
+	      // especially useful for `global.should = require('chai').should()`.
+	      //
+	      // Note that we have to use [[DefineProperty]] instead of [[Put]]
+	      // since otherwise we would trigger this very setter!
+	      Object.defineProperty(this, 'should', {
+	        value: value,
+	        enumerable: true,
+	        configurable: true,
+	        writable: true
+	      });
+	    }
+	    // modify Object.prototype to have `should`
+	    Object.defineProperty(Object.prototype, 'should', {
+	      set: shouldSetter,
+	      get: shouldGetter,
+	      configurable: true
+	    });
+
+	    var should = {};
+
+	    /**
+	     * ### .fail(actual, expected, [message], [operator])
+	     *
+	     * Throw a failure.
+	     *
+	     * @name fail
+	     * @param {Mixed} actual
+	     * @param {Mixed} expected
+	     * @param {String} message
+	     * @param {String} operator
+	     * @namespace Should
+	     * @api public
+	     */
+
+	    should.fail = function (actual, expected, message, operator) {
+	      message = message || 'should.fail()';
+	      throw new chai.AssertionError(message, {
+	        actual: actual,
+	        expected: expected,
+	        operator: operator
+	      }, should.fail);
+	    };
+
+	    /**
+	     * ### .equal(actual, expected, [message])
+	     *
+	     * Asserts non-strict equality (`==`) of `actual` and `expected`.
+	     *
+	     *     should.equal(3, '3', '== coerces values to strings');
+	     *
+	     * @name equal
+	     * @param {Mixed} actual
+	     * @param {Mixed} expected
+	     * @param {String} message
+	     * @namespace Should
+	     * @api public
+	     */
+
+	    should.equal = function (val1, val2, msg) {
+	      new Assertion(val1, msg).to.equal(val2);
+	    };
+
+	    /**
+	     * ### .throw(function, [constructor/string/regexp], [string/regexp], [message])
+	     *
+	     * Asserts that `function` will throw an error that is an instance of
+	     * `constructor`, or alternately that it will throw an error with message
+	     * matching `regexp`.
+	     *
+	     *     should.throw(fn, 'function throws a reference error');
+	     *     should.throw(fn, /function throws a reference error/);
+	     *     should.throw(fn, ReferenceError);
+	     *     should.throw(fn, ReferenceError, 'function throws a reference error');
+	     *     should.throw(fn, ReferenceError, /function throws a reference error/);
+	     *
+	     * @name throw
+	     * @alias Throw
+	     * @param {Function} function
+	     * @param {ErrorConstructor} constructor
+	     * @param {RegExp} regexp
+	     * @param {String} message
+	     * @see https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error#Error_types
+	     * @namespace Should
+	     * @api public
+	     */
+
+	    should.Throw = function (fn, errt, errs, msg) {
+	      new Assertion(fn, msg).to.Throw(errt, errs);
+	    };
+
+	    /**
+	     * ### .exist
+	     *
+	     * Asserts that the target is neither `null` nor `undefined`.
+	     *
+	     *     var foo = 'hi';
+	     *
+	     *     should.exist(foo, 'foo exists');
+	     *
+	     * @name exist
+	     * @namespace Should
+	     * @api public
+	     */
+
+	    should.exist = function (val, msg) {
+	      new Assertion(val, msg).to.exist;
+	    };
+
+	    // negation
+	    should.not = {};
+
+	    /**
+	     * ### .not.equal(actual, expected, [message])
+	     *
+	     * Asserts non-strict inequality (`!=`) of `actual` and `expected`.
+	     *
+	     *     should.not.equal(3, 4, 'these numbers are not equal');
+	     *
+	     * @name not.equal
+	     * @param {Mixed} actual
+	     * @param {Mixed} expected
+	     * @param {String} message
+	     * @namespace Should
+	     * @api public
+	     */
+
+	    should.not.equal = function (val1, val2, msg) {
+	      new Assertion(val1, msg).to.not.equal(val2);
+	    };
+
+	    /**
+	     * ### .throw(function, [constructor/regexp], [message])
+	     *
+	     * Asserts that `function` will _not_ throw an error that is an instance of
+	     * `constructor`, or alternately that it will not throw an error with message
+	     * matching `regexp`.
+	     *
+	     *     should.not.throw(fn, Error, 'function does not throw');
+	     *
+	     * @name not.throw
+	     * @alias not.Throw
+	     * @param {Function} function
+	     * @param {ErrorConstructor} constructor
+	     * @param {RegExp} regexp
+	     * @param {String} message
+	     * @see https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error#Error_types
+	     * @namespace Should
+	     * @api public
+	     */
+
+	    should.not.Throw = function (fn, errt, errs, msg) {
+	      new Assertion(fn, msg).to.not.Throw(errt, errs);
+	    };
+
+	    /**
+	     * ### .not.exist
+	     *
+	     * Asserts that the target is neither `null` nor `undefined`.
+	     *
+	     *     var bar = null;
+	     *
+	     *     should.not.exist(bar, 'bar does not exist');
+	     *
+	     * @name not.exist
+	     * @namespace Should
+	     * @api public
+	     */
+
+	    should.not.exist = function (val, msg) {
+	      new Assertion(val, msg).to.not.exist;
+	    };
+
+	    should['throw'] = should['Throw'];
+	    should.not['throw'] = should.not['Throw'];
+
+	    return should;
+	  };
+
+	  chai.should = loadShould;
+	  chai.Should = loadShould;
+	};
+
+/***/ },
+/* 54 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/*!
+	 * chai
+	 * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+	 * MIT Licensed
+	 */
+
+	module.exports = function (chai, util) {
+
+	  /*!
+	   * Chai dependencies.
+	   */
+
+	  var Assertion = chai.Assertion,
+	      flag = util.flag;
+
+	  /*!
+	   * Module export.
+	   */
+
+	  /**
+	   * ### assert(expression, message)
+	   *
+	   * Write your own test expressions.
+	   *
+	   *     assert('foo' !== 'bar', 'foo is not bar');
+	   *     assert(Array.isArray([]), 'empty arrays are arrays');
+	   *
+	   * @param {Mixed} expression to test for truthiness
+	   * @param {String} message to display on error
+	   * @name assert
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  var assert = chai.assert = function (express, errmsg) {
+	    var test = new Assertion(null, null, chai.assert);
+	    test.assert(express, errmsg, '[ negation message unavailable ]');
+	  };
+
+	  /**
+	   * ### .fail(actual, expected, [message], [operator])
+	   *
+	   * Throw a failure. Node.js `assert` module-compatible.
+	   *
+	   * @name fail
+	   * @param {Mixed} actual
+	   * @param {Mixed} expected
+	   * @param {String} message
+	   * @param {String} operator
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.fail = function (actual, expected, message, operator) {
+	    message = message || 'assert.fail()';
+	    throw new chai.AssertionError(message, {
+	      actual: actual,
+	      expected: expected,
+	      operator: operator
+	    }, assert.fail);
+	  };
+
+	  /**
+	   * ### .isOk(object, [message])
+	   *
+	   * Asserts that `object` is truthy.
+	   *
+	   *     assert.isOk('everything', 'everything is ok');
+	   *     assert.isOk(false, 'this will fail');
+	   *
+	   * @name isOk
+	   * @alias ok
+	   * @param {Mixed} object to test
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isOk = function (val, msg) {
+	    new Assertion(val, msg).is.ok;
+	  };
+
+	  /**
+	   * ### .isNotOk(object, [message])
+	   *
+	   * Asserts that `object` is falsy.
+	   *
+	   *     assert.isNotOk('everything', 'this will fail');
+	   *     assert.isNotOk(false, 'this will pass');
+	   *
+	   * @name isNotOk
+	   * @alias notOk
+	   * @param {Mixed} object to test
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotOk = function (val, msg) {
+	    new Assertion(val, msg).is.not.ok;
+	  };
+
+	  /**
+	   * ### .equal(actual, expected, [message])
+	   *
+	   * Asserts non-strict equality (`==`) of `actual` and `expected`.
+	   *
+	   *     assert.equal(3, '3', '== coerces values to strings');
+	   *
+	   * @name equal
+	   * @param {Mixed} actual
+	   * @param {Mixed} expected
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.equal = function (act, exp, msg) {
+	    var test = new Assertion(act, msg, assert.equal);
+
+	    test.assert(exp == flag(test, 'object'), 'expected #{this} to equal #{exp}', 'expected #{this} to not equal #{act}', exp, act);
+	  };
+
+	  /**
+	   * ### .notEqual(actual, expected, [message])
+	   *
+	   * Asserts non-strict inequality (`!=`) of `actual` and `expected`.
+	   *
+	   *     assert.notEqual(3, 4, 'these numbers are not equal');
+	   *
+	   * @name notEqual
+	   * @param {Mixed} actual
+	   * @param {Mixed} expected
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.notEqual = function (act, exp, msg) {
+	    var test = new Assertion(act, msg, assert.notEqual);
+
+	    test.assert(exp != flag(test, 'object'), 'expected #{this} to not equal #{exp}', 'expected #{this} to equal #{act}', exp, act);
+	  };
+
+	  /**
+	   * ### .strictEqual(actual, expected, [message])
+	   *
+	   * Asserts strict equality (`===`) of `actual` and `expected`.
+	   *
+	   *     assert.strictEqual(true, true, 'these booleans are strictly equal');
+	   *
+	   * @name strictEqual
+	   * @param {Mixed} actual
+	   * @param {Mixed} expected
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.strictEqual = function (act, exp, msg) {
+	    new Assertion(act, msg).to.equal(exp);
+	  };
+
+	  /**
+	   * ### .notStrictEqual(actual, expected, [message])
+	   *
+	   * Asserts strict inequality (`!==`) of `actual` and `expected`.
+	   *
+	   *     assert.notStrictEqual(3, '3', 'no coercion for strict equality');
+	   *
+	   * @name notStrictEqual
+	   * @param {Mixed} actual
+	   * @param {Mixed} expected
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.notStrictEqual = function (act, exp, msg) {
+	    new Assertion(act, msg).to.not.equal(exp);
+	  };
+
+	  /**
+	   * ### .deepEqual(actual, expected, [message])
+	   *
+	   * Asserts that `actual` is deeply equal to `expected`.
+	   *
+	   *     assert.deepEqual({ tea: 'green' }, { tea: 'green' });
+	   *
+	   * @name deepEqual
+	   * @param {Mixed} actual
+	   * @param {Mixed} expected
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.deepEqual = function (act, exp, msg) {
+	    new Assertion(act, msg).to.eql(exp);
+	  };
+
+	  /**
+	   * ### .notDeepEqual(actual, expected, [message])
+	   *
+	   * Assert that `actual` is not deeply equal to `expected`.
+	   *
+	   *     assert.notDeepEqual({ tea: 'green' }, { tea: 'jasmine' });
+	   *
+	   * @name notDeepEqual
+	   * @param {Mixed} actual
+	   * @param {Mixed} expected
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.notDeepEqual = function (act, exp, msg) {
+	    new Assertion(act, msg).to.not.eql(exp);
+	  };
+
+	  /**
+	  * ### .isAbove(valueToCheck, valueToBeAbove, [message])
+	  *
+	  * Asserts `valueToCheck` is strictly greater than (>) `valueToBeAbove`
+	  *
+	  *     assert.isAbove(5, 2, '5 is strictly greater than 2');
+	  *
+	  * @name isAbove
+	  * @param {Mixed} valueToCheck
+	  * @param {Mixed} valueToBeAbove
+	  * @param {String} message
+	  * @namespace Assert
+	  * @api public
+	  */
+
+	  assert.isAbove = function (val, abv, msg) {
+	    new Assertion(val, msg).to.be.above(abv);
+	  };
+
+	  /**
+	  * ### .isAtLeast(valueToCheck, valueToBeAtLeast, [message])
+	  *
+	  * Asserts `valueToCheck` is greater than or equal to (>=) `valueToBeAtLeast`
+	  *
+	  *     assert.isAtLeast(5, 2, '5 is greater or equal to 2');
+	  *     assert.isAtLeast(3, 3, '3 is greater or equal to 3');
+	  *
+	  * @name isAtLeast
+	  * @param {Mixed} valueToCheck
+	  * @param {Mixed} valueToBeAtLeast
+	  * @param {String} message
+	  * @namespace Assert
+	  * @api public
+	  */
+
+	  assert.isAtLeast = function (val, atlst, msg) {
+	    new Assertion(val, msg).to.be.least(atlst);
+	  };
+
+	  /**
+	  * ### .isBelow(valueToCheck, valueToBeBelow, [message])
+	  *
+	  * Asserts `valueToCheck` is strictly less than (<) `valueToBeBelow`
+	  *
+	  *     assert.isBelow(3, 6, '3 is strictly less than 6');
+	  *
+	  * @name isBelow
+	  * @param {Mixed} valueToCheck
+	  * @param {Mixed} valueToBeBelow
+	  * @param {String} message
+	  * @namespace Assert
+	  * @api public
+	  */
+
+	  assert.isBelow = function (val, blw, msg) {
+	    new Assertion(val, msg).to.be.below(blw);
+	  };
+
+	  /**
+	  * ### .isAtMost(valueToCheck, valueToBeAtMost, [message])
+	  *
+	  * Asserts `valueToCheck` is less than or equal to (<=) `valueToBeAtMost`
+	  *
+	  *     assert.isAtMost(3, 6, '3 is less than or equal to 6');
+	  *     assert.isAtMost(4, 4, '4 is less than or equal to 4');
+	  *
+	  * @name isAtMost
+	  * @param {Mixed} valueToCheck
+	  * @param {Mixed} valueToBeAtMost
+	  * @param {String} message
+	  * @namespace Assert
+	  * @api public
+	  */
+
+	  assert.isAtMost = function (val, atmst, msg) {
+	    new Assertion(val, msg).to.be.most(atmst);
+	  };
+
+	  /**
+	   * ### .isTrue(value, [message])
+	   *
+	   * Asserts that `value` is true.
+	   *
+	   *     var teaServed = true;
+	   *     assert.isTrue(teaServed, 'the tea has been served');
+	   *
+	   * @name isTrue
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isTrue = function (val, msg) {
+	    new Assertion(val, msg).is['true'];
+	  };
+
+	  /**
+	   * ### .isNotTrue(value, [message])
+	   *
+	   * Asserts that `value` is not true.
+	   *
+	   *     var tea = 'tasty chai';
+	   *     assert.isNotTrue(tea, 'great, time for tea!');
+	   *
+	   * @name isNotTrue
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotTrue = function (val, msg) {
+	    new Assertion(val, msg).to.not.equal(true);
+	  };
+
+	  /**
+	   * ### .isFalse(value, [message])
+	   *
+	   * Asserts that `value` is false.
+	   *
+	   *     var teaServed = false;
+	   *     assert.isFalse(teaServed, 'no tea yet? hmm...');
+	   *
+	   * @name isFalse
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isFalse = function (val, msg) {
+	    new Assertion(val, msg).is['false'];
+	  };
+
+	  /**
+	   * ### .isNotFalse(value, [message])
+	   *
+	   * Asserts that `value` is not false.
+	   *
+	   *     var tea = 'tasty chai';
+	   *     assert.isNotFalse(tea, 'great, time for tea!');
+	   *
+	   * @name isNotFalse
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotFalse = function (val, msg) {
+	    new Assertion(val, msg).to.not.equal(false);
+	  };
+
+	  /**
+	   * ### .isNull(value, [message])
+	   *
+	   * Asserts that `value` is null.
+	   *
+	   *     assert.isNull(err, 'there was no error');
+	   *
+	   * @name isNull
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNull = function (val, msg) {
+	    new Assertion(val, msg).to.equal(null);
+	  };
+
+	  /**
+	   * ### .isNotNull(value, [message])
+	   *
+	   * Asserts that `value` is not null.
+	   *
+	   *     var tea = 'tasty chai';
+	   *     assert.isNotNull(tea, 'great, time for tea!');
+	   *
+	   * @name isNotNull
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotNull = function (val, msg) {
+	    new Assertion(val, msg).to.not.equal(null);
+	  };
+
+	  /**
+	   * ### .isNaN
+	   * Asserts that value is NaN
+	   *
+	   *    assert.isNaN('foo', 'foo is NaN');
+	   *
+	   * @name isNaN
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNaN = function (val, msg) {
+	    new Assertion(val, msg).to.be.NaN;
+	  };
+
+	  /**
+	   * ### .isNotNaN
+	   * Asserts that value is not NaN
+	   *
+	   *    assert.isNotNaN(4, '4 is not NaN');
+	   *
+	   * @name isNotNaN
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+	  assert.isNotNaN = function (val, msg) {
+	    new Assertion(val, msg).not.to.be.NaN;
+	  };
+
+	  /**
+	   * ### .isUndefined(value, [message])
+	   *
+	   * Asserts that `value` is `undefined`.
+	   *
+	   *     var tea;
+	   *     assert.isUndefined(tea, 'no tea defined');
+	   *
+	   * @name isUndefined
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isUndefined = function (val, msg) {
+	    new Assertion(val, msg).to.equal(undefined);
+	  };
+
+	  /**
+	   * ### .isDefined(value, [message])
+	   *
+	   * Asserts that `value` is not `undefined`.
+	   *
+	   *     var tea = 'cup of chai';
+	   *     assert.isDefined(tea, 'tea has been defined');
+	   *
+	   * @name isDefined
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isDefined = function (val, msg) {
+	    new Assertion(val, msg).to.not.equal(undefined);
+	  };
+
+	  /**
+	   * ### .isFunction(value, [message])
+	   *
+	   * Asserts that `value` is a function.
+	   *
+	   *     function serveTea() { return 'cup of tea'; };
+	   *     assert.isFunction(serveTea, 'great, we can have tea now');
+	   *
+	   * @name isFunction
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isFunction = function (val, msg) {
+	    new Assertion(val, msg).to.be.a('function');
+	  };
+
+	  /**
+	   * ### .isNotFunction(value, [message])
+	   *
+	   * Asserts that `value` is _not_ a function.
+	   *
+	   *     var serveTea = [ 'heat', 'pour', 'sip' ];
+	   *     assert.isNotFunction(serveTea, 'great, we have listed the steps');
+	   *
+	   * @name isNotFunction
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotFunction = function (val, msg) {
+	    new Assertion(val, msg).to.not.be.a('function');
+	  };
+
+	  /**
+	   * ### .isObject(value, [message])
+	   *
+	   * Asserts that `value` is an object of type 'Object' (as revealed by `Object.prototype.toString`).
+	   * _The assertion does not match subclassed objects._
+	   *
+	   *     var selection = { name: 'Chai', serve: 'with spices' };
+	   *     assert.isObject(selection, 'tea selection is an object');
+	   *
+	   * @name isObject
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isObject = function (val, msg) {
+	    new Assertion(val, msg).to.be.a('object');
+	  };
+
+	  /**
+	   * ### .isNotObject(value, [message])
+	   *
+	   * Asserts that `value` is _not_ an object of type 'Object' (as revealed by `Object.prototype.toString`).
+	   *
+	   *     var selection = 'chai'
+	   *     assert.isNotObject(selection, 'tea selection is not an object');
+	   *     assert.isNotObject(null, 'null is not an object');
+	   *
+	   * @name isNotObject
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotObject = function (val, msg) {
+	    new Assertion(val, msg).to.not.be.a('object');
+	  };
+
+	  /**
+	   * ### .isArray(value, [message])
+	   *
+	   * Asserts that `value` is an array.
+	   *
+	   *     var menu = [ 'green', 'chai', 'oolong' ];
+	   *     assert.isArray(menu, 'what kind of tea do we want?');
+	   *
+	   * @name isArray
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isArray = function (val, msg) {
+	    new Assertion(val, msg).to.be.an('array');
+	  };
+
+	  /**
+	   * ### .isNotArray(value, [message])
+	   *
+	   * Asserts that `value` is _not_ an array.
+	   *
+	   *     var menu = 'green|chai|oolong';
+	   *     assert.isNotArray(menu, 'what kind of tea do we want?');
+	   *
+	   * @name isNotArray
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotArray = function (val, msg) {
+	    new Assertion(val, msg).to.not.be.an('array');
+	  };
+
+	  /**
+	   * ### .isString(value, [message])
+	   *
+	   * Asserts that `value` is a string.
+	   *
+	   *     var teaOrder = 'chai';
+	   *     assert.isString(teaOrder, 'order placed');
+	   *
+	   * @name isString
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isString = function (val, msg) {
+	    new Assertion(val, msg).to.be.a('string');
+	  };
+
+	  /**
+	   * ### .isNotString(value, [message])
+	   *
+	   * Asserts that `value` is _not_ a string.
+	   *
+	   *     var teaOrder = 4;
+	   *     assert.isNotString(teaOrder, 'order placed');
+	   *
+	   * @name isNotString
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotString = function (val, msg) {
+	    new Assertion(val, msg).to.not.be.a('string');
+	  };
+
+	  /**
+	   * ### .isNumber(value, [message])
+	   *
+	   * Asserts that `value` is a number.
+	   *
+	   *     var cups = 2;
+	   *     assert.isNumber(cups, 'how many cups');
+	   *
+	   * @name isNumber
+	   * @param {Number} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNumber = function (val, msg) {
+	    new Assertion(val, msg).to.be.a('number');
+	  };
+
+	  /**
+	   * ### .isNotNumber(value, [message])
+	   *
+	   * Asserts that `value` is _not_ a number.
+	   *
+	   *     var cups = '2 cups please';
+	   *     assert.isNotNumber(cups, 'how many cups');
+	   *
+	   * @name isNotNumber
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotNumber = function (val, msg) {
+	    new Assertion(val, msg).to.not.be.a('number');
+	  };
+
+	  /**
+	   * ### .isBoolean(value, [message])
+	   *
+	   * Asserts that `value` is a boolean.
+	   *
+	   *     var teaReady = true
+	   *       , teaServed = false;
+	   *
+	   *     assert.isBoolean(teaReady, 'is the tea ready');
+	   *     assert.isBoolean(teaServed, 'has tea been served');
+	   *
+	   * @name isBoolean
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isBoolean = function (val, msg) {
+	    new Assertion(val, msg).to.be.a('boolean');
+	  };
+
+	  /**
+	   * ### .isNotBoolean(value, [message])
+	   *
+	   * Asserts that `value` is _not_ a boolean.
+	   *
+	   *     var teaReady = 'yep'
+	   *       , teaServed = 'nope';
+	   *
+	   *     assert.isNotBoolean(teaReady, 'is the tea ready');
+	   *     assert.isNotBoolean(teaServed, 'has tea been served');
+	   *
+	   * @name isNotBoolean
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotBoolean = function (val, msg) {
+	    new Assertion(val, msg).to.not.be.a('boolean');
+	  };
+
+	  /**
+	   * ### .typeOf(value, name, [message])
+	   *
+	   * Asserts that `value`'s type is `name`, as determined by
+	   * `Object.prototype.toString`.
+	   *
+	   *     assert.typeOf({ tea: 'chai' }, 'object', 'we have an object');
+	   *     assert.typeOf(['chai', 'jasmine'], 'array', 'we have an array');
+	   *     assert.typeOf('tea', 'string', 'we have a string');
+	   *     assert.typeOf(/tea/, 'regexp', 'we have a regular expression');
+	   *     assert.typeOf(null, 'null', 'we have a null');
+	   *     assert.typeOf(undefined, 'undefined', 'we have an undefined');
+	   *
+	   * @name typeOf
+	   * @param {Mixed} value
+	   * @param {String} name
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.typeOf = function (val, type, msg) {
+	    new Assertion(val, msg).to.be.a(type);
+	  };
+
+	  /**
+	   * ### .notTypeOf(value, name, [message])
+	   *
+	   * Asserts that `value`'s type is _not_ `name`, as determined by
+	   * `Object.prototype.toString`.
+	   *
+	   *     assert.notTypeOf('tea', 'number', 'strings are not numbers');
+	   *
+	   * @name notTypeOf
+	   * @param {Mixed} value
+	   * @param {String} typeof name
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.notTypeOf = function (val, type, msg) {
+	    new Assertion(val, msg).to.not.be.a(type);
+	  };
+
+	  /**
+	   * ### .instanceOf(object, constructor, [message])
+	   *
+	   * Asserts that `value` is an instance of `constructor`.
+	   *
+	   *     var Tea = function (name) { this.name = name; }
+	   *       , chai = new Tea('chai');
+	   *
+	   *     assert.instanceOf(chai, Tea, 'chai is an instance of tea');
+	   *
+	   * @name instanceOf
+	   * @param {Object} object
+	   * @param {Constructor} constructor
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.instanceOf = function (val, type, msg) {
+	    new Assertion(val, msg).to.be.instanceOf(type);
+	  };
+
+	  /**
+	   * ### .notInstanceOf(object, constructor, [message])
+	   *
+	   * Asserts `value` is not an instance of `constructor`.
+	   *
+	   *     var Tea = function (name) { this.name = name; }
+	   *       , chai = new String('chai');
+	   *
+	   *     assert.notInstanceOf(chai, Tea, 'chai is not an instance of tea');
+	   *
+	   * @name notInstanceOf
+	   * @param {Object} object
+	   * @param {Constructor} constructor
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.notInstanceOf = function (val, type, msg) {
+	    new Assertion(val, msg).to.not.be.instanceOf(type);
+	  };
+
+	  /**
+	   * ### .include(haystack, needle, [message])
+	   *
+	   * Asserts that `haystack` includes `needle`. Works
+	   * for strings and arrays.
+	   *
+	   *     assert.include('foobar', 'bar', 'foobar contains string "bar"');
+	   *     assert.include([ 1, 2, 3 ], 3, 'array contains value');
+	   *
+	   * @name include
+	   * @param {Array|String} haystack
+	   * @param {Mixed} needle
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.include = function (exp, inc, msg) {
+	    new Assertion(exp, msg, assert.include).include(inc);
+	  };
+
+	  /**
+	   * ### .notInclude(haystack, needle, [message])
+	   *
+	   * Asserts that `haystack` does not include `needle`. Works
+	   * for strings and arrays.
+	   *
+	   *     assert.notInclude('foobar', 'baz', 'string not include substring');
+	   *     assert.notInclude([ 1, 2, 3 ], 4, 'array not include contain value');
+	   *
+	   * @name notInclude
+	   * @param {Array|String} haystack
+	   * @param {Mixed} needle
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.notInclude = function (exp, inc, msg) {
+	    new Assertion(exp, msg, assert.notInclude).not.include(inc);
+	  };
+
+	  /**
+	   * ### .match(value, regexp, [message])
+	   *
+	   * Asserts that `value` matches the regular expression `regexp`.
+	   *
+	   *     assert.match('foobar', /^foo/, 'regexp matches');
+	   *
+	   * @name match
+	   * @param {Mixed} value
+	   * @param {RegExp} regexp
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.match = function (exp, re, msg) {
+	    new Assertion(exp, msg).to.match(re);
+	  };
+
+	  /**
+	   * ### .notMatch(value, regexp, [message])
+	   *
+	   * Asserts that `value` does not match the regular expression `regexp`.
+	   *
+	   *     assert.notMatch('foobar', /^foo/, 'regexp does not match');
+	   *
+	   * @name notMatch
+	   * @param {Mixed} value
+	   * @param {RegExp} regexp
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.notMatch = function (exp, re, msg) {
+	    new Assertion(exp, msg).to.not.match(re);
+	  };
+
+	  /**
+	   * ### .property(object, property, [message])
+	   *
+	   * Asserts that `object` has a property named by `property`.
+	   *
+	   *     assert.property({ tea: { green: 'matcha' }}, 'tea');
+	   *
+	   * @name property
+	   * @param {Object} object
+	   * @param {String} property
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.property = function (obj, prop, msg) {
+	    new Assertion(obj, msg).to.have.property(prop);
+	  };
+
+	  /**
+	   * ### .notProperty(object, property, [message])
+	   *
+	   * Asserts that `object` does _not_ have a property named by `property`.
+	   *
+	   *     assert.notProperty({ tea: { green: 'matcha' }}, 'coffee');
+	   *
+	   * @name notProperty
+	   * @param {Object} object
+	   * @param {String} property
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.notProperty = function (obj, prop, msg) {
+	    new Assertion(obj, msg).to.not.have.property(prop);
+	  };
+
+	  /**
+	   * ### .deepProperty(object, property, [message])
+	   *
+	   * Asserts that `object` has a property named by `property`, which can be a
+	   * string using dot- and bracket-notation for deep reference.
+	   *
+	   *     assert.deepProperty({ tea: { green: 'matcha' }}, 'tea.green');
+	   *
+	   * @name deepProperty
+	   * @param {Object} object
+	   * @param {String} property
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.deepProperty = function (obj, prop, msg) {
+	    new Assertion(obj, msg).to.have.deep.property(prop);
+	  };
+
+	  /**
+	   * ### .notDeepProperty(object, property, [message])
+	   *
+	   * Asserts that `object` does _not_ have a property named by `property`, which
+	   * can be a string using dot- and bracket-notation for deep reference.
+	   *
+	   *     assert.notDeepProperty({ tea: { green: 'matcha' }}, 'tea.oolong');
+	   *
+	   * @name notDeepProperty
+	   * @param {Object} object
+	   * @param {String} property
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.notDeepProperty = function (obj, prop, msg) {
+	    new Assertion(obj, msg).to.not.have.deep.property(prop);
+	  };
+
+	  /**
+	   * ### .propertyVal(object, property, value, [message])
+	   *
+	   * Asserts that `object` has a property named by `property` with value given
+	   * by `value`.
+	   *
+	   *     assert.propertyVal({ tea: 'is good' }, 'tea', 'is good');
+	   *
+	   * @name propertyVal
+	   * @param {Object} object
+	   * @param {String} property
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.propertyVal = function (obj, prop, val, msg) {
+	    new Assertion(obj, msg).to.have.property(prop, val);
+	  };
+
+	  /**
+	   * ### .propertyNotVal(object, property, value, [message])
+	   *
+	   * Asserts that `object` has a property named by `property`, but with a value
+	   * different from that given by `value`.
+	   *
+	   *     assert.propertyNotVal({ tea: 'is good' }, 'tea', 'is bad');
+	   *
+	   * @name propertyNotVal
+	   * @param {Object} object
+	   * @param {String} property
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.propertyNotVal = function (obj, prop, val, msg) {
+	    new Assertion(obj, msg).to.not.have.property(prop, val);
+	  };
+
+	  /**
+	   * ### .deepPropertyVal(object, property, value, [message])
+	   *
+	   * Asserts that `object` has a property named by `property` with value given
+	   * by `value`. `property` can use dot- and bracket-notation for deep
+	   * reference.
+	   *
+	   *     assert.deepPropertyVal({ tea: { green: 'matcha' }}, 'tea.green', 'matcha');
+	   *
+	   * @name deepPropertyVal
+	   * @param {Object} object
+	   * @param {String} property
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.deepPropertyVal = function (obj, prop, val, msg) {
+	    new Assertion(obj, msg).to.have.deep.property(prop, val);
+	  };
+
+	  /**
+	   * ### .deepPropertyNotVal(object, property, value, [message])
+	   *
+	   * Asserts that `object` has a property named by `property`, but with a value
+	   * different from that given by `value`. `property` can use dot- and
+	   * bracket-notation for deep reference.
+	   *
+	   *     assert.deepPropertyNotVal({ tea: { green: 'matcha' }}, 'tea.green', 'konacha');
+	   *
+	   * @name deepPropertyNotVal
+	   * @param {Object} object
+	   * @param {String} property
+	   * @param {Mixed} value
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.deepPropertyNotVal = function (obj, prop, val, msg) {
+	    new Assertion(obj, msg).to.not.have.deep.property(prop, val);
+	  };
+
+	  /**
+	   * ### .lengthOf(object, length, [message])
+	   *
+	   * Asserts that `object` has a `length` property with the expected value.
+	   *
+	   *     assert.lengthOf([1,2,3], 3, 'array has length of 3');
+	   *     assert.lengthOf('foobar', 6, 'string has length of 6');
+	   *
+	   * @name lengthOf
+	   * @param {Mixed} object
+	   * @param {Number} length
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.lengthOf = function (exp, len, msg) {
+	    new Assertion(exp, msg).to.have.length(len);
+	  };
+
+	  /**
+	   * ### .throws(function, [constructor/string/regexp], [string/regexp], [message])
+	   *
+	   * Asserts that `function` will throw an error that is an instance of
+	   * `constructor`, or alternately that it will throw an error with message
+	   * matching `regexp`.
+	   *
+	   *     assert.throws(fn, 'function throws a reference error');
+	   *     assert.throws(fn, /function throws a reference error/);
+	   *     assert.throws(fn, ReferenceError);
+	   *     assert.throws(fn, ReferenceError, 'function throws a reference error');
+	   *     assert.throws(fn, ReferenceError, /function throws a reference error/);
+	   *
+	   * @name throws
+	   * @alias throw
+	   * @alias Throw
+	   * @param {Function} function
+	   * @param {ErrorConstructor} constructor
+	   * @param {RegExp} regexp
+	   * @param {String} message
+	   * @see https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error#Error_types
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.throws = function (fn, errt, errs, msg) {
+	    if ('string' === typeof errt || errt instanceof RegExp) {
+	      errs = errt;
+	      errt = null;
+	    }
+
+	    var assertErr = new Assertion(fn, msg).to.throw(errt, errs);
+	    return flag(assertErr, 'object');
+	  };
+
+	  /**
+	   * ### .doesNotThrow(function, [constructor/regexp], [message])
+	   *
+	   * Asserts that `function` will _not_ throw an error that is an instance of
+	   * `constructor`, or alternately that it will not throw an error with message
+	   * matching `regexp`.
+	   *
+	   *     assert.doesNotThrow(fn, Error, 'function does not throw');
+	   *
+	   * @name doesNotThrow
+	   * @param {Function} function
+	   * @param {ErrorConstructor} constructor
+	   * @param {RegExp} regexp
+	   * @param {String} message
+	   * @see https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error#Error_types
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.doesNotThrow = function (fn, type, msg) {
+	    if ('string' === typeof type) {
+	      msg = type;
+	      type = null;
+	    }
+
+	    new Assertion(fn, msg).to.not.Throw(type);
+	  };
+
+	  /**
+	   * ### .operator(val1, operator, val2, [message])
+	   *
+	   * Compares two values using `operator`.
+	   *
+	   *     assert.operator(1, '<', 2, 'everything is ok');
+	   *     assert.operator(1, '>', 2, 'this will fail');
+	   *
+	   * @name operator
+	   * @param {Mixed} val1
+	   * @param {String} operator
+	   * @param {Mixed} val2
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.operator = function (val, operator, val2, msg) {
+	    var ok;
+	    switch (operator) {
+	      case '==':
+	        ok = val == val2;
+	        break;
+	      case '===':
+	        ok = val === val2;
+	        break;
+	      case '>':
+	        ok = val > val2;
+	        break;
+	      case '>=':
+	        ok = val >= val2;
+	        break;
+	      case '<':
+	        ok = val < val2;
+	        break;
+	      case '<=':
+	        ok = val <= val2;
+	        break;
+	      case '!=':
+	        ok = val != val2;
+	        break;
+	      case '!==':
+	        ok = val !== val2;
+	        break;
+	      default:
+	        throw new Error('Invalid operator "' + operator + '"');
+	    }
+	    var test = new Assertion(ok, msg);
+	    test.assert(true === flag(test, 'object'), 'expected ' + util.inspect(val) + ' to be ' + operator + ' ' + util.inspect(val2), 'expected ' + util.inspect(val) + ' to not be ' + operator + ' ' + util.inspect(val2));
+	  };
+
+	  /**
+	   * ### .closeTo(actual, expected, delta, [message])
+	   *
+	   * Asserts that the target is equal `expected`, to within a +/- `delta` range.
+	   *
+	   *     assert.closeTo(1.5, 1, 0.5, 'numbers are close');
+	   *
+	   * @name closeTo
+	   * @param {Number} actual
+	   * @param {Number} expected
+	   * @param {Number} delta
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.closeTo = function (act, exp, delta, msg) {
+	    new Assertion(act, msg).to.be.closeTo(exp, delta);
+	  };
+
+	  /**
+	   * ### .approximately(actual, expected, delta, [message])
+	   *
+	   * Asserts that the target is equal `expected`, to within a +/- `delta` range.
+	   *
+	   *     assert.approximately(1.5, 1, 0.5, 'numbers are close');
+	   *
+	   * @name approximately
+	   * @param {Number} actual
+	   * @param {Number} expected
+	   * @param {Number} delta
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.approximately = function (act, exp, delta, msg) {
+	    new Assertion(act, msg).to.be.approximately(exp, delta);
+	  };
+
+	  /**
+	   * ### .sameMembers(set1, set2, [message])
+	   *
+	   * Asserts that `set1` and `set2` have the same members.
+	   * Order is not taken into account.
+	   *
+	   *     assert.sameMembers([ 1, 2, 3 ], [ 2, 1, 3 ], 'same members');
+	   *
+	   * @name sameMembers
+	   * @param {Array} set1
+	   * @param {Array} set2
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.sameMembers = function (set1, set2, msg) {
+	    new Assertion(set1, msg).to.have.same.members(set2);
+	  };
+
+	  /**
+	   * ### .sameDeepMembers(set1, set2, [message])
+	   *
+	   * Asserts that `set1` and `set2` have the same members - using a deep equality checking.
+	   * Order is not taken into account.
+	   *
+	   *     assert.sameDeepMembers([ {b: 3}, {a: 2}, {c: 5} ], [ {c: 5}, {b: 3}, {a: 2} ], 'same deep members');
+	   *
+	   * @name sameDeepMembers
+	   * @param {Array} set1
+	   * @param {Array} set2
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.sameDeepMembers = function (set1, set2, msg) {
+	    new Assertion(set1, msg).to.have.same.deep.members(set2);
+	  };
+
+	  /**
+	   * ### .includeMembers(superset, subset, [message])
+	   *
+	   * Asserts that `subset` is included in `superset`.
+	   * Order is not taken into account.
+	   *
+	   *     assert.includeMembers([ 1, 2, 3 ], [ 2, 1 ], 'include members');
+	   *
+	   * @name includeMembers
+	   * @param {Array} superset
+	   * @param {Array} subset
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.includeMembers = function (superset, subset, msg) {
+	    new Assertion(superset, msg).to.include.members(subset);
+	  };
+
+	  /**
+	   * ### .includeDeepMembers(superset, subset, [message])
+	   *
+	   * Asserts that `subset` is included in `superset` - using deep equality checking.
+	   * Order is not taken into account.
+	   * Duplicates are ignored.
+	   *
+	   *     assert.includeDeepMembers([ {a: 1}, {b: 2}, {c: 3} ], [ {b: 2}, {a: 1}, {b: 2} ], 'include deep members');
+	   *
+	   * @name includeDeepMembers
+	   * @param {Array} superset
+	   * @param {Array} subset
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.includeDeepMembers = function (superset, subset, msg) {
+	    new Assertion(superset, msg).to.include.deep.members(subset);
+	  };
+
+	  /**
+	   * ### .oneOf(inList, list, [message])
+	   *
+	   * Asserts that non-object, non-array value `inList` appears in the flat array `list`.
+	   *
+	   *     assert.oneOf(1, [ 2, 1 ], 'Not found in list');
+	   *
+	   * @name oneOf
+	   * @param {*} inList
+	   * @param {Array<*>} list
+	   * @param {String} message
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.oneOf = function (inList, list, msg) {
+	    new Assertion(inList, msg).to.be.oneOf(list);
+	  };
+
+	  /**
+	  * ### .changes(function, object, property)
+	  *
+	  * Asserts that a function changes the value of a property
+	  *
+	  *     var obj = { val: 10 };
+	  *     var fn = function() { obj.val = 22 };
+	  *     assert.changes(fn, obj, 'val');
+	  *
+	  * @name changes
+	  * @param {Function} modifier function
+	  * @param {Object} object
+	  * @param {String} property name
+	  * @param {String} message _optional_
+	  * @namespace Assert
+	  * @api public
+	  */
+
+	  assert.changes = function (fn, obj, prop) {
+	    new Assertion(fn).to.change(obj, prop);
+	  };
+
+	  /**
+	  * ### .doesNotChange(function, object, property)
+	  *
+	  * Asserts that a function does not changes the value of a property
+	  *
+	  *     var obj = { val: 10 };
+	  *     var fn = function() { console.log('foo'); };
+	  *     assert.doesNotChange(fn, obj, 'val');
+	  *
+	  * @name doesNotChange
+	  * @param {Function} modifier function
+	  * @param {Object} object
+	  * @param {String} property name
+	  * @param {String} message _optional_
+	  * @namespace Assert
+	  * @api public
+	  */
+
+	  assert.doesNotChange = function (fn, obj, prop) {
+	    new Assertion(fn).to.not.change(obj, prop);
+	  };
+
+	  /**
+	  * ### .increases(function, object, property)
+	  *
+	  * Asserts that a function increases an object property
+	  *
+	  *     var obj = { val: 10 };
+	  *     var fn = function() { obj.val = 13 };
+	  *     assert.increases(fn, obj, 'val');
+	  *
+	  * @name increases
+	  * @param {Function} modifier function
+	  * @param {Object} object
+	  * @param {String} property name
+	  * @param {String} message _optional_
+	  * @namespace Assert
+	  * @api public
+	  */
+
+	  assert.increases = function (fn, obj, prop) {
+	    new Assertion(fn).to.increase(obj, prop);
+	  };
+
+	  /**
+	  * ### .doesNotIncrease(function, object, property)
+	  *
+	  * Asserts that a function does not increase object property
+	  *
+	  *     var obj = { val: 10 };
+	  *     var fn = function() { obj.val = 8 };
+	  *     assert.doesNotIncrease(fn, obj, 'val');
+	  *
+	  * @name doesNotIncrease
+	  * @param {Function} modifier function
+	  * @param {Object} object
+	  * @param {String} property name
+	  * @param {String} message _optional_
+	  * @namespace Assert
+	  * @api public
+	  */
+
+	  assert.doesNotIncrease = function (fn, obj, prop) {
+	    new Assertion(fn).to.not.increase(obj, prop);
+	  };
+
+	  /**
+	  * ### .decreases(function, object, property)
+	  *
+	  * Asserts that a function decreases an object property
+	  *
+	  *     var obj = { val: 10 };
+	  *     var fn = function() { obj.val = 5 };
+	  *     assert.decreases(fn, obj, 'val');
+	  *
+	  * @name decreases
+	  * @param {Function} modifier function
+	  * @param {Object} object
+	  * @param {String} property name
+	  * @param {String} message _optional_
+	  * @namespace Assert
+	  * @api public
+	  */
+
+	  assert.decreases = function (fn, obj, prop) {
+	    new Assertion(fn).to.decrease(obj, prop);
+	  };
+
+	  /**
+	  * ### .doesNotDecrease(function, object, property)
+	  *
+	  * Asserts that a function does not decreases an object property
+	  *
+	  *     var obj = { val: 10 };
+	  *     var fn = function() { obj.val = 15 };
+	  *     assert.doesNotDecrease(fn, obj, 'val');
+	  *
+	  * @name doesNotDecrease
+	  * @param {Function} modifier function
+	  * @param {Object} object
+	  * @param {String} property name
+	  * @param {String} message _optional_
+	  * @namespace Assert
+	  * @api public
+	  */
+
+	  assert.doesNotDecrease = function (fn, obj, prop) {
+	    new Assertion(fn).to.not.decrease(obj, prop);
+	  };
+
+	  /*!
+	   * ### .ifError(object)
+	   *
+	   * Asserts if value is not a false value, and throws if it is a true value.
+	   * This is added to allow for chai to be a drop-in replacement for Node's
+	   * assert class.
+	   *
+	   *     var err = new Error('I am a custom error');
+	   *     assert.ifError(err); // Rethrows err!
+	   *
+	   * @name ifError
+	   * @param {Object} object
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.ifError = function (val) {
+	    if (val) {
+	      throw val;
+	    }
+	  };
+
+	  /**
+	   * ### .isExtensible(object)
+	   *
+	   * Asserts that `object` is extensible (can have new properties added to it).
+	   *
+	   *     assert.isExtensible({});
+	   *
+	   * @name isExtensible
+	   * @alias extensible
+	   * @param {Object} object
+	   * @param {String} message _optional_
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isExtensible = function (obj, msg) {
+	    new Assertion(obj, msg).to.be.extensible;
+	  };
+
+	  /**
+	   * ### .isNotExtensible(object)
+	   *
+	   * Asserts that `object` is _not_ extensible.
+	   *
+	   *     var nonExtensibleObject = Object.preventExtensions({});
+	   *     var sealedObject = Object.seal({});
+	   *     var frozenObject = Object.freese({});
+	   *
+	   *     assert.isNotExtensible(nonExtensibleObject);
+	   *     assert.isNotExtensible(sealedObject);
+	   *     assert.isNotExtensible(frozenObject);
+	   *
+	   * @name isNotExtensible
+	   * @alias notExtensible
+	   * @param {Object} object
+	   * @param {String} message _optional_
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotExtensible = function (obj, msg) {
+	    new Assertion(obj, msg).to.not.be.extensible;
+	  };
+
+	  /**
+	   * ### .isSealed(object)
+	   *
+	   * Asserts that `object` is sealed (cannot have new properties added to it
+	   * and its existing properties cannot be removed).
+	   *
+	   *     var sealedObject = Object.seal({});
+	   *     var frozenObject = Object.seal({});
+	   *
+	   *     assert.isSealed(sealedObject);
+	   *     assert.isSealed(frozenObject);
+	   *
+	   * @name isSealed
+	   * @alias sealed
+	   * @param {Object} object
+	   * @param {String} message _optional_
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isSealed = function (obj, msg) {
+	    new Assertion(obj, msg).to.be.sealed;
+	  };
+
+	  /**
+	   * ### .isNotSealed(object)
+	   *
+	   * Asserts that `object` is _not_ sealed.
+	   *
+	   *     assert.isNotSealed({});
+	   *
+	   * @name isNotSealed
+	   * @alias notSealed
+	   * @param {Object} object
+	   * @param {String} message _optional_
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotSealed = function (obj, msg) {
+	    new Assertion(obj, msg).to.not.be.sealed;
+	  };
+
+	  /**
+	   * ### .isFrozen(object)
+	   *
+	   * Asserts that `object` is frozen (cannot have new properties added to it
+	   * and its existing properties cannot be modified).
+	   *
+	   *     var frozenObject = Object.freeze({});
+	   *     assert.frozen(frozenObject);
+	   *
+	   * @name isFrozen
+	   * @alias frozen
+	   * @param {Object} object
+	   * @param {String} message _optional_
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isFrozen = function (obj, msg) {
+	    new Assertion(obj, msg).to.be.frozen;
+	  };
+
+	  /**
+	   * ### .isNotFrozen(object)
+	   *
+	   * Asserts that `object` is _not_ frozen.
+	   *
+	   *     assert.isNotFrozen({});
+	   *
+	   * @name isNotFrozen
+	   * @alias notFrozen
+	   * @param {Object} object
+	   * @param {String} message _optional_
+	   * @namespace Assert
+	   * @api public
+	   */
+
+	  assert.isNotFrozen = function (obj, msg) {
+	    new Assertion(obj, msg).to.not.be.frozen;
+	  };
+
+	  /*!
+	   * Aliases.
+	   */
+
+	  (function alias(name, as) {
+	    assert[as] = assert[name];
+	    return alias;
+	  })('isOk', 'ok')('isNotOk', 'notOk')('throws', 'throw')('throws', 'Throw')('isExtensible', 'extensible')('isNotExtensible', 'notExtensible')('isSealed', 'sealed')('isNotSealed', 'notSealed')('isFrozen', 'frozen')('isNotFrozen', 'notFrozen');
+	};
+
+/***/ },
+/* 55 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function CreateIdea(title, body, id, quality) {
+	  this.title = title;
+	  this.body = body;
+	  this.id = id || Date.now();
+	  this.quality = quality || "Normal";
+	  this.done = false;
+	}
+
+	module.exports = CreateIdea;
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/*jshint esversion: 6 */
+	var assert = __webpack_require__(57);
+	var webdriver = __webpack_require__(62);
+	var test = __webpack_require__(349);
+
+	test.describe('testing 2dobox', function () {
+
+	  test.beforeEach(function () {
+	    driver = new webdriver.Builder().forBrowser('chrome').build();
+	    driver.get('http://localhost:8080');
+	  });
+
+	  test.afterEach(function () {
+	    driver.quit();
+	  });
+
+	  test.it('should allow me to add a title and description', function () {
+
+	    var title = driver.findElement({ name: 'title-field' });
+	    var body = driver.findElement({ name: 'body-field' });
+	    var save = driver.findElement({ name: 'save' });
+
+	    title.sendKeys('this is the title').then(function () {
+	      return title.getAttribute('value');
+	    }).then(function (value) {
+	      assert.equal(value, 'this is the title');
+	    });
+
+	    body.sendKeys('this is the body').then(function () {
+	      return body.getAttribute('value');
+	    }).then(function (value) {
+	      assert.equal(value, 'this is the body');
+	    });
+	  });
+
+	  test.it('should append a card to the page', function () {
+
+	    var title = driver.findElement({ name: 'title-field' });
+	    var body = driver.findElement({ name: 'body-field' });
+	    var save = driver.findElement({ name: 'save' });
+
+	    title.sendKeys('this is a title');
+	    body.sendKeys('this is the body');
+	    save.click();
+
+	    var titl = driver.findElement({ className: 'title-input' }).then(function (title) {
+	      return title.getText();
+	    }).then(function (text) {
+	      assert.equal(text, 'this is a title');
+	    });
+
+	    var bod = driver.findElement({ className: 'body-input' }).then(function (body) {
+	      return body.getText();
+	    }).then(function (text) {
+	      assert.equal(text, 'this is the body');
+	    });
+	  });
+
+	  test.it('should delete a card when x button is pressed', function () {
+
+	    var title = driver.findElement({ name: 'title-field' });
+	    var body = driver.findElement({ name: 'body-field' });
+	    var saveButton = driver.findElement({ name: 'save' });
+
+	    title.sendKeys('this is a title');
+	    body.sendKeys('this is the body');
+	    saveButton.click();
+
+	    var titl = driver.findElement({ className: 'title-input' }).then(function (title) {
+	      return title.getText();
+	    }).then(function (text) {
+	      assert.equal(text, 'this is a title');
+	    });
+
+	    var bod = driver.findElement({ className: 'body-input' }).then(function (body) {
+	      return body.getText();
+	    }).then(function (text) {
+	      assert.equal(text, 'this is the body');
+	    });
+
+	    var deleteButton = driver.findElement({ name: 'delete' });
+	    var card = driver.findElement({ className: 'new-idea' });
+
+	    deleteButton.click().then(function (card) {
+	      assert.equal(card, undefined);
+	    });
+	  });
+
+	  test.it('pressing the up arrow should increment the importance of a card', function () {
+
+	    var title = driver.findElement({ name: 'title-field' });
+	    var body = driver.findElement({ name: 'body-field' });
+	    var saveButton = driver.findElement({ name: 'save' });
+
+	    title.sendKeys('this is a title');
+	    body.sendKeys('this is the body');
+	    saveButton.click();
+
+	    var titl = driver.findElement({ className: 'title-input' }).then(function (title) {
+	      return title.getText();
+	    }).then(function (text) {
+	      assert.equal(text, 'this is a title');
+	    });
+
+	    var bod = driver.findElement({ className: 'body-input' }).then(function (body) {
+	      return body.getText();
+	    }).then(function (text) {
+	      assert.equal(text, 'this is the body');
+	    });
+
+	    var incrementButton = driver.findElement({ name: 'up-vote' });
+
+	    incrementButton.click();
+
+	    var incrementValue = driver.findElement({ className: 'user-quality' }).then(function (quality) {
+	      return quality.getText();
+	    }).then(function (quality) {
+	      assert.equal(quality, 'High');
+	    });
+	  });
+
+	  test.it('pressing the down arrow should decrement the importance of a card', function () {
+
+	    var title = driver.findElement({ name: 'title-field' });
+	    var body = driver.findElement({ name: 'body-field' });
+	    var saveButton = driver.findElement({ name: 'save' });
+
+	    title.sendKeys('this is a title');
+	    body.sendKeys('this is the body');
+	    saveButton.click();
+
+	    var titl = driver.findElement({ className: 'title-input' }).then(function (title) {
+	      return title.getText();
+	    }).then(function (text) {
+	      assert.equal(text, 'this is a title');
+	    });
+
+	    var bod = driver.findElement({ className: 'body-input' }).then(function (body) {
+	      return body.getText();
+	    }).then(function (text) {
+	      assert.equal(text, 'this is the body');
+	    });
+
+	    var decrementButton = driver.findElement({ name: 'down-vote' });
+
+	    decrementButton.click();
+
+	    var decrementValue = driver.findElement({ className: 'user-quality' }).then(function (quality) {
+	      return quality.getText();
+	    }).then(function (quality) {
+	      assert.equal(quality, 'Low');
+	    });
+	  });
+	});
+
+/***/ },
+/* 57 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+
+	// compare and isBuffer taken from https://github.com/feross/buffer/blob/680e9e5e488f22aac27599a57dc844a6315928dd/index.js
+	// original notice:
+
+	/*!
+	 * The buffer module from node.js, for the browser.
+	 *
+	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+	 * @license  MIT
+	 */
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	function compare(a, b) {
+	  if (a === b) {
+	    return 0;
+	  }
+
+	  var x = a.length;
+	  var y = b.length;
+
+	  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
+	    if (a[i] !== b[i]) {
+	      x = a[i];
+	      y = b[i];
+	      break;
+	    }
+	  }
+
+	  if (x < y) {
+	    return -1;
+	  }
+	  if (y < x) {
+	    return 1;
+	  }
+	  return 0;
+	}
+	function isBuffer(b) {
+	  if (global.Buffer && typeof global.Buffer.isBuffer === 'function') {
+	    return global.Buffer.isBuffer(b);
+	  }
+	  return !!(b != null && b._isBuffer);
+	}
+
+	// based on node assert, original notice:
+
+	// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
+	//
+	// THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
+	//
+	// Originally from narwhal.js (http://narwhaljs.org)
+	// Copyright (c) 2009 Thomas Robinson <280north.com>
+	//
+	// Permission is hereby granted, free of charge, to any person obtaining a copy
+	// of this software and associated documentation files (the 'Software'), to
+	// deal in the Software without restriction, including without limitation the
+	// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+	// sell copies of the Software, and to permit persons to whom the Software is
+	// furnished to do so, subject to the following conditions:
+	//
+	// The above copyright notice and this permission notice shall be included in
+	// all copies or substantial portions of the Software.
+	//
+	// THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	// AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+	// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+	// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+	var util = __webpack_require__(58);
+	var hasOwn = Object.prototype.hasOwnProperty;
+	var pSlice = Array.prototype.slice;
+	var functionsHaveNames = function () {
+	  return function foo() {}.name === 'foo';
+	}();
+	function pToString(obj) {
+	  return Object.prototype.toString.call(obj);
+	}
+	function isView(arrbuf) {
+	  if (isBuffer(arrbuf)) {
+	    return false;
+	  }
+	  if (typeof global.ArrayBuffer !== 'function') {
+	    return false;
+	  }
+	  if (typeof ArrayBuffer.isView === 'function') {
+	    return ArrayBuffer.isView(arrbuf);
+	  }
+	  if (!arrbuf) {
+	    return false;
+	  }
+	  if (arrbuf instanceof DataView) {
+	    return true;
+	  }
+	  if (arrbuf.buffer && arrbuf.buffer instanceof ArrayBuffer) {
+	    return true;
+	  }
+	  return false;
+	}
+	// 1. The assert module provides functions that throw
+	// AssertionError's when particular conditions are not met. The
+	// assert module must conform to the following interface.
+
+	var assert = module.exports = ok;
+
+	// 2. The AssertionError is defined in assert.
+	// new assert.AssertionError({ message: message,
+	//                             actual: actual,
+	//                             expected: expected })
+
+	var regex = /\s*function\s+([^\(\s]*)\s*/;
+	// based on https://github.com/ljharb/function.prototype.name/blob/adeeeec8bfcc6068b187d7d9fb3d5bb1d3a30899/implementation.js
+	function getName(func) {
+	  if (!util.isFunction(func)) {
+	    return;
+	  }
+	  if (functionsHaveNames) {
+	    return func.name;
+	  }
+	  var str = func.toString();
+	  var match = str.match(regex);
+	  return match && match[1];
+	}
+	assert.AssertionError = function AssertionError(options) {
+	  this.name = 'AssertionError';
+	  this.actual = options.actual;
+	  this.expected = options.expected;
+	  this.operator = options.operator;
+	  if (options.message) {
+	    this.message = options.message;
+	    this.generatedMessage = false;
+	  } else {
+	    this.message = getMessage(this);
+	    this.generatedMessage = true;
+	  }
+	  var stackStartFunction = options.stackStartFunction || fail;
+	  if (Error.captureStackTrace) {
+	    Error.captureStackTrace(this, stackStartFunction);
+	  } else {
+	    // non v8 browsers so we can have a stacktrace
+	    var err = new Error();
+	    if (err.stack) {
+	      var out = err.stack;
+
+	      // try to strip useless frames
+	      var fn_name = getName(stackStartFunction);
+	      var idx = out.indexOf('\n' + fn_name);
+	      if (idx >= 0) {
+	        // once we have located the function frame
+	        // we need to strip out everything before it (and its line)
+	        var next_line = out.indexOf('\n', idx + 1);
+	        out = out.substring(next_line + 1);
+	      }
+
+	      this.stack = out;
+	    }
+	  }
+	};
+
+	// assert.AssertionError instanceof Error
+	util.inherits(assert.AssertionError, Error);
+
+	function truncate(s, n) {
+	  if (typeof s === 'string') {
+	    return s.length < n ? s : s.slice(0, n);
+	  } else {
+	    return s;
+	  }
+	}
+	function inspect(something) {
+	  if (functionsHaveNames || !util.isFunction(something)) {
+	    return util.inspect(something);
+	  }
+	  var rawname = getName(something);
+	  var name = rawname ? ': ' + rawname : '';
+	  return '[Function' + name + ']';
+	}
+	function getMessage(self) {
+	  return truncate(inspect(self.actual), 128) + ' ' + self.operator + ' ' + truncate(inspect(self.expected), 128);
+	}
+
+	// At present only the three keys mentioned above are used and
+	// understood by the spec. Implementations or sub modules can pass
+	// other keys to the AssertionError's constructor - they will be
+	// ignored.
+
+	// 3. All of the following functions must throw an AssertionError
+	// when a corresponding condition is not met, with a message that
+	// may be undefined if not provided.  All assertion methods provide
+	// both the actual and expected values to the assertion error for
+	// display purposes.
+
+	function fail(actual, expected, message, operator, stackStartFunction) {
+	  throw new assert.AssertionError({
+	    message: message,
+	    actual: actual,
+	    expected: expected,
+	    operator: operator,
+	    stackStartFunction: stackStartFunction
+	  });
+	}
+
+	// EXTENSION! allows for well behaved errors defined elsewhere.
+	assert.fail = fail;
+
+	// 4. Pure assertion tests whether a value is truthy, as determined
+	// by !!guard.
+	// assert.ok(guard, message_opt);
+	// This statement is equivalent to assert.equal(true, !!guard,
+	// message_opt);. To test strictly for the value true, use
+	// assert.strictEqual(true, guard, message_opt);.
+
+	function ok(value, message) {
+	  if (!value) fail(value, true, message, '==', assert.ok);
+	}
+	assert.ok = ok;
+
+	// 5. The equality assertion tests shallow, coercive equality with
+	// ==.
+	// assert.equal(actual, expected, message_opt);
+
+	assert.equal = function equal(actual, expected, message) {
+	  if (actual != expected) fail(actual, expected, message, '==', assert.equal);
+	};
+
+	// 6. The non-equality assertion tests for whether two objects are not equal
+	// with != assert.notEqual(actual, expected, message_opt);
+
+	assert.notEqual = function notEqual(actual, expected, message) {
+	  if (actual == expected) {
+	    fail(actual, expected, message, '!=', assert.notEqual);
+	  }
+	};
+
+	// 7. The equivalence assertion tests a deep equality relation.
+	// assert.deepEqual(actual, expected, message_opt);
+
+	assert.deepEqual = function deepEqual(actual, expected, message) {
+	  if (!_deepEqual(actual, expected, false)) {
+	    fail(actual, expected, message, 'deepEqual', assert.deepEqual);
+	  }
+	};
+
+	assert.deepStrictEqual = function deepStrictEqual(actual, expected, message) {
+	  if (!_deepEqual(actual, expected, true)) {
+	    fail(actual, expected, message, 'deepStrictEqual', assert.deepStrictEqual);
+	  }
+	};
+
+	function _deepEqual(actual, expected, strict, memos) {
+	  // 7.1. All identical values are equivalent, as determined by ===.
+	  if (actual === expected) {
+	    return true;
+	  } else if (isBuffer(actual) && isBuffer(expected)) {
+	    return compare(actual, expected) === 0;
+
+	    // 7.2. If the expected value is a Date object, the actual value is
+	    // equivalent if it is also a Date object that refers to the same time.
+	  } else if (util.isDate(actual) && util.isDate(expected)) {
+	    return actual.getTime() === expected.getTime();
+
+	    // 7.3 If the expected value is a RegExp object, the actual value is
+	    // equivalent if it is also a RegExp object with the same source and
+	    // properties (`global`, `multiline`, `lastIndex`, `ignoreCase`).
+	  } else if (util.isRegExp(actual) && util.isRegExp(expected)) {
+	    return actual.source === expected.source && actual.global === expected.global && actual.multiline === expected.multiline && actual.lastIndex === expected.lastIndex && actual.ignoreCase === expected.ignoreCase;
+
+	    // 7.4. Other pairs that do not both pass typeof value == 'object',
+	    // equivalence is determined by ==.
+	  } else if ((actual === null || (typeof actual === 'undefined' ? 'undefined' : _typeof(actual)) !== 'object') && (expected === null || (typeof expected === 'undefined' ? 'undefined' : _typeof(expected)) !== 'object')) {
+	    return strict ? actual === expected : actual == expected;
+
+	    // If both values are instances of typed arrays, wrap their underlying
+	    // ArrayBuffers in a Buffer each to increase performance
+	    // This optimization requires the arrays to have the same type as checked by
+	    // Object.prototype.toString (aka pToString). Never perform binary
+	    // comparisons for Float*Arrays, though, since e.g. +0 === -0 but their
+	    // bit patterns are not identical.
+	  } else if (isView(actual) && isView(expected) && pToString(actual) === pToString(expected) && !(actual instanceof Float32Array || actual instanceof Float64Array)) {
+	    return compare(new Uint8Array(actual.buffer), new Uint8Array(expected.buffer)) === 0;
+
+	    // 7.5 For all other Object pairs, including Array objects, equivalence is
+	    // determined by having the same number of owned properties (as verified
+	    // with Object.prototype.hasOwnProperty.call), the same set of keys
+	    // (although not necessarily the same order), equivalent values for every
+	    // corresponding key, and an identical 'prototype' property. Note: this
+	    // accounts for both named and indexed properties on Arrays.
+	  } else if (isBuffer(actual) !== isBuffer(expected)) {
+	    return false;
+	  } else {
+	    memos = memos || { actual: [], expected: [] };
+
+	    var actualIndex = memos.actual.indexOf(actual);
+	    if (actualIndex !== -1) {
+	      if (actualIndex === memos.expected.indexOf(expected)) {
+	        return true;
+	      }
+	    }
+
+	    memos.actual.push(actual);
+	    memos.expected.push(expected);
+
+	    return objEquiv(actual, expected, strict, memos);
+	  }
+	}
+
+	function isArguments(object) {
+	  return Object.prototype.toString.call(object) == '[object Arguments]';
+	}
+
+	function objEquiv(a, b, strict, actualVisitedObjects) {
+	  if (a === null || a === undefined || b === null || b === undefined) return false;
+	  // if one is a primitive, the other must be same
+	  if (util.isPrimitive(a) || util.isPrimitive(b)) return a === b;
+	  if (strict && Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) return false;
+	  var aIsArgs = isArguments(a);
+	  var bIsArgs = isArguments(b);
+	  if (aIsArgs && !bIsArgs || !aIsArgs && bIsArgs) return false;
+	  if (aIsArgs) {
+	    a = pSlice.call(a);
+	    b = pSlice.call(b);
+	    return _deepEqual(a, b, strict);
+	  }
+	  var ka = objectKeys(a);
+	  var kb = objectKeys(b);
+	  var key, i;
+	  // having the same number of owned properties (keys incorporates
+	  // hasOwnProperty)
+	  if (ka.length !== kb.length) return false;
+	  //the same set of keys (although not necessarily the same order),
+	  ka.sort();
+	  kb.sort();
+	  //~~~cheap key test
+	  for (i = ka.length - 1; i >= 0; i--) {
+	    if (ka[i] !== kb[i]) return false;
+	  }
+	  //equivalent values for every corresponding key, and
+	  //~~~possibly expensive deep test
+	  for (i = ka.length - 1; i >= 0; i--) {
+	    key = ka[i];
+	    if (!_deepEqual(a[key], b[key], strict, actualVisitedObjects)) return false;
+	  }
+	  return true;
+	}
+
+	// 8. The non-equivalence assertion tests for any deep inequality.
+	// assert.notDeepEqual(actual, expected, message_opt);
+
+	assert.notDeepEqual = function notDeepEqual(actual, expected, message) {
+	  if (_deepEqual(actual, expected, false)) {
+	    fail(actual, expected, message, 'notDeepEqual', assert.notDeepEqual);
+	  }
+	};
+
+	assert.notDeepStrictEqual = notDeepStrictEqual;
+	function notDeepStrictEqual(actual, expected, message) {
+	  if (_deepEqual(actual, expected, true)) {
+	    fail(actual, expected, message, 'notDeepStrictEqual', notDeepStrictEqual);
+	  }
+	}
+
+	// 9. The strict equality assertion tests strict equality, as determined by ===.
+	// assert.strictEqual(actual, expected, message_opt);
+
+	assert.strictEqual = function strictEqual(actual, expected, message) {
+	  if (actual !== expected) {
+	    fail(actual, expected, message, '===', assert.strictEqual);
+	  }
+	};
+
+	// 10. The strict non-equality assertion tests for strict inequality, as
+	// determined by !==.  assert.notStrictEqual(actual, expected, message_opt);
+
+	assert.notStrictEqual = function notStrictEqual(actual, expected, message) {
+	  if (actual === expected) {
+	    fail(actual, expected, message, '!==', assert.notStrictEqual);
+	  }
+	};
+
+	function expectedException(actual, expected) {
+	  if (!actual || !expected) {
+	    return false;
+	  }
+
+	  if (Object.prototype.toString.call(expected) == '[object RegExp]') {
+	    return expected.test(actual);
+	  }
+
+	  try {
+	    if (actual instanceof expected) {
+	      return true;
+	    }
+	  } catch (e) {
+	    // Ignore.  The instanceof check doesn't work for arrow functions.
+	  }
+
+	  if (Error.isPrototypeOf(expected)) {
+	    return false;
+	  }
+
+	  return expected.call({}, actual) === true;
+	}
+
+	function _tryBlock(block) {
+	  var error;
+	  try {
+	    block();
+	  } catch (e) {
+	    error = e;
+	  }
+	  return error;
+	}
+
+	function _throws(shouldThrow, block, expected, message) {
+	  var actual;
+
+	  if (typeof block !== 'function') {
+	    throw new TypeError('"block" argument must be a function');
+	  }
+
+	  if (typeof expected === 'string') {
+	    message = expected;
+	    expected = null;
+	  }
+
+	  actual = _tryBlock(block);
+
+	  message = (expected && expected.name ? ' (' + expected.name + ').' : '.') + (message ? ' ' + message : '.');
+
+	  if (shouldThrow && !actual) {
+	    fail(actual, expected, 'Missing expected exception' + message);
+	  }
+
+	  var userProvidedMessage = typeof message === 'string';
+	  var isUnwantedException = !shouldThrow && util.isError(actual);
+	  var isUnexpectedException = !shouldThrow && actual && !expected;
+
+	  if (isUnwantedException && userProvidedMessage && expectedException(actual, expected) || isUnexpectedException) {
+	    fail(actual, expected, 'Got unwanted exception' + message);
+	  }
+
+	  if (shouldThrow && actual && expected && !expectedException(actual, expected) || !shouldThrow && actual) {
+	    throw actual;
+	  }
+	}
+
+	// 11. Expected to throw an error:
+	// assert.throws(block, Error_opt, message_opt);
+
+	assert.throws = function (block, /*optional*/error, /*optional*/message) {
+	  _throws(true, block, error, message);
+	};
+
+	// EXTENSION! This is annoying to write outside this module.
+	assert.doesNotThrow = function (block, /*optional*/error, /*optional*/message) {
+	  _throws(false, block, error, message);
+	};
+
+	assert.ifError = function (err) {
+	  if (err) throw err;
+	};
+
+	var objectKeys = Object.keys || function (obj) {
+	  var keys = [];
+	  for (var key in obj) {
+	    if (hasOwn.call(obj, key)) keys.push(key);
+	  }
+	  return keys;
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 58 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global, process) {'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	// Copyright Joyent, Inc. and other Node contributors.
+	//
+	// Permission is hereby granted, free of charge, to any person obtaining a
+	// copy of this software and associated documentation files (the
+	// "Software"), to deal in the Software without restriction, including
+	// without limitation the rights to use, copy, modify, merge, publish,
+	// distribute, sublicense, and/or sell copies of the Software, and to permit
+	// persons to whom the Software is furnished to do so, subject to the
+	// following conditions:
+	//
+	// The above copyright notice and this permission notice shall be included
+	// in all copies or substantial portions of the Software.
+	//
+	// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+	// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+	// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+	// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+	var formatRegExp = /%[sdj%]/g;
+	exports.format = function (f) {
+	  if (!isString(f)) {
+	    var objects = [];
+	    for (var i = 0; i < arguments.length; i++) {
+	      objects.push(inspect(arguments[i]));
+	    }
+	    return objects.join(' ');
+	  }
+
+	  var i = 1;
+	  var args = arguments;
+	  var len = args.length;
+	  var str = String(f).replace(formatRegExp, function (x) {
+	    if (x === '%%') return '%';
+	    if (i >= len) return x;
+	    switch (x) {
+	      case '%s':
+	        return String(args[i++]);
+	      case '%d':
+	        return Number(args[i++]);
+	      case '%j':
+	        try {
+	          return JSON.stringify(args[i++]);
+	        } catch (_) {
+	          return '[Circular]';
+	        }
+	      default:
+	        return x;
+	    }
+	  });
+	  for (var x = args[i]; i < len; x = args[++i]) {
+	    if (isNull(x) || !isObject(x)) {
+	      str += ' ' + x;
+	    } else {
+	      str += ' ' + inspect(x);
+	    }
+	  }
+	  return str;
+	};
+
+	// Mark that a method should not be used.
+	// Returns a modified function which warns once by default.
+	// If --no-deprecation is set, then it is a no-op.
+	exports.deprecate = function (fn, msg) {
+	  // Allow for deprecating things in the process of starting up.
+	  if (isUndefined(global.process)) {
+	    return function () {
+	      return exports.deprecate(fn, msg).apply(this, arguments);
+	    };
+	  }
+
+	  if (process.noDeprecation === true) {
+	    return fn;
+	  }
+
+	  var warned = false;
+	  function deprecated() {
+	    if (!warned) {
+	      if (process.throwDeprecation) {
+	        throw new Error(msg);
+	      } else if (process.traceDeprecation) {
+	        console.trace(msg);
+	      } else {
+	        console.error(msg);
+	      }
+	      warned = true;
+	    }
+	    return fn.apply(this, arguments);
+	  }
+
+	  return deprecated;
+	};
+
+	var debugs = {};
+	var debugEnviron;
+	exports.debuglog = function (set) {
+	  if (isUndefined(debugEnviron)) debugEnviron = process.env.NODE_DEBUG || '';
+	  set = set.toUpperCase();
+	  if (!debugs[set]) {
+	    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
+	      var pid = process.pid;
+	      debugs[set] = function () {
+	        var msg = exports.format.apply(exports, arguments);
+	        console.error('%s %d: %s', set, pid, msg);
+	      };
+	    } else {
+	      debugs[set] = function () {};
+	    }
+	  }
+	  return debugs[set];
+	};
+
+	/**
+	 * Echos the value of a value. Trys to print the value out
+	 * in the best way possible given the different types.
+	 *
+	 * @param {Object} obj The object to print out.
+	 * @param {Object} opts Optional options object that alters the output.
+	 */
+	/* legacy: obj, showHidden, depth, colors*/
+	function inspect(obj, opts) {
+	  // default options
+	  var ctx = {
+	    seen: [],
+	    stylize: stylizeNoColor
+	  };
+	  // legacy...
+	  if (arguments.length >= 3) ctx.depth = arguments[2];
+	  if (arguments.length >= 4) ctx.colors = arguments[3];
+	  if (isBoolean(opts)) {
+	    // legacy...
+	    ctx.showHidden = opts;
+	  } else if (opts) {
+	    // got an "options" object
+	    exports._extend(ctx, opts);
+	  }
+	  // set default options
+	  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
+	  if (isUndefined(ctx.depth)) ctx.depth = 2;
+	  if (isUndefined(ctx.colors)) ctx.colors = false;
+	  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
+	  if (ctx.colors) ctx.stylize = stylizeWithColor;
+	  return formatValue(ctx, obj, ctx.depth);
+	}
+	exports.inspect = inspect;
+
+	// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
+	inspect.colors = {
+	  'bold': [1, 22],
+	  'italic': [3, 23],
+	  'underline': [4, 24],
+	  'inverse': [7, 27],
+	  'white': [37, 39],
+	  'grey': [90, 39],
+	  'black': [30, 39],
+	  'blue': [34, 39],
+	  'cyan': [36, 39],
+	  'green': [32, 39],
+	  'magenta': [35, 39],
+	  'red': [31, 39],
+	  'yellow': [33, 39]
+	};
+
+	// Don't use 'blue' not visible on cmd.exe
+	inspect.styles = {
+	  'special': 'cyan',
+	  'number': 'yellow',
+	  'boolean': 'yellow',
+	  'undefined': 'grey',
+	  'null': 'bold',
+	  'string': 'green',
+	  'date': 'magenta',
+	  // "name": intentionally not styling
+	  'regexp': 'red'
+	};
+
+	function stylizeWithColor(str, styleType) {
+	  var style = inspect.styles[styleType];
+
+	  if (style) {
+	    return '\x1B[' + inspect.colors[style][0] + 'm' + str + '\x1B[' + inspect.colors[style][1] + 'm';
+	  } else {
+	    return str;
+	  }
+	}
+
+	function stylizeNoColor(str, styleType) {
+	  return str;
+	}
+
+	function arrayToHash(array) {
+	  var hash = {};
+
+	  array.forEach(function (val, idx) {
+	    hash[val] = true;
+	  });
+
+	  return hash;
+	}
+
+	function formatValue(ctx, value, recurseTimes) {
+	  // Provide a hook for user-specified inspect functions.
+	  // Check that value is an object with an inspect function on it
+	  if (ctx.customInspect && value && isFunction(value.inspect) &&
+	  // Filter out the util module, it's inspect function is special
+	  value.inspect !== exports.inspect &&
+	  // Also filter out any prototype objects using the circular check.
+	  !(value.constructor && value.constructor.prototype === value)) {
+	    var ret = value.inspect(recurseTimes, ctx);
+	    if (!isString(ret)) {
+	      ret = formatValue(ctx, ret, recurseTimes);
+	    }
+	    return ret;
+	  }
+
+	  // Primitive types cannot have properties
+	  var primitive = formatPrimitive(ctx, value);
+	  if (primitive) {
+	    return primitive;
+	  }
+
+	  // Look up the keys of the object.
+	  var keys = Object.keys(value);
+	  var visibleKeys = arrayToHash(keys);
+
+	  if (ctx.showHidden) {
+	    keys = Object.getOwnPropertyNames(value);
+	  }
+
+	  // IE doesn't make error fields non-enumerable
+	  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
+	  if (isError(value) && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
+	    return formatError(value);
+	  }
+
+	  // Some type of object without properties can be shortcutted.
+	  if (keys.length === 0) {
+	    if (isFunction(value)) {
+	      var name = value.name ? ': ' + value.name : '';
+	      return ctx.stylize('[Function' + name + ']', 'special');
+	    }
+	    if (isRegExp(value)) {
+	      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+	    }
+	    if (isDate(value)) {
+	      return ctx.stylize(Date.prototype.toString.call(value), 'date');
+	    }
+	    if (isError(value)) {
+	      return formatError(value);
+	    }
+	  }
+
+	  var base = '',
+	      array = false,
+	      braces = ['{', '}'];
+
+	  // Make Array say that they are Array
+	  if (isArray(value)) {
+	    array = true;
+	    braces = ['[', ']'];
+	  }
+
+	  // Make functions say that they are functions
+	  if (isFunction(value)) {
+	    var n = value.name ? ': ' + value.name : '';
+	    base = ' [Function' + n + ']';
+	  }
+
+	  // Make RegExps say that they are RegExps
+	  if (isRegExp(value)) {
+	    base = ' ' + RegExp.prototype.toString.call(value);
+	  }
+
+	  // Make dates with properties first say the date
+	  if (isDate(value)) {
+	    base = ' ' + Date.prototype.toUTCString.call(value);
+	  }
+
+	  // Make error with message first say the error
+	  if (isError(value)) {
+	    base = ' ' + formatError(value);
+	  }
+
+	  if (keys.length === 0 && (!array || value.length == 0)) {
+	    return braces[0] + base + braces[1];
+	  }
+
+	  if (recurseTimes < 0) {
+	    if (isRegExp(value)) {
+	      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+	    } else {
+	      return ctx.stylize('[Object]', 'special');
+	    }
+	  }
+
+	  ctx.seen.push(value);
+
+	  var output;
+	  if (array) {
+	    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+	  } else {
+	    output = keys.map(function (key) {
+	      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+	    });
+	  }
+
+	  ctx.seen.pop();
+
+	  return reduceToSingleString(output, base, braces);
+	}
+
+	function formatPrimitive(ctx, value) {
+	  if (isUndefined(value)) return ctx.stylize('undefined', 'undefined');
+	  if (isString(value)) {
+	    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '').replace(/'/g, "\\'").replace(/\\"/g, '"') + '\'';
+	    return ctx.stylize(simple, 'string');
+	  }
+	  if (isNumber(value)) return ctx.stylize('' + value, 'number');
+	  if (isBoolean(value)) return ctx.stylize('' + value, 'boolean');
+	  // For some reason typeof null is "object", so special case here.
+	  if (isNull(value)) return ctx.stylize('null', 'null');
+	}
+
+	function formatError(value) {
+	  return '[' + Error.prototype.toString.call(value) + ']';
+	}
+
+	function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+	  var output = [];
+	  for (var i = 0, l = value.length; i < l; ++i) {
+	    if (hasOwnProperty(value, String(i))) {
+	      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys, String(i), true));
+	    } else {
+	      output.push('');
+	    }
+	  }
+	  keys.forEach(function (key) {
+	    if (!key.match(/^\d+$/)) {
+	      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys, key, true));
+	    }
+	  });
+	  return output;
+	}
+
+	function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+	  var name, str, desc;
+	  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
+	  if (desc.get) {
+	    if (desc.set) {
+	      str = ctx.stylize('[Getter/Setter]', 'special');
+	    } else {
+	      str = ctx.stylize('[Getter]', 'special');
+	    }
+	  } else {
+	    if (desc.set) {
+	      str = ctx.stylize('[Setter]', 'special');
+	    }
+	  }
+	  if (!hasOwnProperty(visibleKeys, key)) {
+	    name = '[' + key + ']';
+	  }
+	  if (!str) {
+	    if (ctx.seen.indexOf(desc.value) < 0) {
+	      if (isNull(recurseTimes)) {
+	        str = formatValue(ctx, desc.value, null);
+	      } else {
+	        str = formatValue(ctx, desc.value, recurseTimes - 1);
+	      }
+	      if (str.indexOf('\n') > -1) {
+	        if (array) {
+	          str = str.split('\n').map(function (line) {
+	            return '  ' + line;
+	          }).join('\n').substr(2);
+	        } else {
+	          str = '\n' + str.split('\n').map(function (line) {
+	            return '   ' + line;
+	          }).join('\n');
+	        }
+	      }
+	    } else {
+	      str = ctx.stylize('[Circular]', 'special');
+	    }
+	  }
+	  if (isUndefined(name)) {
+	    if (array && key.match(/^\d+$/)) {
+	      return str;
+	    }
+	    name = JSON.stringify('' + key);
+	    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+	      name = name.substr(1, name.length - 2);
+	      name = ctx.stylize(name, 'name');
+	    } else {
+	      name = name.replace(/'/g, "\\'").replace(/\\"/g, '"').replace(/(^"|"$)/g, "'");
+	      name = ctx.stylize(name, 'string');
+	    }
+	  }
+
+	  return name + ': ' + str;
+	}
+
+	function reduceToSingleString(output, base, braces) {
+	  var numLinesEst = 0;
+	  var length = output.reduce(function (prev, cur) {
+	    numLinesEst++;
+	    if (cur.indexOf('\n') >= 0) numLinesEst++;
+	    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
+	  }, 0);
+
+	  if (length > 60) {
+	    return braces[0] + (base === '' ? '' : base + '\n ') + ' ' + output.join(',\n  ') + ' ' + braces[1];
+	  }
+
+	  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
+	}
+
+	// NOTE: These type checking functions intentionally don't use `instanceof`
+	// because it is fragile and can be easily faked with `Object.create()`.
+	function isArray(ar) {
+	  return Array.isArray(ar);
+	}
+	exports.isArray = isArray;
+
+	function isBoolean(arg) {
+	  return typeof arg === 'boolean';
+	}
+	exports.isBoolean = isBoolean;
+
+	function isNull(arg) {
+	  return arg === null;
+	}
+	exports.isNull = isNull;
+
+	function isNullOrUndefined(arg) {
+	  return arg == null;
+	}
+	exports.isNullOrUndefined = isNullOrUndefined;
+
+	function isNumber(arg) {
+	  return typeof arg === 'number';
+	}
+	exports.isNumber = isNumber;
+
+	function isString(arg) {
+	  return typeof arg === 'string';
+	}
+	exports.isString = isString;
+
+	function isSymbol(arg) {
+	  return (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) === 'symbol';
+	}
+	exports.isSymbol = isSymbol;
+
+	function isUndefined(arg) {
+	  return arg === void 0;
+	}
+	exports.isUndefined = isUndefined;
+
+	function isRegExp(re) {
+	  return isObject(re) && objectToString(re) === '[object RegExp]';
+	}
+	exports.isRegExp = isRegExp;
+
+	function isObject(arg) {
+	  return (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) === 'object' && arg !== null;
+	}
+	exports.isObject = isObject;
+
+	function isDate(d) {
+	  return isObject(d) && objectToString(d) === '[object Date]';
+	}
+	exports.isDate = isDate;
+
+	function isError(e) {
+	  return isObject(e) && (objectToString(e) === '[object Error]' || e instanceof Error);
+	}
+	exports.isError = isError;
+
+	function isFunction(arg) {
+	  return typeof arg === 'function';
+	}
+	exports.isFunction = isFunction;
+
+	function isPrimitive(arg) {
+	  return arg === null || typeof arg === 'boolean' || typeof arg === 'number' || typeof arg === 'string' || (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) === 'symbol' || // ES6 symbol
+	  typeof arg === 'undefined';
+	}
+	exports.isPrimitive = isPrimitive;
+
+	exports.isBuffer = __webpack_require__(60);
+
+	function objectToString(o) {
+	  return Object.prototype.toString.call(o);
+	}
+
+	function pad(n) {
+	  return n < 10 ? '0' + n.toString(10) : n.toString(10);
+	}
+
+	var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+	// 26 Feb 16:19:34
+	function timestamp() {
+	  var d = new Date();
+	  var time = [pad(d.getHours()), pad(d.getMinutes()), pad(d.getSeconds())].join(':');
+	  return [d.getDate(), months[d.getMonth()], time].join(' ');
+	}
+
+	// log is just a thin wrapper to console.log that prepends a timestamp
+	exports.log = function () {
+	  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
+	};
+
+	/**
+	 * Inherit the prototype methods from one constructor into another.
+	 *
+	 * The Function.prototype.inherits from lang.js rewritten as a standalone
+	 * function (not on Function.prototype). NOTE: If this file is to be loaded
+	 * during bootstrapping this function needs to be rewritten using some native
+	 * functions as prototype setup using normal JavaScript does not work as
+	 * expected during bootstrapping (see mirror.js in r114903).
+	 *
+	 * @param {function} ctor Constructor function which needs to inherit the
+	 *     prototype.
+	 * @param {function} superCtor Constructor function to inherit prototype from.
+	 */
+	exports.inherits = __webpack_require__(61);
+
+	exports._extend = function (origin, add) {
+	  // Don't do anything if add isn't an object
+	  if (!add || !isObject(add)) return origin;
+
+	  var keys = Object.keys(add);
+	  var i = keys.length;
+	  while (i--) {
+	    origin[keys[i]] = add[keys[i]];
+	  }
+	  return origin;
+	};
+
+	function hasOwnProperty(obj, prop) {
+	  return Object.prototype.hasOwnProperty.call(obj, prop);
+	}
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(59)))
+
+/***/ },
+/* 59 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	// shim for using process in browser
+	var process = module.exports = {};
+
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
+
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout() {
+	    throw new Error('clearTimeout has not been defined');
+	}
+	(function () {
+	    try {
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
+	    } catch (e) {
+	        cachedSetTimeout = defaultSetTimout;
+	    }
+	    try {
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
+	    } catch (e) {
+	        cachedClearTimeout = defaultClearTimeout;
+	    }
+	})();
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch (e) {
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch (e) {
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e) {
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e) {
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+	}
+	var queue = [];
+	var draining = false;
+	var currentQueue;
+	var queueIndex = -1;
+
+	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
+	    draining = false;
+	    if (currentQueue.length) {
+	        queue = currentQueue.concat(queue);
+	    } else {
+	        queueIndex = -1;
+	    }
+	    if (queue.length) {
+	        drainQueue();
+	    }
+	}
+
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    var timeout = runTimeout(cleanUpNextTick);
+	    draining = true;
+
+	    var len = queue.length;
+	    while (len) {
+	        currentQueue = queue;
+	        queue = [];
+	        while (++queueIndex < len) {
+	            if (currentQueue) {
+	                currentQueue[queueIndex].run();
+	            }
+	        }
+	        queueIndex = -1;
+	        len = queue.length;
+	    }
+	    currentQueue = null;
+	    draining = false;
+	    runClearTimeout(timeout);
+	}
+
+	process.nextTick = function (fun) {
+	    var args = new Array(arguments.length - 1);
+	    if (arguments.length > 1) {
+	        for (var i = 1; i < arguments.length; i++) {
+	            args[i - 1] = arguments[i];
+	        }
+	    }
+	    queue.push(new Item(fun, args));
+	    if (queue.length === 1 && !draining) {
+	        runTimeout(drainQueue);
+	    }
+	};
+
+	// v8 likes predictible objects
+	function Item(fun, array) {
+	    this.fun = fun;
+	    this.array = array;
+	}
+	Item.prototype.run = function () {
+	    this.fun.apply(null, this.array);
+	};
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	process.cwd = function () {
+	    return '/';
+	};
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function () {
+	    return 0;
+	};
+
+/***/ },
+/* 60 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	module.exports = function isBuffer(arg) {
+	  return arg && (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) === 'object' && typeof arg.copy === 'function' && typeof arg.fill === 'function' && typeof arg.readUInt8 === 'function';
+	};
+
+/***/ },
+/* 61 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	if (typeof Object.create === 'function') {
+	  // implementation from standard node.js 'util' module
+	  module.exports = function inherits(ctor, superCtor) {
+	    ctor.super_ = superCtor;
+	    ctor.prototype = Object.create(superCtor.prototype, {
+	      constructor: {
+	        value: ctor,
+	        enumerable: false,
+	        writable: true,
+	        configurable: true
+	      }
+	    });
+	  };
+	} else {
+	  // old school shim for old browsers
+	  module.exports = function inherits(ctor, superCtor) {
+	    ctor.super_ = superCtor;
+	    var TempCtor = function TempCtor() {};
+	    TempCtor.prototype = superCtor.prototype;
+	    ctor.prototype = new TempCtor();
+	    ctor.prototype.constructor = ctor;
+	  };
+	}
+
+/***/ },
+/* 62 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {// Licensed to the Software Freedom Conservancy (SFC) under one
+	// or more contributor license agreements.  See the NOTICE file
+	// distributed with this work for additional information
+	// regarding copyright ownership.  The SFC licenses this file
+	// to you under the Apache License, Version 2.0 (the
+	// "License"); you may not use this file except in compliance
+	// with the License.  You may obtain a copy of the License at
+	//
+	//   http://www.apache.org/licenses/LICENSE-2.0
+	//
+	// Unless required by applicable law or agreed to in writing,
+	// software distributed under the License is distributed on an
+	// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+	// KIND, either express or implied.  See the License for the
+	// specific language governing permissions and limitations
+	// under the License.
+
+	/**
+	 * @fileoverview The main user facing module. Exports WebDriver's primary
+	 * public API and provides convenience assessors to certain sub-modules.
+	 */
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var chrome = __webpack_require__(63);
+	var edge = __webpack_require__(181);
+	var firefox = __webpack_require__(182);
+	var _http = __webpack_require__(65);
+	var ie = __webpack_require__(344);
+	var actions = __webpack_require__(106);
+	var by = __webpack_require__(108);
+	var capabilities = __webpack_require__(103);
+	var command = __webpack_require__(96);
+	var error = __webpack_require__(98);
+	var events = __webpack_require__(101);
+	var input = __webpack_require__(107);
+	var logging = __webpack_require__(99);
+	var promise = __webpack_require__(100);
+	var session = __webpack_require__(102);
+	var until = __webpack_require__(345);
+	var webdriver = __webpack_require__(105);
+	var opera = __webpack_require__(346);
+	var phantomjs = __webpack_require__(347);
+	var remote = __webpack_require__(142);
+	var safari = __webpack_require__(348);
+
+	var Browser = capabilities.Browser;
+	var Capabilities = capabilities.Capabilities;
+	var Capability = capabilities.Capability;
+	var Session = session.Session;
+	var WebDriver = webdriver.WebDriver;
+
+	var seleniumServer;
+
+	/**
+	 * Starts an instance of the Selenium server if not yet running.
+	 * @param {string} jar Path to the server jar to use.
+	 * @return {!Promise<string>} A promise for the server's
+	 *     addrss once started.
+	 */
+	function startSeleniumServer(jar) {
+	  if (!seleniumServer) {
+	    seleniumServer = new remote.SeleniumServer(jar);
+	  }
+	  return seleniumServer.start();
+	}
+
+	/**
+	 * {@linkplain webdriver.WebDriver#setFileDetector WebDriver's setFileDetector}
+	 * method uses a non-standard command to transfer files from the local client
+	 * to the remote end hosting the browser. Many of the WebDriver sub-types, like
+	 * the {@link chrome.Driver} and {@link firefox.Driver}, do not support this
+	 * command. Thus, these classes override the `setFileDetector` to no-op.
+	 *
+	 * This function uses a mixin to re-enable `setFileDetector` by calling the
+	 * original method on the WebDriver prototype directly. This is used only when
+	 * the builder creates a Chrome or Firefox instance that communicates with a
+	 * remote end (and thus, support for remote file detectors is unknown).
+	 *
+	 * @param {function(new: webdriver.WebDriver, ...?)} ctor
+	 * @return {function(new: webdriver.WebDriver, ...?)}
+	 */
+	function ensureFileDetectorsAreEnabled(ctor) {
+	  var mixin = function (_ctor) {
+	    _inherits(mixin, _ctor);
+
+	    function mixin() {
+	      _classCallCheck(this, mixin);
+
+	      return _possibleConstructorReturn(this, (mixin.__proto__ || Object.getPrototypeOf(mixin)).apply(this, arguments));
+	    }
+
+	    _createClass(mixin, [{
+	      key: 'setFileDetector',
+
+	      /** @param {input.FileDetector} detector */
+	      value: function setFileDetector(detector) {
+	        webdriver.WebDriver.prototype.setFileDetector.call(this, detector);
+	      }
+	    }]);
+
+	    return mixin;
+	  }(ctor);
+	  return mixin;
+	}
+
+	/**
+	 * A thenable wrapper around a {@linkplain webdriver.IWebDriver IWebDriver}
+	 * instance that allows commands to be issued directly instead of having to
+	 * repeatedly call `then`:
+	 *
+	 *     let driver = new Builder().build();
+	 *     driver.then(d => d.get(url));  // You can do this...
+	 *     driver.get(url);               // ...or this
+	 *
+	 * If the driver instance fails to resolve (e.g. the session cannot be created),
+	 * every issued command will fail.
+	 *
+	 * @extends {webdriver.IWebDriver}
+	 * @extends {promise.CancellableThenable<!webdriver.IWebDriver>}
+	 * @interface
+	 */
+
+	var ThenableWebDriver = function () {
+	  function ThenableWebDriver() {
+	    _classCallCheck(this, ThenableWebDriver);
+	  }
+
+	  _createClass(ThenableWebDriver, null, [{
+	    key: 'createSession',
+
+	    /** @param {...?} args */
+	    value: function createSession() {}
+	  }]);
+
+	  return ThenableWebDriver;
+	}();
+
+	/**
+	 * @const {!Map<function(new: WebDriver, !IThenable<!Session>, ...?),
+	 *              function(new: ThenableWebDriver, !IThenable<!Session>, ...?)>}
+	 */
+
+
+	var THENABLE_DRIVERS = new Map();
+
+	/**
+	 * @param {function(new: WebDriver, !IThenable<!Session>, ...?)} ctor
+	 * @param {...?} args
+	 * @return {!ThenableWebDriver}
+	 */
+	function createDriver(ctor) {
+	  var _thenableWebDriverPro;
+
+	  var thenableWebDriverProxy = THENABLE_DRIVERS.get(ctor);
+	  if (!thenableWebDriverProxy) {
+	    /** @implements {ThenableWebDriver} */
+	    thenableWebDriverProxy = function (_ctor2) {
+	      _inherits(thenableWebDriverProxy, _ctor2);
+
+	      /**
+	       * @param {!IThenable<!Session>} session
+	       * @param {...?} rest
+	       */
+	      function thenableWebDriverProxy(session) {
+	        var _ref;
+
+	        for (var _len2 = arguments.length, rest = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	          rest[_key2 - 1] = arguments[_key2];
+	        }
+
+	        _classCallCheck(this, thenableWebDriverProxy);
+
+	        var _this2 = _possibleConstructorReturn(this, (_ref = thenableWebDriverProxy.__proto__ || Object.getPrototypeOf(thenableWebDriverProxy)).call.apply(_ref, [this, session].concat(rest)));
+
+	        var pd = _this2.getSession().then(function (session) {
+	          return new (Function.prototype.bind.apply(ctor, [null].concat([session], rest)))();
+	        });
+
+	        /**
+	         * @param {(string|Error)=} opt_reason
+	         * @override
+	         */
+	        _this2.cancel = function (opt_reason) {
+	          if (promise.CancellableThenable.isImplementation(pd)) {
+	            /** @type {!promise.CancellableThenable} */pd.cancel(opt_reason);
+	          }
+	        };
+
+	        /** @override */
+	        _this2.then = pd.then.bind(pd);
+
+	        /** @override */
+	        _this2.catch = pd.then.bind(pd);
+	        return _this2;
+	      }
+
+	      return thenableWebDriverProxy;
+	    }(ctor);
+	    promise.CancellableThenable.addImplementation(thenableWebDriverProxy);
+	    THENABLE_DRIVERS.set(ctor, thenableWebDriverProxy);
+	  }
+
+	  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	    args[_key - 1] = arguments[_key];
+	  }
+
+	  return (_thenableWebDriverPro = thenableWebDriverProxy).createSession.apply(_thenableWebDriverPro, args);
+	}
+
+	/**
+	 * Creates new {@link webdriver.WebDriver WebDriver} instances. The environment
+	 * variables listed below may be used to override a builder's configuration,
+	 * allowing quick runtime changes.
+	 *
+	 * - {@code SELENIUM_BROWSER}: defines the target browser in the form
+	 *   {@code browser[:version][:platform]}.
+	 *
+	 * - {@code SELENIUM_REMOTE_URL}: defines the remote URL for all builder
+	 *   instances. This environment variable should be set to a fully qualified
+	 *   URL for a WebDriver server (e.g. http://localhost:4444/wd/hub). This
+	 *   option always takes precedence over {@code SELENIUM_SERVER_JAR}.
+	 *
+	 * - {@code SELENIUM_SERVER_JAR}: defines the path to the
+	 *   <a href="http://selenium-release.storage.googleapis.com/index.html">
+	 *   standalone Selenium server</a> jar to use. The server will be started the
+	 *   first time a WebDriver instance and be killed when the process exits.
+	 *
+	 * Suppose you had mytest.js that created WebDriver with
+	 *
+	 *     var driver = new webdriver.Builder()
+	 *         .forBrowser('chrome')
+	 *         .build();
+	 *
+	 * This test could be made to use Firefox on the local machine by running with
+	 * `SELENIUM_BROWSER=firefox node mytest.js`. Rather than change the code to
+	 * target Google Chrome on a remote machine, you can simply set the
+	 * `SELENIUM_BROWSER` and `SELENIUM_REMOTE_URL` environment variables:
+	 *
+	 *     SELENIUM_BROWSER=chrome:36:LINUX \
+	 *     SELENIUM_REMOTE_URL=http://www.example.com:4444/wd/hub \
+	 *     node mytest.js
+	 *
+	 * You could also use a local copy of the standalone Selenium server:
+	 *
+	 *     SELENIUM_BROWSER=chrome:36:LINUX \
+	 *     SELENIUM_SERVER_JAR=/path/to/selenium-server-standalone.jar \
+	 *     node mytest.js
+	 */
+
+	var Builder = function () {
+	  function Builder() {
+	    _classCallCheck(this, Builder);
+
+	    /** @private @const */
+	    this.log_ = logging.getLogger('webdriver.Builder');
+
+	    /** @private {promise.ControlFlow} */
+	    this.flow_ = null;
+
+	    /** @private {string} */
+	    this.url_ = '';
+
+	    /** @private {?string} */
+	    this.proxy_ = null;
+
+	    /** @private {!Capabilities} */
+	    this.capabilities_ = new Capabilities();
+
+	    /** @private {chrome.Options} */
+	    this.chromeOptions_ = null;
+
+	    /** @private {firefox.Options} */
+	    this.firefoxOptions_ = null;
+
+	    /** @private {opera.Options} */
+	    this.operaOptions_ = null;
+
+	    /** @private {ie.Options} */
+	    this.ieOptions_ = null;
+
+	    /** @private {safari.Options} */
+	    this.safariOptions_ = null;
+
+	    /** @private {edge.Options} */
+	    this.edgeOptions_ = null;
+
+	    /** @private {boolean} */
+	    this.ignoreEnv_ = false;
+
+	    /** @private {http.Agent} */
+	    this.agent_ = null;
+	  }
+
+	  /**
+	   * Configures this builder to ignore any environment variable overrides and to
+	   * only use the configuration specified through this instance's API.
+	   *
+	   * @return {!Builder} A self reference.
+	   */
+
+
+	  _createClass(Builder, [{
+	    key: 'disableEnvironmentOverrides',
+	    value: function disableEnvironmentOverrides() {
+	      this.ignoreEnv_ = true;
+	      return this;
+	    }
+
+	    /**
+	     * Sets the URL of a remote WebDriver server to use. Once a remote URL has
+	     * been specified, the builder direct all new clients to that server. If this
+	     * method is never called, the Builder will attempt to create all clients
+	     * locally.
+	     *
+	     * As an alternative to this method, you may also set the
+	     * `SELENIUM_REMOTE_URL` environment variable.
+	     *
+	     * @param {string} url The URL of a remote server to use.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'usingServer',
+	    value: function usingServer(url) {
+	      this.url_ = url;
+	      return this;
+	    }
+
+	    /**
+	     * @return {string} The URL of the WebDriver server this instance is
+	     *     configured to use.
+	     */
+
+	  }, {
+	    key: 'getServerUrl',
+	    value: function getServerUrl() {
+	      return this.url_;
+	    }
+
+	    /**
+	     * Sets the URL of the proxy to use for the WebDriver's HTTP connections.
+	     * If this method is never called, the Builder will create a connection
+	     * without a proxy.
+	     *
+	     * @param {string} proxy The URL of a proxy to use.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'usingWebDriverProxy',
+	    value: function usingWebDriverProxy(proxy) {
+	      this.proxy_ = proxy;
+	      return this;
+	    }
+
+	    /**
+	     * @return {?string} The URL of the proxy server to use for the WebDriver's
+	     *    HTTP connections, or `null` if not set.
+	     */
+
+	  }, {
+	    key: 'getWebDriverProxy',
+	    value: function getWebDriverProxy() {
+	      return this.proxy_;
+	    }
+
+	    /**
+	     * Sets the http agent to use for each request.
+	     * If this method is not called, the Builder will use http.globalAgent by default.
+	     *
+	     * @param {http.Agent} agent The agent to use for each request.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'usingHttpAgent',
+	    value: function usingHttpAgent(agent) {
+	      this.agent_ = agent;
+	      return this;
+	    }
+
+	    /**
+	     * @return {http.Agent} The http agent used for each request
+	     */
+
+	  }, {
+	    key: 'getHttpAgent',
+	    value: function getHttpAgent() {
+	      return this.agent_;
+	    }
+
+	    /**
+	     * Sets the desired capabilities when requesting a new session. This will
+	     * overwrite any previously set capabilities.
+	     * @param {!(Object|Capabilities)} capabilities The desired capabilities for
+	     *     a new session.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'withCapabilities',
+	    value: function withCapabilities(capabilities) {
+	      this.capabilities_ = new Capabilities(capabilities);
+	      return this;
+	    }
+
+	    /**
+	     * Returns the base set of capabilities this instance is currently configured
+	     * to use.
+	     * @return {!Capabilities} The current capabilities for this builder.
+	     */
+
+	  }, {
+	    key: 'getCapabilities',
+	    value: function getCapabilities() {
+	      return this.capabilities_;
+	    }
+
+	    /**
+	     * Configures the target browser for clients created by this instance.
+	     * Any calls to {@link #withCapabilities} after this function will
+	     * overwrite these settings.
+	     *
+	     * You may also define the target browser using the {@code SELENIUM_BROWSER}
+	     * environment variable. If set, this environment variable should be of the
+	     * form `browser[:[version][:platform]]`.
+	     *
+	     * @param {(string|Browser)} name The name of the target browser;
+	     *     common defaults are available on the {@link webdriver.Browser} enum.
+	     * @param {string=} opt_version A desired version; may be omitted if any
+	     *     version should be used.
+	     * @param {string=} opt_platform The desired platform; may be omitted if any
+	     *     version may be used.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'forBrowser',
+	    value: function forBrowser(name, opt_version, opt_platform) {
+	      this.capabilities_.set(Capability.BROWSER_NAME, name);
+	      this.capabilities_.set(Capability.VERSION, opt_version || null);
+	      this.capabilities_.set(Capability.PLATFORM, opt_platform || null);
+	      return this;
+	    }
+
+	    /**
+	     * Sets the proxy configuration for the target browser.
+	     * Any calls to {@link #withCapabilities} after this function will
+	     * overwrite these settings.
+	     *
+	     * @param {!capabilities.ProxyConfig} config The configuration to use.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setProxy',
+	    value: function setProxy(config) {
+	      this.capabilities_.setProxy(config);
+	      return this;
+	    }
+
+	    /**
+	     * Sets the logging preferences for the created session. Preferences may be
+	     * changed by repeated calls, or by calling {@link #withCapabilities}.
+	     * @param {!(./lib/logging.Preferences|Object<string, string>)} prefs The
+	     *     desired logging preferences.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setLoggingPrefs',
+	    value: function setLoggingPrefs(prefs) {
+	      this.capabilities_.setLoggingPrefs(prefs);
+	      return this;
+	    }
+
+	    /**
+	     * Sets whether native events should be used.
+	     * @param {boolean} enabled Whether to enable native events.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setEnableNativeEvents',
+	    value: function setEnableNativeEvents(enabled) {
+	      this.capabilities_.setEnableNativeEvents(enabled);
+	      return this;
+	    }
+
+	    /**
+	     * Sets how elements should be scrolled into view for interaction.
+	     * @param {number} behavior The desired scroll behavior: either 0 to align
+	     *     with the top of the viewport or 1 to align with the bottom.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setScrollBehavior',
+	    value: function setScrollBehavior(behavior) {
+	      this.capabilities_.setScrollBehavior(behavior);
+	      return this;
+	    }
+
+	    /**
+	     * Sets the default action to take with an unexpected alert before returning
+	     * an error.
+	     * @param {string} behavior The desired behavior; should be "accept",
+	     *     "dismiss", or "ignore". Defaults to "dismiss".
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setAlertBehavior',
+	    value: function setAlertBehavior(behavior) {
+	      this.capabilities_.setAlertBehavior(behavior);
+	      return this;
+	    }
+
+	    /**
+	     * Sets Chrome specific {@linkplain chrome.Options options} for drivers
+	     * created by this builder. Any logging or proxy settings defined on the given
+	     * options will take precedence over those set through
+	     * {@link #setLoggingPrefs} and {@link #setProxy}, respectively.
+	     *
+	     * @param {!chrome.Options} options The ChromeDriver options to use.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setChromeOptions',
+	    value: function setChromeOptions(options) {
+	      this.chromeOptions_ = options;
+	      return this;
+	    }
+
+	    /**
+	     * Sets Firefox specific {@linkplain firefox.Options options} for drivers
+	     * created by this builder. Any logging or proxy settings defined on the given
+	     * options will take precedence over those set through
+	     * {@link #setLoggingPrefs} and {@link #setProxy}, respectively.
+	     *
+	     * @param {!firefox.Options} options The FirefoxDriver options to use.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setFirefoxOptions',
+	    value: function setFirefoxOptions(options) {
+	      this.firefoxOptions_ = options;
+	      return this;
+	    }
+
+	    /**
+	     * @return {firefox.Options} the Firefox specific options currently configured
+	     *     for this instance.
+	     */
+
+	  }, {
+	    key: 'getFirefoxOptions',
+	    value: function getFirefoxOptions() {
+	      return this.firefoxOptions_;
+	    }
+
+	    /**
+	     * Sets Opera specific {@linkplain opera.Options options} for drivers created
+	     * by this builder. Any logging or proxy settings defined on the given options
+	     * will take precedence over those set through {@link #setLoggingPrefs} and
+	     * {@link #setProxy}, respectively.
+	     *
+	     * @param {!opera.Options} options The OperaDriver options to use.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setOperaOptions',
+	    value: function setOperaOptions(options) {
+	      this.operaOptions_ = options;
+	      return this;
+	    }
+
+	    /**
+	     * Set Internet Explorer specific {@linkplain ie.Options options} for drivers
+	     * created by this builder. Any proxy settings defined on the given options
+	     * will take precedence over those set through {@link #setProxy}.
+	     *
+	     * @param {!ie.Options} options The IEDriver options to use.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setIeOptions',
+	    value: function setIeOptions(options) {
+	      this.ieOptions_ = options;
+	      return this;
+	    }
+
+	    /**
+	     * Set {@linkplain edge.Options options} specific to Microsoft's Edge browser
+	     * for drivers created by this builder. Any proxy settings defined on the
+	     * given options will take precedence over those set through
+	     * {@link #setProxy}.
+	     *
+	     * @param {!edge.Options} options The MicrosoftEdgeDriver options to use.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setEdgeOptions',
+	    value: function setEdgeOptions(options) {
+	      this.edgeOptions_ = options;
+	      return this;
+	    }
+
+	    /**
+	     * Sets Safari specific {@linkplain safari.Options options} for drivers
+	     * created by this builder. Any logging settings defined on the given options
+	     * will take precedence over those set through {@link #setLoggingPrefs}.
+	     *
+	     * @param {!safari.Options} options The Safari options to use.
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setSafariOptions',
+	    value: function setSafariOptions(options) {
+	      this.safariOptions_ = options;
+	      return this;
+	    }
+
+	    /**
+	     * @return {safari.Options} the Safari specific options currently configured
+	     *     for this instance.
+	     */
+
+	  }, {
+	    key: 'getSafariOptions',
+	    value: function getSafariOptions() {
+	      return this.safariOptions_;
+	    }
+
+	    /**
+	     * Sets the control flow that created drivers should execute actions in. If
+	     * the flow is never set, or is set to {@code null}, it will use the active
+	     * flow at the time {@link #build()} is called.
+	     * @param {promise.ControlFlow} flow The control flow to use, or
+	     *     {@code null} to
+	     * @return {!Builder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setControlFlow',
+	    value: function setControlFlow(flow) {
+	      this.flow_ = flow;
+	      return this;
+	    }
+
+	    /**
+	     * Creates a new WebDriver client based on this builder's current
+	     * configuration.
+	     *
+	     * This method will return a {@linkplain ThenableWebDriver} instance, allowing
+	     * users to issue commands directly without calling `then()`. The returned
+	     * thenable wraps a promise that will resolve to a concrete
+	     * {@linkplain webdriver.WebDriver WebDriver} instance. The promise will be
+	     * rejected if the remote end fails to create a new session.
+	     *
+	     * @return {!ThenableWebDriver} A new WebDriver instance.
+	     * @throws {Error} If the current configuration is invalid.
+	     */
+
+	  }, {
+	    key: 'build',
+	    value: function build() {
+	      var _this3 = this;
+
+	      // Create a copy for any changes we may need to make based on the current
+	      // environment.
+	      var capabilities = new Capabilities(this.capabilities_);
+
+	      var browser;
+	      if (!this.ignoreEnv_ && process.env.SELENIUM_BROWSER) {
+	        this.log_.fine('SELENIUM_BROWSER=' + process.env.SELENIUM_BROWSER);
+	        browser = process.env.SELENIUM_BROWSER.split(/:/, 3);
+	        capabilities.set(Capability.BROWSER_NAME, browser[0]);
+	        capabilities.set(Capability.VERSION, browser[1] || null);
+	        capabilities.set(Capability.PLATFORM, browser[2] || null);
+	      }
+
+	      browser = capabilities.get(Capability.BROWSER_NAME);
+
+	      if (typeof browser !== 'string') {
+	        throw TypeError('Target browser must be a string, but is <' + (typeof browser === 'undefined' ? 'undefined' : _typeof(browser)) + '>;' + ' did you forget to call forBrowser()?');
+	      }
+
+	      if (browser === 'ie') {
+	        browser = Browser.INTERNET_EXPLORER;
+	      }
+
+	      // Apply browser specific overrides.
+	      if (browser === Browser.CHROME && this.chromeOptions_) {
+	        capabilities.merge(this.chromeOptions_.toCapabilities());
+	      } else if (browser === Browser.FIREFOX && this.firefoxOptions_) {
+	        capabilities.merge(this.firefoxOptions_.toCapabilities());
+	      } else if (browser === Browser.INTERNET_EXPLORER && this.ieOptions_) {
+	        capabilities.merge(this.ieOptions_.toCapabilities());
+	      } else if (browser === Browser.OPERA && this.operaOptions_) {
+	        capabilities.merge(this.operaOptions_.toCapabilities());
+	      } else if (browser === Browser.SAFARI && this.safariOptions_) {
+	        capabilities.merge(this.safariOptions_.toCapabilities());
+	      } else if (browser === Browser.EDGE && this.edgeOptions_) {
+	        capabilities.merge(this.edgeOptions_.toCapabilities());
+	      }
+
+	      // Check for a remote browser.
+	      var url = this.url_;
+	      if (!this.ignoreEnv_) {
+	        if (process.env.SELENIUM_REMOTE_URL) {
+	          this.log_.fine('SELENIUM_REMOTE_URL=' + process.env.SELENIUM_REMOTE_URL);
+	          url = process.env.SELENIUM_REMOTE_URL;
+	        } else if (process.env.SELENIUM_SERVER_JAR) {
+	          this.log_.fine('SELENIUM_SERVER_JAR=' + process.env.SELENIUM_SERVER_JAR);
+	          url = startSeleniumServer(process.env.SELENIUM_SERVER_JAR);
+	        }
+	      }
+
+	      if (url) {
+	        this.log_.fine('Creating session on remote server');
+	        var client = Promise.resolve(url).then(function (url) {
+	          return new _http.HttpClient(url, _this3.agent_, _this3.proxy_);
+	        });
+	        var executor = new _http.Executor(client);
+
+	        if (browser === Browser.CHROME) {
+	          var driver = ensureFileDetectorsAreEnabled(chrome.Driver);
+	          return createDriver(driver, capabilities, executor, this.flow_);
+	        }
+
+	        if (browser === Browser.FIREFOX) {
+	          var _driver = ensureFileDetectorsAreEnabled(firefox.Driver);
+	          return createDriver(_driver, capabilities, executor, this.flow_);
+	        }
+	        return createDriver(WebDriver, executor, capabilities, this.flow_);
+	      }
+
+	      // Check for a native browser.
+	      switch (browser) {
+	        case Browser.CHROME:
+	          return createDriver(chrome.Driver, capabilities, null, this.flow_);
+
+	        case Browser.FIREFOX:
+	          return createDriver(firefox.Driver, capabilities, null, this.flow_);
+
+	        case Browser.INTERNET_EXPLORER:
+	          return createDriver(ie.Driver, capabilities, this.flow_);
+
+	        case Browser.EDGE:
+	          return createDriver(edge.Driver, capabilities, null, this.flow_);
+
+	        case Browser.OPERA:
+	          return createDriver(opera.Driver, capabilities, null, this.flow_);
+
+	        case Browser.PHANTOM_JS:
+	          return createDriver(phantomjs.Driver, capabilities, this.flow_);
+
+	        case Browser.SAFARI:
+	          return createDriver(safari.Driver, capabilities, this.flow_);
+
+	        default:
+	          throw new Error('Do not know how to build driver: ' + browser + '; did you forget to call usingServer(url)?');
+	      }
+	    }
+	  }]);
+
+	  return Builder;
+	}();
+
+	// PUBLIC API
+
+
+	exports.ActionSequence = actions.ActionSequence;
+	exports.Browser = capabilities.Browser;
+	exports.Builder = Builder;
+	exports.Button = input.Button;
+	exports.By = by.By;
+	exports.Capabilities = capabilities.Capabilities;
+	exports.Capability = capabilities.Capability;
+	exports.Condition = webdriver.Condition;
+	exports.EventEmitter = events.EventEmitter;
+	exports.FileDetector = input.FileDetector;
+	exports.Key = input.Key;
+	exports.Session = session.Session;
+	exports.ThenableWebDriver = ThenableWebDriver;
+	exports.TouchSequence = actions.TouchSequence;
+	exports.WebDriver = webdriver.WebDriver;
+	exports.WebElement = webdriver.WebElement;
+	exports.WebElementCondition = webdriver.WebElementCondition;
+	exports.WebElementPromise = webdriver.WebElementPromise;
+	exports.error = error;
+	exports.logging = logging;
+	exports.promise = promise;
+	exports.until = until;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process, Buffer) {// Licensed to the Software Freedom Conservancy (SFC) under one
+	// or more contributor license agreements.  See the NOTICE file
+	// distributed with this work for additional information
+	// regarding copyright ownership.  The SFC licenses this file
+	// to you under the Apache License, Version 2.0 (the
+	// "License"); you may not use this file except in compliance
+	// with the License.  You may obtain a copy of the License at
+	//
+	//   http://www.apache.org/licenses/LICENSE-2.0
+	//
+	// Unless required by applicable law or agreed to in writing,
+	// software distributed under the License is distributed on an
+	// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+	// KIND, either express or implied.  See the License for the
+	// specific language governing permissions and limitations
+	// under the License.
+
+	/**
+	 * @fileoverview Defines a {@linkplain Driver WebDriver} client for the Chrome
+	 * web browser. Before using this module, you must download the latest
+	 * [ChromeDriver release] and ensure it can be found on your system [PATH].
+	 *
+	 * There are three primary classes exported by this module:
+	 *
+	 * 1. {@linkplain ServiceBuilder}: configures the
+	 *     {@link selenium-webdriver/remote.DriverService remote.DriverService}
+	 *     that manages the [ChromeDriver] child process.
+	 *
+	 * 2. {@linkplain Options}: defines configuration options for each new Chrome
+	 *     session, such as which {@linkplain Options#setProxy proxy} to use,
+	 *     what {@linkplain Options#addExtensions extensions} to install, or
+	 *     what {@linkplain Options#addArguments command-line switches} to use when
+	 *     starting the browser.
+	 *
+	 * 3. {@linkplain Driver}: the WebDriver client; each new instance will control
+	 *     a unique browser session with a clean user profile (unless otherwise
+	 *     configured through the {@link Options} class).
+	 *
+	 * __Customizing the ChromeDriver Server__ <a id="custom-server"></a>
+	 *
+	 * By default, every Chrome session will use a single driver service, which is
+	 * started the first time a {@link Driver} instance is created and terminated
+	 * when this process exits. The default service will inherit its environment
+	 * from the current process and direct all output to /dev/null. You may obtain
+	 * a handle to this default service using
+	 * {@link #getDefaultService getDefaultService()} and change its configuration
+	 * with {@link #setDefaultService setDefaultService()}.
+	 *
+	 * You may also create a {@link Driver} with its own driver service. This is
+	 * useful if you need to capture the server's log output for a specific session:
+	 *
+	 *     let chrome = require('selenium-webdriver/chrome');
+	 *
+	 *     let service = new chrome.ServiceBuilder()
+	 *         .loggingTo('/my/log/file.txt')
+	 *         .enableVerboseLogging()
+	 *         .build();
+	 *
+	 *     let options = new chrome.Options();
+	 *     // configure browser options ...
+	 *
+	 *     let driver = new chrome.Driver(options, service);
+	 *
+	 * Users should only instantiate the {@link Driver} class directly when they
+	 * need a custom driver service configuration (as shown above). For normal
+	 * operation, users should start Chrome using the
+	 * {@link selenium-webdriver.Builder}.
+	 *
+	 * __Working with Android__ <a id="android"></a>
+	 *
+	 * The [ChromeDriver][android] supports running tests on the Chrome browser as
+	 * well as [WebView apps][webview] starting in Android 4.4 (KitKat). In order to
+	 * work with Android, you must first start the adb
+	 *
+	 *     adb start-server
+	 *
+	 * By default, adb will start on port 5037. You may change this port, but this
+	 * will require configuring a [custom server](#custom-server) that will connect
+	 * to adb on the {@linkplain ServiceBuilder#setAdbPort correct port}:
+	 *
+	 *     let service = new chrome.ServiceBuilder()
+	 *         .setAdbPort(1234)
+	 *         build();
+	 *     // etc.
+	 *
+	 * The ChromeDriver may be configured to launch Chrome on Android using
+	 * {@link Options#androidChrome()}:
+	 *
+	 *     let driver = new Builder()
+	 *         .forBrowser('chrome')
+	 *         .setChromeOptions(new chrome.Options().androidChrome())
+	 *         .build();
+	 *
+	 * Alternatively, you can configure the ChromeDriver to launch an app with a
+	 * Chrome-WebView by setting the {@linkplain Options#androidActivity
+	 * androidActivity} option:
+	 *
+	 *     let driver = new Builder()
+	 *         .forBrowser('chrome')
+	 *         .setChromeOptions(new chrome.Options()
+	 *             .androidPackage('com.example')
+	 *             .androidActivity('com.example.Activity'))
+	 *         .build();
+	 *
+	 * [Refer to the ChromeDriver site] for more information on using the
+	 * [ChromeDriver with Android][android].
+	 *
+	 * [ChromeDriver]: https://sites.google.com/a/chromium.org/chromedriver/
+	 * [ChromeDriver release]: http://chromedriver.storage.googleapis.com/index.html
+	 * [PATH]: http://en.wikipedia.org/wiki/PATH_%28variable%29
+	 * [android]: https://sites.google.com/a/chromium.org/chromedriver/getting-started/getting-started---android
+	 * [webview]: https://developer.chrome.com/multidevice/webview/overview
+	 */
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var fs = __webpack_require__(64),
+	    util = __webpack_require__(58);
+
+	var http = __webpack_require__(65),
+	    io = __webpack_require__(109),
+	    _require = __webpack_require__(103),
+	    Capabilities = _require.Capabilities,
+	    Capability = _require.Capability,
+	    command = __webpack_require__(96),
+	    logging = __webpack_require__(99),
+	    promise = __webpack_require__(100),
+	    Symbols = __webpack_require__(104),
+	    webdriver = __webpack_require__(105),
+	    portprober = __webpack_require__(141),
+	    remote = __webpack_require__(142);
+
+	/**
+	 * Name of the ChromeDriver executable.
+	 * @type {string}
+	 * @const
+	 */
+	var CHROMEDRIVER_EXE = process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver';
+
+	/**
+	 * Custom command names supported by ChromeDriver.
+	 * @enum {string}
+	 */
+	var Command = {
+	  LAUNCH_APP: 'launchApp'
+	};
+
+	/**
+	 * Creates a command executor with support for ChromeDriver's custom commands.
+	 * @param {!Promise<string>} url The server's URL.
+	 * @return {!command.Executor} The new command executor.
+	 */
+	function createExecutor(url) {
+	  var client = url.then(function (url) {
+	    return new http.HttpClient(url);
+	  });
+	  var executor = new http.Executor(client);
+	  configureExecutor(executor);
+	  return executor;
+	}
+
+	/**
+	 * Configures the given executor with Chrome-specific commands.
+	 * @param {!http.Executor} executor the executor to configure.
+	 */
+	function configureExecutor(executor) {
+	  executor.defineCommand(Command.LAUNCH_APP, 'POST', '/session/:sessionId/chromium/launch_app');
+	}
+
+	/**
+	 * Creates {@link selenium-webdriver/remote.DriverService} instances that manage
+	 * a [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/)
+	 * server in a child process.
+	 */
+
+	var ServiceBuilder = function (_remote$DriverService) {
+	  _inherits(ServiceBuilder, _remote$DriverService);
+
+	  /**
+	   * @param {string=} opt_exe Path to the server executable to use. If omitted,
+	   *     the builder will attempt to locate the chromedriver on the current
+	   *     PATH.
+	   * @throws {Error} If provided executable does not exist, or the chromedriver
+	   *     cannot be found on the PATH.
+	   */
+	  function ServiceBuilder(opt_exe) {
+	    _classCallCheck(this, ServiceBuilder);
+
+	    var exe = opt_exe || io.findInPath(CHROMEDRIVER_EXE, true);
+	    if (!exe) {
+	      throw Error('The ChromeDriver could not be found on the current PATH. Please ' + 'download the latest version of the ChromeDriver from ' + 'http://chromedriver.storage.googleapis.com/index.html and ensure ' + 'it can be found on your PATH.');
+	    }
+
+	    var _this = _possibleConstructorReturn(this, (ServiceBuilder.__proto__ || Object.getPrototypeOf(ServiceBuilder)).call(this, exe));
+
+	    _this.setLoopback(true); // Required
+	    return _this;
+	  }
+
+	  /**
+	   * Sets which port adb is listening to. _The ChromeDriver will connect to adb
+	   * if an {@linkplain Options#androidPackage Android session} is requested, but
+	   * adb **must** be started beforehand._
+	   *
+	   * @param {number} port Which port adb is running on.
+	   * @return {!ServiceBuilder} A self reference.
+	   */
+
+
+	  _createClass(ServiceBuilder, [{
+	    key: 'setAdbPort',
+	    value: function setAdbPort(port) {
+	      return this.addArguments('--adb-port=' + port);
+	    }
+
+	    /**
+	     * Sets the path of the log file the driver should log to. If a log file is
+	     * not specified, the driver will log to stderr.
+	     * @param {string} path Path of the log file to use.
+	     * @return {!ServiceBuilder} A self reference.
+	     */
+
+	  }, {
+	    key: 'loggingTo',
+	    value: function loggingTo(path) {
+	      return this.addArguments('--log-path=' + path);
+	    }
+
+	    /**
+	     * Enables verbose logging.
+	     * @return {!ServiceBuilder} A self reference.
+	     */
+
+	  }, {
+	    key: 'enableVerboseLogging',
+	    value: function enableVerboseLogging() {
+	      return this.addArguments('--verbose');
+	    }
+
+	    /**
+	     * Sets the number of threads the driver should use to manage HTTP requests.
+	     * By default, the driver will use 4 threads.
+	     * @param {number} n The number of threads to use.
+	     * @return {!ServiceBuilder} A self reference.
+	     */
+
+	  }, {
+	    key: 'setNumHttpThreads',
+	    value: function setNumHttpThreads(n) {
+	      return this.addArguments('--http-threads=' + n);
+	    }
+
+	    /**
+	     * @override
+	     */
+
+	  }, {
+	    key: 'setPath',
+	    value: function setPath(path) {
+	      _get(ServiceBuilder.prototype.__proto__ || Object.getPrototypeOf(ServiceBuilder.prototype), 'setPath', this).call(this, path);
+	      return this.addArguments('--url-base=' + path);
+	    }
+	  }]);
+
+	  return ServiceBuilder;
+	}(remote.DriverService.Builder);
+
+	/** @type {remote.DriverService} */
+
+
+	var defaultService = null;
+
+	/**
+	 * Sets the default service to use for new ChromeDriver instances.
+	 * @param {!remote.DriverService} service The service to use.
+	 * @throws {Error} If the default service is currently running.
+	 */
+	function setDefaultService(service) {
+	  if (defaultService && defaultService.isRunning()) {
+	    throw Error('The previously configured ChromeDriver service is still running. ' + 'You must shut it down before you may adjust its configuration.');
+	  }
+	  defaultService = service;
+	}
+
+	/**
+	 * Returns the default ChromeDriver service. If such a service has not been
+	 * configured, one will be constructed using the default configuration for
+	 * a ChromeDriver executable found on the system PATH.
+	 * @return {!remote.DriverService} The default ChromeDriver service.
+	 */
+	function getDefaultService() {
+	  if (!defaultService) {
+	    defaultService = new ServiceBuilder().build();
+	  }
+	  return defaultService;
+	}
+
+	/**
+	 * @type {string}
+	 * @const
+	 */
+	var OPTIONS_CAPABILITY_KEY = 'chromeOptions';
+
+	/**
+	 * Class for managing ChromeDriver specific options.
+	 */
+
+	var Options = function () {
+	  function Options() {
+	    _classCallCheck(this, Options);
+
+	    /** @private {!Object} */
+	    this.options_ = {};
+
+	    /** @private {!Array<(string|!Buffer)>} */
+	    this.extensions_ = [];
+
+	    /** @private {?logging.Preferences} */
+	    this.logPrefs_ = null;
+
+	    /** @private {?./lib/capabilities.ProxyConfig} */
+	    this.proxy_ = null;
+	  }
+
+	  /**
+	   * Extracts the ChromeDriver specific options from the given capabilities
+	   * object.
+	   * @param {!Capabilities} caps The capabilities object.
+	   * @return {!Options} The ChromeDriver options.
+	   */
+
+
+	  _createClass(Options, [{
+	    key: 'addArguments',
+
+
+	    /**
+	     * Add additional command line arguments to use when launching the Chrome
+	     * browser.  Each argument may be specified with or without the "--" prefix
+	     * (e.g. "--foo" and "foo"). Arguments with an associated value should be
+	     * delimited by an "=": "foo=bar".
+	     * @param {...(string|!Array<string>)} var_args The arguments to add.
+	     * @return {!Options} A self reference.
+	     */
+	    value: function addArguments(var_args) {
+	      var args = this.options_.args || [];
+	      args = args.concat.apply(args, arguments);
+	      if (args.length) {
+	        this.options_.args = args;
+	      }
+	      return this;
+	    }
+
+	    /**
+	     * List of Chrome command line switches to exclude that ChromeDriver by default
+	     * passes when starting Chrome.  Do not prefix switches with "--".
+	     *
+	     * @param {...(string|!Array<string>)} var_args The switches to exclude.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'excludeSwitches',
+	    value: function excludeSwitches(var_args) {
+	      var switches = this.options_.excludeSwitches || [];
+	      switches = switches.concat.apply(switches, arguments);
+	      if (switches.length) {
+	        this.options_.excludeSwitches = switches;
+	      }
+	      return this;
+	    }
+
+	    /**
+	     * Add additional extensions to install when launching Chrome. Each extension
+	     * should be specified as the path to the packed CRX file, or a Buffer for an
+	     * extension.
+	     * @param {...(string|!Buffer|!Array<(string|!Buffer)>)} var_args The
+	     *     extensions to add.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'addExtensions',
+	    value: function addExtensions(var_args) {
+	      this.extensions_ = this.extensions_.concat.apply(this.extensions_, arguments);
+	      return this;
+	    }
+
+	    /**
+	     * Sets the path to the Chrome binary to use. On Mac OS X, this path should
+	     * reference the actual Chrome executable, not just the application binary
+	     * (e.g. "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome").
+	     *
+	     * The binary path be absolute or relative to the chromedriver server
+	     * executable, but it must exist on the machine that will launch Chrome.
+	     *
+	     * @param {string} path The path to the Chrome binary to use.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'setChromeBinaryPath',
+	    value: function setChromeBinaryPath(path) {
+	      this.options_.binary = path;
+	      return this;
+	    }
+
+	    /**
+	     * Sets whether to leave the started Chrome browser running if the controlling
+	     * ChromeDriver service is killed before {@link webdriver.WebDriver#quit()} is
+	     * called.
+	     * @param {boolean} detach Whether to leave the browser running if the
+	     *     chromedriver service is killed before the session.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'detachDriver',
+	    value: function detachDriver(detach) {
+	      this.options_.detach = detach;
+	      return this;
+	    }
+
+	    /**
+	     * Sets the user preferences for Chrome's user profile. See the "Preferences"
+	     * file in Chrome's user data directory for examples.
+	     * @param {!Object} prefs Dictionary of user preferences to use.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'setUserPreferences',
+	    value: function setUserPreferences(prefs) {
+	      this.options_.prefs = prefs;
+	      return this;
+	    }
+
+	    /**
+	     * Sets the logging preferences for the new session.
+	     * @param {!logging.Preferences} prefs The logging preferences.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'setLoggingPrefs',
+	    value: function setLoggingPrefs(prefs) {
+	      this.logPrefs_ = prefs;
+	      return this;
+	    }
+
+	    /**
+	     * Sets the performance logging preferences. Options include:
+	     *
+	     * - `enableNetwork`: Whether or not to collect events from Network domain.
+	     * - `enablePage`: Whether or not to collect events from Page domain.
+	     * - `enableTimeline`: Whether or not to collect events from Timeline domain.
+	     *     Note: when tracing is enabled, Timeline domain is implicitly disabled,
+	     *     unless `enableTimeline` is explicitly set to true.
+	     * - `tracingCategories`: A comma-separated string of Chrome tracing
+	     *     categories for which trace events should be collected. An unspecified
+	     *     or empty string disables tracing.
+	     * - `bufferUsageReportingInterval`: The requested number of milliseconds
+	     *     between DevTools trace buffer usage events. For example, if 1000, then
+	     *     once per second, DevTools will report how full the trace buffer is. If
+	     *     a report indicates the buffer usage is 100%, a warning will be issued.
+	     *
+	     * @param {{enableNetwork: boolean,
+	     *          enablePage: boolean,
+	     *          enableTimeline: boolean,
+	     *          tracingCategories: string,
+	     *          bufferUsageReportingInterval: number}} prefs The performance
+	     *     logging preferences.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'setPerfLoggingPrefs',
+	    value: function setPerfLoggingPrefs(prefs) {
+	      this.options_.perfLoggingPrefs = prefs;
+	      return this;
+	    }
+
+	    /**
+	     * Sets preferences for the "Local State" file in Chrome's user data
+	     * directory.
+	     * @param {!Object} state Dictionary of local state preferences.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'setLocalState',
+	    value: function setLocalState(state) {
+	      this.options_.localState = state;
+	      return this;
+	    }
+
+	    /**
+	     * Sets the name of the activity hosting a Chrome-based Android WebView. This
+	     * option must be set to connect to an [Android WebView](
+	     * https://sites.google.com/a/chromium.org/chromedriver/getting-started/getting-started---android)
+	     *
+	     * @param {string} name The activity name.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'androidActivity',
+	    value: function androidActivity(name) {
+	      this.options_.androidActivity = name;
+	      return this;
+	    }
+
+	    /**
+	     * Sets the device serial number to connect to via ADB. If not specified, the
+	     * ChromeDriver will select an unused device at random. An error will be
+	     * returned if all devices already have active sessions.
+	     *
+	     * @param {string} serial The device serial number to connect to.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'androidDeviceSerial',
+	    value: function androidDeviceSerial(serial) {
+	      this.options_.androidDeviceSerial = serial;
+	      return this;
+	    }
+
+	    /**
+	     * Configures the ChromeDriver to launch Chrome on Android via adb. This
+	     * function is shorthand for
+	     * {@link #androidPackage options.androidPackage('com.android.chrome')}.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'androidChrome',
+	    value: function androidChrome() {
+	      return this.androidPackage('com.android.chrome');
+	    }
+
+	    /**
+	     * Sets the package name of the Chrome or WebView app.
+	     *
+	     * @param {?string} pkg The package to connect to, or `null` to disable Android
+	     *     and switch back to using desktop Chrome.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'androidPackage',
+	    value: function androidPackage(pkg) {
+	      this.options_.androidPackage = pkg;
+	      return this;
+	    }
+
+	    /**
+	     * Sets the process name of the Activity hosting the WebView (as given by
+	     * `ps`). If not specified, the process name is assumed to be the same as
+	     * {@link #androidPackage}.
+	     *
+	     * @param {string} processName The main activity name.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'androidProcess',
+	    value: function androidProcess(processName) {
+	      this.options_.androidProcess = processName;
+	      return this;
+	    }
+
+	    /**
+	     * Sets whether to connect to an already-running instead of the specified
+	     * {@linkplain #androidProcess app} instead of launching the app with a clean
+	     * data directory.
+	     *
+	     * @param {boolean} useRunning Whether to connect to a running instance.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'androidUseRunningApp',
+	    value: function androidUseRunningApp(useRunning) {
+	      this.options_.androidUseRunningApp = useRunning;
+	      return this;
+	    }
+
+	    /**
+	     * Sets the path to Chrome's log file. This path should exist on the machine
+	     * that will launch Chrome.
+	     * @param {string} path Path to the log file to use.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'setChromeLogFile',
+	    value: function setChromeLogFile(path) {
+	      this.options_.logPath = path;
+	      return this;
+	    }
+
+	    /**
+	     * Sets the directory to store Chrome minidumps in. This option is only
+	     * supported when ChromeDriver is running on Linux.
+	     * @param {string} path The directory path.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'setChromeMinidumpPath',
+	    value: function setChromeMinidumpPath(path) {
+	      this.options_.minidumpPath = path;
+	      return this;
+	    }
+
+	    /**
+	     * Configures Chrome to emulate a mobile device. For more information, refer
+	     * to the ChromeDriver project page on [mobile emulation][em]. Configuration
+	     * options include:
+	     *
+	     * - `deviceName`: The name of a pre-configured [emulated device][devem]
+	     * - `width`: screen width, in pixels
+	     * - `height`: screen height, in pixels
+	     * - `pixelRatio`: screen pixel ratio
+	     *
+	     * __Example 1: Using a Pre-configured Device__
+	     *
+	     *     let options = new chrome.Options().setMobileEmulation(
+	     *         {deviceName: 'Google Nexus 5'});
+	     *
+	     *     let driver = new chrome.Driver(options);
+	     *
+	     * __Example 2: Using Custom Screen Configuration__
+	     *
+	     *     let options = new chrome.Options().setMobileEmulation({
+	     *         width: 360,
+	     *         height: 640,
+	     *         pixelRatio: 3.0
+	     *     });
+	     *
+	     *     let driver = new chrome.Driver(options);
+	     *
+	     *
+	     * [em]: https://sites.google.com/a/chromium.org/chromedriver/mobile-emulation
+	     * [devem]: https://developer.chrome.com/devtools/docs/device-mode
+	     *
+	     * @param {?({deviceName: string}|
+	     *           {width: number, height: number, pixelRatio: number})} config The
+	     *     mobile emulation configuration, or `null` to disable emulation.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'setMobileEmulation',
+	    value: function setMobileEmulation(config) {
+	      this.options_.mobileEmulation = config;
+	      return this;
+	    }
+
+	    /**
+	     * Sets the proxy settings for the new session.
+	     * @param {./lib/capabilities.ProxyConfig} proxy The proxy configuration to
+	     *    use.
+	     * @return {!Options} A self reference.
+	     */
+
+	  }, {
+	    key: 'setProxy',
+	    value: function setProxy(proxy) {
+	      this.proxy_ = proxy;
+	      return this;
+	    }
+
+	    /**
+	     * Converts this options instance to a {@link Capabilities} object.
+	     * @param {Capabilities=} opt_capabilities The capabilities to merge
+	     *     these options into, if any.
+	     * @return {!Capabilities} The capabilities.
+	     */
+
+	  }, {
+	    key: 'toCapabilities',
+	    value: function toCapabilities(opt_capabilities) {
+	      var caps = opt_capabilities || Capabilities.chrome();
+	      caps.set(Capability.PROXY, this.proxy_).set(Capability.LOGGING_PREFS, this.logPrefs_).set(OPTIONS_CAPABILITY_KEY, this);
+	      return caps;
+	    }
+
+	    /**
+	     * Converts this instance to its JSON wire protocol representation. Note this
+	     * function is an implementation not intended for general use.
+	     * @return {!Object} The JSON wire protocol representation of this instance.
+	     */
+
+	  }, {
+	    key: Symbols.serialize,
+	    value: function value() {
+	      var json = {};
+	      for (var key in this.options_) {
+	        if (this.options_[key] != null) {
+	          json[key] = this.options_[key];
+	        }
+	      }
+	      if (this.extensions_.length) {
+	        json.extensions = this.extensions_.map(function (extension) {
+	          if (Buffer.isBuffer(extension)) {
+	            return extension.toString('base64');
+	          }
+	          return io.read( /** @type {string} */extension).then(function (buffer) {
+	            return buffer.toString('base64');
+	          });
+	        });
+	      }
+	      return json;
+	    }
+	  }], [{
+	    key: 'fromCapabilities',
+	    value: function fromCapabilities(caps) {
+	      var options = new Options();
+
+	      var o = caps.get(OPTIONS_CAPABILITY_KEY);
+	      if (o instanceof Options) {
+	        options = o;
+	      } else if (o) {
+	        options.addArguments(o.args || []).addExtensions(o.extensions || []).detachDriver(o.detach).excludeSwitches(o.excludeSwitches || []).setChromeBinaryPath(o.binary).setChromeLogFile(o.logPath).setChromeMinidumpPath(o.minidumpPath).setLocalState(o.localState).setMobileEmulation(o.mobileEmulation).setUserPreferences(o.prefs).setPerfLoggingPrefs(o.perfLoggingPrefs);
+	      }
+
+	      if (caps.has(Capability.PROXY)) {
+	        options.setProxy(caps.get(Capability.PROXY));
+	      }
+
+	      if (caps.has(Capability.LOGGING_PREFS)) {
+	        options.setLoggingPrefs(caps.get(Capability.LOGGING_PREFS));
+	      }
+
+	      return options;
+	    }
+	  }]);
+
+	  return Options;
+	}();
+
+	/**
+	 * Creates a new WebDriver client for Chrome.
+	 */
+
+
+	var Driver = function (_webdriver$WebDriver) {
+	  _inherits(Driver, _webdriver$WebDriver);
+
+	  function Driver() {
+	    _classCallCheck(this, Driver);
+
+	    return _possibleConstructorReturn(this, (Driver.__proto__ || Object.getPrototypeOf(Driver)).apply(this, arguments));
+	  }
+
+	  _createClass(Driver, [{
+	    key: 'setFileDetector',
+
+
+	    /**
+	     * This function is a no-op as file detectors are not supported by this
+	     * implementation.
+	     * @override
+	     */
+	    value: function setFileDetector() {}
+
+	    /**
+	     * Schedules a command to launch Chrome App with given ID.
+	     * @param {string} id ID of the App to launch.
+	     * @return {!promise.Thenable<void>} A promise that will be resolved
+	     *     when app is launched.
+	     */
+
+	  }, {
+	    key: 'launchApp',
+	    value: function launchApp(id) {
+	      return this.schedule(new command.Command(Command.LAUNCH_APP).setParameter('id', id), 'Driver.launchApp()');
+	    }
+	  }], [{
+	    key: 'createSession',
+
+
+	    /**
+	     * Creates a new session with the ChromeDriver.
+	     *
+	     * @param {(Capabilities|Options)=} opt_config The configuration options.
+	     * @param {(remote.DriverService|http.Executor)=} opt_serviceExecutor Either
+	     *     a  DriverService to use for the remote end, or a preconfigured executor
+	     *     for an externally managed endpoint. If neither is provided, the
+	     *     {@linkplain ##getDefaultService default service} will be used by
+	     *     default.
+	     * @param {promise.ControlFlow=} opt_flow The control flow to use, or `null`
+	     *     to use the currently active flow.
+	     * @return {!Driver} A new driver instance.
+	     */
+	    value: function createSession(opt_config, opt_serviceExecutor, opt_flow) {
+	      var executor = void 0;
+	      if (opt_serviceExecutor instanceof http.Executor) {
+	        executor = opt_serviceExecutor;
+	        configureExecutor(executor);
+	      } else {
+	        var service = opt_serviceExecutor || getDefaultService();
+	        executor = createExecutor(service.start());
+	      }
+
+	      var caps = opt_config instanceof Options ? opt_config.toCapabilities() : opt_config || Capabilities.chrome();
+
+	      return (/** @type {!Driver} */webdriver.WebDriver.createSession(executor, caps, opt_flow, this)
+	      );
+	    }
+	  }]);
+
+	  return Driver;
+	}(webdriver.WebDriver);
+
+	// PUBLIC API
+
+
+	exports.Driver = Driver;
+	exports.Options = Options;
+	exports.ServiceBuilder = ServiceBuilder;
+	exports.getDefaultService = getDefaultService;
+	exports.setDefaultService = setDefaultService;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59), __webpack_require__(37).Buffer))
+
+/***/ },
+/* 64 */
 /***/ function(module, exports) {
 
 	"use strict";
 
 /***/ },
-/* 26 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -5422,11 +11596,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var http = __webpack_require__(27);
-	var https = __webpack_require__(54);
-	var url = __webpack_require__(48);
+	var http = __webpack_require__(66);
+	var https = __webpack_require__(93);
+	var url = __webpack_require__(87);
 
-	var httpLib = __webpack_require__(55);
+	var httpLib = __webpack_require__(94);
 
 	/**
 	 * @typedef {{protocol: (?string|undefined),
@@ -5657,18 +11831,18 @@
 	exports.HttpClient = HttpClient;
 	exports.Request = httpLib.Request;
 	exports.Response = httpLib.Response;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 27 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var http = module.exports;
-	var EventEmitter = __webpack_require__(28).EventEmitter;
-	var Request = __webpack_require__(29);
-	var url = __webpack_require__(48);
+	var EventEmitter = __webpack_require__(67).EventEmitter;
+	var Request = __webpack_require__(68);
+	var url = __webpack_require__(87);
 
 	http.request = function (params, cb) {
 	    if (typeof params === 'string') {
@@ -5803,7 +11977,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 67 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6081,15 +12255,15 @@
 	}
 
 /***/ },
-/* 29 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Stream = __webpack_require__(30);
-	var Response = __webpack_require__(46);
-	var Base64 = __webpack_require__(47);
-	var inherits = __webpack_require__(31);
+	var Stream = __webpack_require__(69);
+	var Response = __webpack_require__(85);
+	var Base64 = __webpack_require__(86);
+	var inherits = __webpack_require__(70);
 
 	var Request = module.exports = function (xhr, params) {
 	    var self = this;
@@ -6264,7 +12438,7 @@
 	};
 
 /***/ },
-/* 30 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6292,15 +12466,15 @@
 
 	module.exports = Stream;
 
-	var EE = __webpack_require__(28).EventEmitter;
-	var inherits = __webpack_require__(31);
+	var EE = __webpack_require__(67).EventEmitter;
+	var inherits = __webpack_require__(70);
 
 	inherits(Stream, EE);
-	Stream.Readable = __webpack_require__(32);
-	Stream.Writable = __webpack_require__(42);
-	Stream.Duplex = __webpack_require__(43);
-	Stream.Transform = __webpack_require__(44);
-	Stream.PassThrough = __webpack_require__(45);
+	Stream.Readable = __webpack_require__(71);
+	Stream.Writable = __webpack_require__(81);
+	Stream.Duplex = __webpack_require__(82);
+	Stream.Transform = __webpack_require__(83);
+	Stream.PassThrough = __webpack_require__(84);
 
 	// Backwards-compat with node 0.4.x
 	Stream.Stream = Stream;
@@ -6395,7 +12569,7 @@
 	};
 
 /***/ },
-/* 31 */
+/* 70 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6425,25 +12599,25 @@
 	}
 
 /***/ },
-/* 32 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	exports = module.exports = __webpack_require__(33);
-	exports.Stream = __webpack_require__(30);
+	exports = module.exports = __webpack_require__(72);
+	exports.Stream = __webpack_require__(69);
 	exports.Readable = exports;
-	exports.Writable = __webpack_require__(38);
-	exports.Duplex = __webpack_require__(37);
-	exports.Transform = __webpack_require__(40);
-	exports.PassThrough = __webpack_require__(41);
+	exports.Writable = __webpack_require__(77);
+	exports.Duplex = __webpack_require__(76);
+	exports.Transform = __webpack_require__(79);
+	exports.PassThrough = __webpack_require__(80);
 	if (!process.browser && process.env.READABLE_STREAM === 'disable') {
-	  module.exports = __webpack_require__(30);
+	  module.exports = __webpack_require__(69);
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 33 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -6472,16 +12646,16 @@
 	module.exports = Readable;
 
 	/*<replacement>*/
-	var isArray = __webpack_require__(34);
+	var isArray = __webpack_require__(73);
 	/*</replacement>*/
 
 	/*<replacement>*/
-	var Buffer = __webpack_require__(21).Buffer;
+	var Buffer = __webpack_require__(37).Buffer;
 	/*</replacement>*/
 
 	Readable.ReadableState = ReadableState;
 
-	var EE = __webpack_require__(28).EventEmitter;
+	var EE = __webpack_require__(67).EventEmitter;
 
 	/*<replacement>*/
 	if (!EE.listenerCount) EE.listenerCount = function (emitter, type) {
@@ -6489,17 +12663,17 @@
 	};
 	/*</replacement>*/
 
-	var Stream = __webpack_require__(30);
+	var Stream = __webpack_require__(69);
 
 	/*<replacement>*/
-	var util = __webpack_require__(35);
-	util.inherits = __webpack_require__(31);
+	var util = __webpack_require__(74);
+	util.inherits = __webpack_require__(70);
 	/*</replacement>*/
 
 	var StringDecoder;
 
 	/*<replacement>*/
-	var debug = __webpack_require__(36);
+	var debug = __webpack_require__(75);
 	if (debug && debug.debuglog) {
 	  debug = debug.debuglog('stream');
 	} else {
@@ -6510,7 +12684,7 @@
 	util.inherits(Readable, Stream);
 
 	function ReadableState(options, stream) {
-	  var Duplex = __webpack_require__(37);
+	  var Duplex = __webpack_require__(76);
 
 	  options = options || {};
 
@@ -6568,14 +12742,14 @@
 	  this.decoder = null;
 	  this.encoding = null;
 	  if (options.encoding) {
-	    if (!StringDecoder) StringDecoder = __webpack_require__(39).StringDecoder;
+	    if (!StringDecoder) StringDecoder = __webpack_require__(78).StringDecoder;
 	    this.decoder = new StringDecoder(options.encoding);
 	    this.encoding = options.encoding;
 	  }
 	}
 
 	function Readable(options) {
-	  var Duplex = __webpack_require__(37);
+	  var Duplex = __webpack_require__(76);
 
 	  if (!(this instanceof Readable)) return new Readable(options);
 
@@ -6664,7 +12838,7 @@
 
 	// backwards compatibility.
 	Readable.prototype.setEncoding = function (enc) {
-	  if (!StringDecoder) StringDecoder = __webpack_require__(39).StringDecoder;
+	  if (!StringDecoder) StringDecoder = __webpack_require__(78).StringDecoder;
 	  this._readableState.decoder = new StringDecoder(enc);
 	  this._readableState.encoding = enc;
 	  return this;
@@ -7300,10 +13474,10 @@
 	  }
 	  return -1;
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 34 */
+/* 73 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7313,7 +13487,7 @@
 	};
 
 /***/ },
-/* 35 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
@@ -7423,16 +13597,16 @@
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 36 */
+/* 75 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 37 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -7475,12 +13649,12 @@
 	/*</replacement>*/
 
 	/*<replacement>*/
-	var util = __webpack_require__(35);
-	util.inherits = __webpack_require__(31);
+	var util = __webpack_require__(74);
+	util.inherits = __webpack_require__(70);
 	/*</replacement>*/
 
-	var Readable = __webpack_require__(33);
-	var Writable = __webpack_require__(38);
+	var Readable = __webpack_require__(72);
+	var Writable = __webpack_require__(77);
 
 	util.inherits(Duplex, Readable);
 
@@ -7520,10 +13694,10 @@
 	    f(xs[i], i);
 	  }
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 38 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -7556,17 +13730,17 @@
 	module.exports = Writable;
 
 	/*<replacement>*/
-	var Buffer = __webpack_require__(21).Buffer;
+	var Buffer = __webpack_require__(37).Buffer;
 	/*</replacement>*/
 
 	Writable.WritableState = WritableState;
 
 	/*<replacement>*/
-	var util = __webpack_require__(35);
-	util.inherits = __webpack_require__(31);
+	var util = __webpack_require__(74);
+	util.inherits = __webpack_require__(70);
 	/*</replacement>*/
 
-	var Stream = __webpack_require__(30);
+	var Stream = __webpack_require__(69);
 
 	util.inherits(Writable, Stream);
 
@@ -7577,7 +13751,7 @@
 	}
 
 	function WritableState(options, stream) {
-	  var Duplex = __webpack_require__(37);
+	  var Duplex = __webpack_require__(76);
 
 	  options = options || {};
 
@@ -7664,7 +13838,7 @@
 	}
 
 	function Writable(options) {
-	  var Duplex = __webpack_require__(37);
+	  var Duplex = __webpack_require__(76);
 
 	  // Writable ctor is applied to Duplexes, though they're not
 	  // instanceof Writable, they're instanceof Readable.
@@ -7953,10 +14127,10 @@
 	  }
 	  state.ended = true;
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 39 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7982,7 +14156,7 @@
 	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 	// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-	var Buffer = __webpack_require__(21).Buffer;
+	var Buffer = __webpack_require__(37).Buffer;
 
 	var isBufferEncoding = Buffer.isEncoding || function (encoding) {
 	  switch (encoding && encoding.toLowerCase()) {
@@ -8180,7 +14354,7 @@
 	}
 
 /***/ },
-/* 40 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8251,11 +14425,11 @@
 
 	module.exports = Transform;
 
-	var Duplex = __webpack_require__(37);
+	var Duplex = __webpack_require__(76);
 
 	/*<replacement>*/
-	var util = __webpack_require__(35);
-	util.inherits = __webpack_require__(31);
+	var util = __webpack_require__(74);
+	util.inherits = __webpack_require__(70);
 	/*</replacement>*/
 
 	util.inherits(Transform, Duplex);
@@ -8380,7 +14554,7 @@
 	}
 
 /***/ },
-/* 41 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8412,11 +14586,11 @@
 
 	module.exports = PassThrough;
 
-	var Transform = __webpack_require__(40);
+	var Transform = __webpack_require__(79);
 
 	/*<replacement>*/
-	var util = __webpack_require__(35);
-	util.inherits = __webpack_require__(31);
+	var util = __webpack_require__(74);
+	util.inherits = __webpack_require__(70);
 	/*</replacement>*/
 
 	util.inherits(PassThrough, Transform);
@@ -8432,45 +14606,45 @@
 	};
 
 /***/ },
-/* 42 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	module.exports = __webpack_require__(38);
+	module.exports = __webpack_require__(77);
 
 /***/ },
-/* 43 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	module.exports = __webpack_require__(37);
+	module.exports = __webpack_require__(76);
 
 /***/ },
-/* 44 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	module.exports = __webpack_require__(40);
+	module.exports = __webpack_require__(79);
 
 /***/ },
-/* 45 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	module.exports = __webpack_require__(41);
+	module.exports = __webpack_require__(80);
 
 /***/ },
-/* 46 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Stream = __webpack_require__(30);
-	var util = __webpack_require__(15);
+	var Stream = __webpack_require__(69);
+	var util = __webpack_require__(58);
 
 	var Response = module.exports = function (res) {
 	    this.offset = 0;
@@ -8583,7 +14757,7 @@
 	};
 
 /***/ },
-/* 47 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8645,7 +14819,7 @@
 	})();
 
 /***/ },
-/* 48 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8673,7 +14847,7 @@
 	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 	// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-	var punycode = __webpack_require__(49);
+	var punycode = __webpack_require__(88);
 
 	exports.parse = urlParse;
 	exports.resolve = urlResolve;
@@ -8752,7 +14926,7 @@
 	  'gopher:': true,
 	  'file:': true
 	},
-	    querystring = __webpack_require__(51);
+	    querystring = __webpack_require__(90);
 
 	function urlParse(url, parseQueryString, slashesDenoteHost) {
 	  if (url && isObject(url) && url instanceof Url) return url;
@@ -9336,7 +15510,7 @@
 	}
 
 /***/ },
-/* 49 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {'use strict';
@@ -9849,7 +16023,7 @@
 		/** Expose `punycode` */
 		// Some AMD build optimizers, like r.js, check for specific condition patterns
 		// like the following:
-		if ("function" == 'function' && _typeof(__webpack_require__(50)) == 'object' && __webpack_require__(50)) {
+		if ("function" == 'function' && _typeof(__webpack_require__(89)) == 'object' && __webpack_require__(89)) {
 			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
 				return punycode;
 			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -9871,7 +16045,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module), (function() { return this; }())))
 
 /***/ },
-/* 50 */
+/* 89 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -9879,16 +16053,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 51 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	exports.decode = exports.parse = __webpack_require__(52);
-	exports.encode = exports.stringify = __webpack_require__(53);
+	exports.decode = exports.parse = __webpack_require__(91);
+	exports.encode = exports.stringify = __webpack_require__(92);
 
 /***/ },
-/* 52 */
+/* 91 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -9977,7 +16151,7 @@
 	};
 
 /***/ },
-/* 53 */
+/* 92 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -10046,12 +16220,12 @@
 	};
 
 /***/ },
-/* 54 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var http = __webpack_require__(27);
+	var http = __webpack_require__(66);
 
 	var https = module.exports;
 
@@ -10066,7 +16240,7 @@
 	};
 
 /***/ },
-/* 55 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__dirname) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -10102,16 +16276,16 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var fs = __webpack_require__(25);
-	var path = __webpack_require__(56);
+	var fs = __webpack_require__(64);
+	var path = __webpack_require__(95);
 
-	var cmd = __webpack_require__(57);
-	var devmode = __webpack_require__(58);
-	var error = __webpack_require__(59);
-	var logging = __webpack_require__(60);
-	var promise = __webpack_require__(61);
-	var Session = __webpack_require__(63).Session;
-	var WebElement = __webpack_require__(66).WebElement;
+	var cmd = __webpack_require__(96);
+	var devmode = __webpack_require__(97);
+	var error = __webpack_require__(98);
+	var logging = __webpack_require__(99);
+	var promise = __webpack_require__(100);
+	var Session = __webpack_require__(102).Session;
+	var WebElement = __webpack_require__(105).WebElement;
 
 	/**
 	 * Converts a headers map to a HTTP header block string.
@@ -10599,7 +16773,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ },
-/* 56 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -10823,10 +16997,10 @@
 	  if (start < 0) start = str.length + start;
 	  return str.substr(start, len);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 57 */
+/* 96 */
 /***/ function(module, exports) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -11108,7 +17282,7 @@
 	};
 
 /***/ },
-/* 58 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__dirname) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -11135,8 +17309,8 @@
 
 	'use strict';
 
-	var fs = __webpack_require__(25);
-	var path = __webpack_require__(56);
+	var fs = __webpack_require__(64);
+	var path = __webpack_require__(95);
 
 	/**
 	 * @const {boolean}
@@ -11148,7 +17322,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ },
-/* 59 */
+/* 98 */
 /***/ function(module, exports) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -11837,7 +18011,7 @@
 	};
 
 /***/ },
-/* 60 */
+/* 99 */
 /***/ function(module, exports) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -12643,7 +18817,7 @@
 	};
 
 /***/ },
-/* 61 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -13286,9 +19460,9 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var error = __webpack_require__(59);
-	var events = __webpack_require__(62);
-	var logging = __webpack_require__(60);
+	var error = __webpack_require__(98);
+	var events = __webpack_require__(101);
+	var logging = __webpack_require__(99);
 
 	/**
 	 * Alias to help with readability and differentiate types.
@@ -16355,10 +22529,10 @@
 	    LONG_STACK_TRACES = v;
 	  }
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 62 */
+/* 101 */
 /***/ function(module, exports) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -16676,7 +22850,7 @@
 	};
 
 /***/ },
-/* 63 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -16702,7 +22876,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _require = __webpack_require__(64),
+	var _require = __webpack_require__(103),
 	    Capabilities = _require.Capabilities;
 
 	/**
@@ -16782,7 +22956,7 @@
 	module.exports = { Session: Session };
 
 /***/ },
-/* 64 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -16821,7 +22995,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Symbols = __webpack_require__(65);
+	var Symbols = __webpack_require__(104);
 
 	/**
 	 * Recognized browser names.
@@ -17338,7 +23512,7 @@
 	};
 
 /***/ },
-/* 65 */
+/* 104 */
 /***/ function(module, exports) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -17380,7 +23554,7 @@
 	};
 
 /***/ },
-/* 66 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -17418,19 +23592,19 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _actions = __webpack_require__(67);
-	var by = __webpack_require__(69);
-	var Capabilities = __webpack_require__(64).Capabilities;
-	var command = __webpack_require__(57);
-	var error = __webpack_require__(59);
-	var input = __webpack_require__(68);
-	var logging = __webpack_require__(60);
+	var _actions = __webpack_require__(106);
+	var by = __webpack_require__(108);
+	var Capabilities = __webpack_require__(103).Capabilities;
+	var command = __webpack_require__(96);
+	var error = __webpack_require__(98);
+	var input = __webpack_require__(107);
+	var logging = __webpack_require__(99);
 
-	var _require = __webpack_require__(63),
+	var _require = __webpack_require__(102),
 	    Session = _require.Session;
 
-	var Symbols = __webpack_require__(65);
-	var promise = __webpack_require__(61);
+	var Symbols = __webpack_require__(104);
+	var promise = __webpack_require__(100);
 
 	/**
 	 * Defines a condition for use with WebDriver's {@linkplain WebDriver#wait wait
@@ -20283,7 +26457,7 @@
 	};
 
 /***/ },
-/* 67 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -20309,9 +26483,9 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var command = __webpack_require__(57);
-	var error = __webpack_require__(59);
-	var input = __webpack_require__(68);
+	var command = __webpack_require__(96);
+	var error = __webpack_require__(98);
+	var input = __webpack_require__(107);
 
 	/**
 	 * @param {!IArrayLike} args .
@@ -20948,7 +27122,7 @@
 	};
 
 /***/ },
-/* 68 */
+/* 107 */
 /***/ function(module, exports) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -21134,7 +27308,7 @@
 	};
 
 /***/ },
-/* 69 */
+/* 108 */
 /***/ function(module, exports) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -21467,7 +27641,7 @@
 	};
 
 /***/ },
-/* 70 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -21491,10 +27665,10 @@
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var fs = __webpack_require__(25),
-	    path = __webpack_require__(56),
-	    rimraf = __webpack_require__(71),
-	    tmp = __webpack_require__(85);
+	var fs = __webpack_require__(64),
+	    path = __webpack_require__(95),
+	    rimraf = __webpack_require__(110),
+	    tmp = __webpack_require__(124);
 
 	/**
 	 * @param {!Function} fn .
@@ -21767,10 +27941,10 @@
 	    });
 	  });
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 71 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
@@ -21780,10 +27954,10 @@
 	module.exports = rimraf;
 	rimraf.sync = rimrafSync;
 
-	var assert = __webpack_require__(14);
-	var path = __webpack_require__(56);
-	var fs = __webpack_require__(25);
-	var glob = __webpack_require__(72);
+	var assert = __webpack_require__(57);
+	var path = __webpack_require__(95);
+	var fs = __webpack_require__(64);
+	var glob = __webpack_require__(111);
 
 	var defaultGlobOpts = {
 	  nosort: true,
@@ -22056,10 +28230,10 @@
 	  });
 	  options.rmdirSync(p, options);
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 72 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -22108,27 +28282,27 @@
 
 	module.exports = glob;
 
-	var fs = __webpack_require__(25);
-	var rp = __webpack_require__(73);
-	var minimatch = __webpack_require__(75);
+	var fs = __webpack_require__(64);
+	var rp = __webpack_require__(112);
+	var minimatch = __webpack_require__(114);
 	var Minimatch = minimatch.Minimatch;
-	var inherits = __webpack_require__(31);
-	var EE = __webpack_require__(28).EventEmitter;
-	var path = __webpack_require__(56);
-	var assert = __webpack_require__(14);
-	var isAbsolute = __webpack_require__(79);
-	var globSync = __webpack_require__(80);
-	var common = __webpack_require__(81);
+	var inherits = __webpack_require__(70);
+	var EE = __webpack_require__(67).EventEmitter;
+	var path = __webpack_require__(95);
+	var assert = __webpack_require__(57);
+	var isAbsolute = __webpack_require__(118);
+	var globSync = __webpack_require__(119);
+	var common = __webpack_require__(120);
 	var alphasort = common.alphasort;
 	var alphasorti = common.alphasorti;
 	var setopts = common.setopts;
 	var ownProp = common.ownProp;
-	var inflight = __webpack_require__(82);
-	var util = __webpack_require__(15);
+	var inflight = __webpack_require__(121);
+	var util = __webpack_require__(58);
 	var childrenIgnored = common.childrenIgnored;
 	var isIgnored = common.isIgnored;
 
-	var once = __webpack_require__(84);
+	var once = __webpack_require__(123);
 
 	function glob(pattern, options, cb) {
 	  if (typeof options === 'function') cb = options, options = {};
@@ -22764,10 +28938,10 @@
 
 	  return cb(null, c, stat);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 73 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -22779,13 +28953,13 @@
 	realpath.monkeypatch = monkeypatch;
 	realpath.unmonkeypatch = unmonkeypatch;
 
-	var fs = __webpack_require__(25);
+	var fs = __webpack_require__(64);
 	var origRealpath = fs.realpath;
 	var origRealpathSync = fs.realpathSync;
 
 	var version = process.version;
 	var ok = /^v[0-5]\./.test(version);
-	var old = __webpack_require__(74);
+	var old = __webpack_require__(113);
 
 	function newError(er) {
 	  return er && er.syscall === 'realpath' && (er.code === 'ELOOP' || er.code === 'ENOMEM' || er.code === 'ENAMETOOLONG');
@@ -22834,10 +29008,10 @@
 	  fs.realpath = origRealpath;
 	  fs.realpathSync = origRealpathSync;
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 74 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -22863,9 +29037,9 @@
 	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 	// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-	var pathModule = __webpack_require__(56);
+	var pathModule = __webpack_require__(95);
 	var isWindows = process.platform === 'win32';
-	var fs = __webpack_require__(25);
+	var fs = __webpack_require__(64);
 
 	// JavaScript implementation of realpath, ported from node pre-v6
 
@@ -23139,10 +29313,10 @@
 	    start();
 	  }
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 75 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23152,11 +29326,11 @@
 
 	var path = { sep: '/' };
 	try {
-	  path = __webpack_require__(56);
+	  path = __webpack_require__(95);
 	} catch (er) {}
 
 	var GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {};
-	var expand = __webpack_require__(76);
+	var expand = __webpack_require__(115);
 
 	var plTypes = {
 	  '!': { open: '(?:(?!(?:', close: '))[^/]*?)' },
@@ -24051,13 +30225,13 @@
 	}
 
 /***/ },
-/* 76 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var concatMap = __webpack_require__(77);
-	var balanced = __webpack_require__(78);
+	var concatMap = __webpack_require__(116);
+	var balanced = __webpack_require__(117);
 
 	module.exports = expandTop;
 
@@ -24236,7 +30410,7 @@
 	}
 
 /***/ },
-/* 77 */
+/* 116 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -24255,7 +30429,7 @@
 	};
 
 /***/ },
-/* 78 */
+/* 117 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -24320,7 +30494,7 @@
 	}
 
 /***/ },
-/* 79 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -24343,10 +30517,10 @@
 	module.exports = process.platform === 'win32' ? win32 : posix;
 	module.exports.posix = posix;
 	module.exports.win32 = win32;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 80 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -24354,16 +30528,16 @@
 	module.exports = globSync;
 	globSync.GlobSync = GlobSync;
 
-	var fs = __webpack_require__(25);
-	var rp = __webpack_require__(73);
-	var minimatch = __webpack_require__(75);
+	var fs = __webpack_require__(64);
+	var rp = __webpack_require__(112);
+	var minimatch = __webpack_require__(114);
 	var Minimatch = minimatch.Minimatch;
-	var Glob = __webpack_require__(72).Glob;
-	var util = __webpack_require__(15);
-	var path = __webpack_require__(56);
-	var assert = __webpack_require__(14);
-	var isAbsolute = __webpack_require__(79);
-	var common = __webpack_require__(81);
+	var Glob = __webpack_require__(111).Glob;
+	var util = __webpack_require__(58);
+	var path = __webpack_require__(95);
+	var assert = __webpack_require__(57);
+	var isAbsolute = __webpack_require__(118);
+	var common = __webpack_require__(120);
 	var alphasort = common.alphasort;
 	var alphasorti = common.alphasorti;
 	var setopts = common.setopts;
@@ -24761,10 +30935,10 @@
 	GlobSync.prototype._makeAbs = function (f) {
 	  return common.makeAbs(this, f);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 81 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
@@ -24783,9 +30957,9 @@
 	  return Object.prototype.hasOwnProperty.call(obj, field);
 	}
 
-	var path = __webpack_require__(56);
-	var minimatch = __webpack_require__(75);
-	var isAbsolute = __webpack_require__(79);
+	var path = __webpack_require__(95);
+	var minimatch = __webpack_require__(114);
+	var isAbsolute = __webpack_require__(118);
 	var Minimatch = minimatch.Minimatch;
 
 	function alphasorti(a, b) {
@@ -24981,17 +31155,17 @@
 	    return !!(item.gmatcher && item.gmatcher.match(path));
 	  });
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 82 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var wrappy = __webpack_require__(83);
+	var wrappy = __webpack_require__(122);
 	var reqs = Object.create(null);
-	var once = __webpack_require__(84);
+	var once = __webpack_require__(123);
 
 	module.exports = wrappy(inflight);
 
@@ -25044,10 +31218,10 @@
 	    array[i] = args[i];
 	  }return array;
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 83 */
+/* 122 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -25086,12 +31260,12 @@
 	}
 
 /***/ },
-/* 84 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var wrappy = __webpack_require__(83);
+	var wrappy = __webpack_require__(122);
 	module.exports = wrappy(once);
 	module.exports.strict = wrappy(onceStrict);
 
@@ -25134,7 +31308,7 @@
 	}
 
 /***/ },
-/* 85 */
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25150,10 +31324,10 @@
 	/**
 	 * Module dependencies.
 	 */
-	var fs = __webpack_require__(25),
-	    path = __webpack_require__(56),
-	    crypto = __webpack_require__(86),
-	    tmpDir = __webpack_require__(101),
+	var fs = __webpack_require__(64),
+	    path = __webpack_require__(95),
+	    crypto = __webpack_require__(125),
+	    tmpDir = __webpack_require__(140),
 	    _c = process.binding('constants');
 
 	/**
@@ -25578,24 +31752,24 @@
 	module.exports.tmpName = _getTmpName;
 	module.exports.tmpNameSync = _getTmpNameSync;
 	module.exports.setGracefulCleanup = _setGracefulCleanup;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 86 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
 
-	var rng = __webpack_require__(87);
+	var rng = __webpack_require__(126);
 
 	function error() {
 	  var m = [].slice.call(arguments).join(' ');
 	  throw new Error([m, 'we accept pull requests', 'http://github.com/dominictarr/crypto-browserify'].join('\n'));
 	}
 
-	exports.createHash = __webpack_require__(89);
+	exports.createHash = __webpack_require__(128);
 
-	exports.createHmac = __webpack_require__(98);
+	exports.createHmac = __webpack_require__(137);
 
 	exports.randomBytes = function (size, callback) {
 	  if (callback && callback.call) {
@@ -25619,7 +31793,7 @@
 	  return ['sha1', 'sha256', 'sha512', 'md5', 'rmd160'];
 	};
 
-	var p = __webpack_require__(99)(exports);
+	var p = __webpack_require__(138)(exports);
 	exports.pbkdf2 = p.pbkdf2;
 	exports.pbkdf2Sync = p.pbkdf2Sync;
 
@@ -25629,17 +31803,17 @@
 	    error('sorry,', name, 'is not implemented yet');
 	  };
 	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 87 */
+/* 126 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, Buffer) {'use strict';
 
 	(function () {
 	  var g = ('undefined' === typeof window ? global : window) || {};
-	  _crypto = g.crypto || g.msCrypto || __webpack_require__(88);
+	  _crypto = g.crypto || g.msCrypto || __webpack_require__(127);
 	  module.exports = function (size) {
 	    // Modern Browsers
 	    if (_crypto.getRandomValues) {
@@ -25655,24 +31829,24 @@
 	    } else throw new Error('secure random number generation not supported by this browser\n' + 'use chrome, FireFox or Internet Explorer 11');
 	  };
 	})();
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(37).Buffer))
 
 /***/ },
-/* 88 */
+/* 127 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 89 */
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
 
-	var createHash = __webpack_require__(90);
+	var createHash = __webpack_require__(129);
 
-	var md5 = toConstructor(__webpack_require__(95));
-	var rmd160 = toConstructor(__webpack_require__(97));
+	var md5 = toConstructor(__webpack_require__(134));
+	var rmd160 = toConstructor(__webpack_require__(136));
 
 	function toConstructor(fn) {
 	  return function () {
@@ -25699,10 +31873,10 @@
 	  if ('rmd160' === alg) return new rmd160();
 	  return createHash(alg);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 90 */
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25713,15 +31887,15 @@
 	  return new Alg();
 	};
 
-	var Buffer = __webpack_require__(21).Buffer;
-	var Hash = __webpack_require__(91)(Buffer);
+	var Buffer = __webpack_require__(37).Buffer;
+	var Hash = __webpack_require__(130)(Buffer);
 
-	_exports.sha1 = __webpack_require__(92)(Buffer, Hash);
-	_exports.sha256 = __webpack_require__(93)(Buffer, Hash);
-	_exports.sha512 = __webpack_require__(94)(Buffer, Hash);
+	_exports.sha1 = __webpack_require__(131)(Buffer, Hash);
+	_exports.sha256 = __webpack_require__(132)(Buffer, Hash);
+	_exports.sha512 = __webpack_require__(133)(Buffer, Hash);
 
 /***/ },
-/* 91 */
+/* 130 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25805,7 +31979,7 @@
 	};
 
 /***/ },
-/* 92 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25819,7 +31993,7 @@
 	 * See http://pajhome.org.uk/crypt/md5 for details.
 	 */
 
-	var inherits = __webpack_require__(15).inherits;
+	var inherits = __webpack_require__(58).inherits;
 
 	module.exports = function (Buffer, Hash) {
 
@@ -25944,7 +32118,7 @@
 	};
 
 /***/ },
-/* 93 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25957,7 +32131,7 @@
 	 *
 	 */
 
-	var inherits = __webpack_require__(15).inherits;
+	var inherits = __webpack_require__(58).inherits;
 
 	module.exports = function (Buffer, Hash) {
 
@@ -26076,12 +32250,12 @@
 	};
 
 /***/ },
-/* 94 */
+/* 133 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var inherits = __webpack_require__(15).inherits;
+	var inherits = __webpack_require__(58).inherits;
 
 	module.exports = function (Buffer, Hash) {
 	  var K = [0x428a2f98, 0xd728ae22, 0x71374491, 0x23ef65cd, 0xb5c0fbcf, 0xec4d3b2f, 0xe9b5dba5, 0x8189dbbc, 0x3956c25b, 0xf348b538, 0x59f111f1, 0xb605d019, 0x923f82a4, 0xaf194f9b, 0xab1c5ed5, 0xda6d8118, 0xd807aa98, 0xa3030242, 0x12835b01, 0x45706fbe, 0x243185be, 0x4ee4b28c, 0x550c7dc3, 0xd5ffb4e2, 0x72be5d74, 0xf27b896f, 0x80deb1fe, 0x3b1696b1, 0x9bdc06a7, 0x25c71235, 0xc19bf174, 0xcf692694, 0xe49b69c1, 0x9ef14ad2, 0xefbe4786, 0x384f25e3, 0x0fc19dc6, 0x8b8cd5b5, 0x240ca1cc, 0x77ac9c65, 0x2de92c6f, 0x592b0275, 0x4a7484aa, 0x6ea6e483, 0x5cb0a9dc, 0xbd41fbd4, 0x76f988da, 0x831153b5, 0x983e5152, 0xee66dfab, 0xa831c66d, 0x2db43210, 0xb00327c8, 0x98fb213f, 0xbf597fc7, 0xbeef0ee4, 0xc6e00bf3, 0x3da88fc2, 0xd5a79147, 0x930aa725, 0x06ca6351, 0xe003826f, 0x14292967, 0x0a0e6e70, 0x27b70a85, 0x46d22ffc, 0x2e1b2138, 0x5c26c926, 0x4d2c6dfc, 0x5ac42aed, 0x53380d13, 0x9d95b3df, 0x650a7354, 0x8baf63de, 0x766a0abb, 0x3c77b2a8, 0x81c2c92e, 0x47edaee6, 0x92722c85, 0x1482353b, 0xa2bfe8a1, 0x4cf10364, 0xa81a664b, 0xbc423001, 0xc24b8b70, 0xd0f89791, 0xc76c51a3, 0x0654be30, 0xd192e819, 0xd6ef5218, 0xd6990624, 0x5565a910, 0xf40e3585, 0x5771202a, 0x106aa070, 0x32bbd1b8, 0x19a4c116, 0xb8d2d0c8, 0x1e376c08, 0x5141ab53, 0x2748774c, 0xdf8eeb99, 0x34b0bcb5, 0xe19b48a8, 0x391c0cb3, 0xc5c95a63, 0x4ed8aa4a, 0xe3418acb, 0x5b9cca4f, 0x7763e373, 0x682e6ff3, 0xd6b2b8a3, 0x748f82ee, 0x5defb2fc, 0x78a5636f, 0x43172f60, 0x84c87814, 0xa1f0ab72, 0x8cc70208, 0x1a6439ec, 0x90befffa, 0x23631e28, 0xa4506ceb, 0xde82bde9, 0xbef9a3f7, 0xb2c67915, 0xc67178f2, 0xe372532b, 0xca273ece, 0xea26619c, 0xd186b8c7, 0x21c0c207, 0xeada7dd6, 0xcde0eb1e, 0xf57d4f7f, 0xee6ed178, 0x06f067aa, 0x72176fba, 0x0a637dc5, 0xa2c898a6, 0x113f9804, 0xbef90dae, 0x1b710b35, 0x131c471b, 0x28db77f5, 0x23047d84, 0x32caab7b, 0x40c72493, 0x3c9ebe0a, 0x15c9bebc, 0x431d67c4, 0x9c100d4c, 0x4cc5d4be, 0xcb3e42b6, 0x597f299c, 0xfc657e2a, 0x5fcb6fab, 0x3ad6faec, 0x6c44198c, 0x4a475817];
@@ -26284,7 +32458,7 @@
 	};
 
 /***/ },
-/* 95 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26298,7 +32472,7 @@
 	 * See http://pajhome.org.uk/crypt/md5 for more info.
 	 */
 
-	var helpers = __webpack_require__(96);
+	var helpers = __webpack_require__(135);
 
 	/*
 	 * Calculate the MD5 of an array of little-endian words, and a bit length
@@ -26436,7 +32610,7 @@
 	};
 
 /***/ },
-/* 96 */
+/* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {"use strict";
@@ -26475,10 +32649,10 @@
 	}
 
 	module.exports = { hash: hash };
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 97 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
@@ -26657,15 +32831,15 @@
 	  var digestbytes = wordsToBytes(H);
 	  return new Buffer(digestbytes);
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 98 */
+/* 137 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
 
-	var createHash = __webpack_require__(89);
+	var createHash = __webpack_require__(128);
 
 	var zeroBuffer = new Buffer(128);
 	zeroBuffer.fill(0);
@@ -26707,15 +32881,15 @@
 	  var h = this._hash.digest();
 	  return createHash(this._alg).update(this._opad).update(h).digest(enc);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 99 */
+/* 138 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var pbkdf2Export = __webpack_require__(100);
+	var pbkdf2Export = __webpack_require__(139);
 
 	module.exports = function (crypto, exports) {
 	  exports = exports || {};
@@ -26729,7 +32903,7 @@
 	};
 
 /***/ },
-/* 100 */
+/* 139 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
@@ -26815,10 +32989,10 @@
 	    pbkdf2Sync: pbkdf2Sync
 	  };
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 101 */
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26842,10 +33016,10 @@
 
 		return path;
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 102 */
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -26867,9 +33041,9 @@
 
 	'use strict';
 
-	var exec = __webpack_require__(25).exec,
-	    fs = __webpack_require__(25),
-	    net = __webpack_require__(25);
+	var exec = __webpack_require__(64).exec,
+	    fs = __webpack_require__(64),
+	    net = __webpack_require__(64);
 
 	/**
 	 * The IANA suggested ephemeral port range.
@@ -27042,10 +33216,10 @@
 
 	exports.findFreePort = findFreePort;
 	exports.isFree = isFree;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 103 */
+/* 142 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -27075,21 +33249,21 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var AdmZip = __webpack_require__(104);
-	var fs = __webpack_require__(25);
-	var path = __webpack_require__(56);
-	var url = __webpack_require__(48);
-	var util = __webpack_require__(15);
+	var AdmZip = __webpack_require__(143);
+	var fs = __webpack_require__(64);
+	var path = __webpack_require__(95);
+	var url = __webpack_require__(87);
+	var util = __webpack_require__(58);
 
-	var httpUtil = __webpack_require__(138);
-	var io = __webpack_require__(70);
-	var exec = __webpack_require__(139);
-	var cmd = __webpack_require__(57);
-	var input = __webpack_require__(68);
-	var promise = __webpack_require__(61);
-	var webdriver = __webpack_require__(66);
-	var net = __webpack_require__(140);
-	var portprober = __webpack_require__(102);
+	var httpUtil = __webpack_require__(177);
+	var io = __webpack_require__(109);
+	var exec = __webpack_require__(178);
+	var cmd = __webpack_require__(96);
+	var input = __webpack_require__(107);
+	var promise = __webpack_require__(100);
+	var webdriver = __webpack_require__(105);
+	var net = __webpack_require__(179);
+	var portprober = __webpack_require__(141);
 
 	/**
 	 * @typedef {(string|!Array<string|number|!stream.Stream|null|undefined>)}
@@ -27726,24 +33900,24 @@
 	exports.FileDetector = FileDetector;
 	exports.SeleniumServer = SeleniumServer;
 	exports.ServiceOptions = ServiceOptions; // Exported for API docs.
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 104 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {"use strict";
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var fs = __webpack_require__(25),
-	    pth = __webpack_require__(56);
+	var fs = __webpack_require__(64),
+	    pth = __webpack_require__(95);
 
 	fs.existsSync = fs.existsSync || pth.existsSync;
 
-	var ZipEntry = __webpack_require__(105),
-	    ZipFile = __webpack_require__(137),
-	    Utils = __webpack_require__(106);
+	var ZipEntry = __webpack_require__(144),
+	    ZipFile = __webpack_require__(176),
+	    Utils = __webpack_require__(145);
 
 	module.exports = function ( /*String*/input) {
 	    var _zip = undefined,
@@ -28212,18 +34386,18 @@
 	        }
 	    };
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 105 */
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {"use strict";
 
-	var Utils = __webpack_require__(106),
-	    Headers = __webpack_require__(111),
+	var Utils = __webpack_require__(145),
+	    Headers = __webpack_require__(150),
 	    Constants = Utils.Constants,
-	    Methods = __webpack_require__(114);
+	    Methods = __webpack_require__(153);
 
 	module.exports = function ( /*Buffer*/input) {
 
@@ -28514,35 +34688,35 @@
 	        }
 	    };
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 106 */
+/* 145 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	module.exports = __webpack_require__(107);
-	module.exports.Constants = __webpack_require__(108);
-	module.exports.Errors = __webpack_require__(109);
-	module.exports.FileAttr = __webpack_require__(110);
+	module.exports = __webpack_require__(146);
+	module.exports.Constants = __webpack_require__(147);
+	module.exports.Errors = __webpack_require__(148);
+	module.exports.FileAttr = __webpack_require__(149);
 
 /***/ },
-/* 107 */
+/* 146 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
 
-	var fs = __webpack_require__(25),
-	    pth = __webpack_require__(56);
+	var fs = __webpack_require__(64),
+	    pth = __webpack_require__(95);
 
 	fs.existsSync = fs.existsSync || pth.existsSync;
 
 	module.exports = function () {
 
 	    var crcTable = [],
-	        Constants = __webpack_require__(108),
-	        Errors = __webpack_require__(109),
+	        Constants = __webpack_require__(147),
+	        Errors = __webpack_require__(148),
 	        PATH_SEPARATOR = pth.normalize("/");
 
 	    function mkdirSync( /*String*/path) {
@@ -28728,10 +34902,10 @@
 	        Errors: Errors
 	    };
 	}();
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 108 */
+/* 147 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -28853,7 +35027,7 @@
 	};
 
 /***/ },
-/* 109 */
+/* 148 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -28895,13 +35069,13 @@
 	};
 
 /***/ },
-/* 110 */
+/* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var fs = __webpack_require__(25),
-	    pth = __webpack_require__(56);
+	var fs = __webpack_require__(64),
+	    pth = __webpack_require__(95);
 
 	fs.existsSync = fs.existsSync || pth.existsSync;
 
@@ -28972,21 +35146,21 @@
 	};
 
 /***/ },
-/* 111 */
+/* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	exports.EntryHeader = __webpack_require__(112);
-	exports.MainHeader = __webpack_require__(113);
+	exports.EntryHeader = __webpack_require__(151);
+	exports.MainHeader = __webpack_require__(152);
 
 /***/ },
-/* 112 */
+/* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
 
-	var Utils = __webpack_require__(106),
+	var Utils = __webpack_require__(145),
 	    Constants = Utils.Constants;
 
 	/* The central directory file header */
@@ -29281,15 +35455,15 @@
 	                }
 	        };
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 113 */
+/* 152 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {"use strict";
 
-	var Utils = __webpack_require__(106),
+	var Utils = __webpack_require__(145),
 	    Constants = Utils.Constants;
 
 	/* The entries in the end of central directory */
@@ -29382,19 +35556,19 @@
 	        }
 	    };
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 114 */
+/* 153 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	exports.Deflater = __webpack_require__(115);
-	exports.Inflater = __webpack_require__(136);
+	exports.Deflater = __webpack_require__(154);
+	exports.Inflater = __webpack_require__(175);
 
 /***/ },
-/* 115 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
@@ -30920,7 +37094,7 @@
 
 	module.exports = function ( /*Buffer*/inbuf) {
 
-	    var zlib = __webpack_require__(116);
+	    var zlib = __webpack_require__(155);
 
 	    return {
 	        deflate: function deflate() {
@@ -30951,10 +37125,10 @@
 	        }
 	    };
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 116 */
+/* 155 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer, process) {'use strict';
@@ -30980,11 +37154,11 @@
 	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 	// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-	var Transform = __webpack_require__(117);
+	var Transform = __webpack_require__(156);
 
-	var binding = __webpack_require__(124);
-	var util = __webpack_require__(15);
-	var assert = __webpack_require__(14).ok;
+	var binding = __webpack_require__(163);
+	var util = __webpack_require__(58);
+	var assert = __webpack_require__(57).ok;
 
 	// zlib doesn't provide these, so kludge them in following the same
 	// const naming scheme zlib uses.
@@ -31520,18 +37694,18 @@
 	util.inherits(DeflateRaw, Zlib);
 	util.inherits(InflateRaw, Zlib);
 	util.inherits(Unzip, Zlib);
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer, __webpack_require__(59)))
 
 /***/ },
-/* 117 */
+/* 156 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	module.exports = __webpack_require__(118);
+	module.exports = __webpack_require__(157);
 
 /***/ },
-/* 118 */
+/* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31602,11 +37776,11 @@
 
 	module.exports = Transform;
 
-	var Duplex = __webpack_require__(119);
+	var Duplex = __webpack_require__(158);
 
 	/*<replacement>*/
-	var util = __webpack_require__(35);
-	util.inherits = __webpack_require__(31);
+	var util = __webpack_require__(74);
+	util.inherits = __webpack_require__(70);
 	/*</replacement>*/
 
 	util.inherits(Transform, Duplex);
@@ -31731,7 +37905,7 @@
 	}
 
 /***/ },
-/* 119 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -31774,12 +37948,12 @@
 	/*</replacement>*/
 
 	/*<replacement>*/
-	var util = __webpack_require__(35);
-	util.inherits = __webpack_require__(31);
+	var util = __webpack_require__(74);
+	util.inherits = __webpack_require__(70);
 	/*</replacement>*/
 
-	var Readable = __webpack_require__(120);
-	var Writable = __webpack_require__(123);
+	var Readable = __webpack_require__(159);
+	var Writable = __webpack_require__(162);
 
 	util.inherits(Duplex, Readable);
 
@@ -31819,10 +37993,10 @@
 	    f(xs[i], i);
 	  }
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 120 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -31851,16 +38025,16 @@
 	module.exports = Readable;
 
 	/*<replacement>*/
-	var isArray = __webpack_require__(121);
+	var isArray = __webpack_require__(160);
 	/*</replacement>*/
 
 	/*<replacement>*/
-	var Buffer = __webpack_require__(21).Buffer;
+	var Buffer = __webpack_require__(37).Buffer;
 	/*</replacement>*/
 
 	Readable.ReadableState = ReadableState;
 
-	var EE = __webpack_require__(28).EventEmitter;
+	var EE = __webpack_require__(67).EventEmitter;
 
 	/*<replacement>*/
 	if (!EE.listenerCount) EE.listenerCount = function (emitter, type) {
@@ -31868,17 +38042,17 @@
 	};
 	/*</replacement>*/
 
-	var Stream = __webpack_require__(30);
+	var Stream = __webpack_require__(69);
 
 	/*<replacement>*/
-	var util = __webpack_require__(35);
-	util.inherits = __webpack_require__(31);
+	var util = __webpack_require__(74);
+	util.inherits = __webpack_require__(70);
 	/*</replacement>*/
 
 	var StringDecoder;
 
 	/*<replacement>*/
-	var debug = __webpack_require__(122);
+	var debug = __webpack_require__(161);
 	if (debug && debug.debuglog) {
 	  debug = debug.debuglog('stream');
 	} else {
@@ -31889,7 +38063,7 @@
 	util.inherits(Readable, Stream);
 
 	function ReadableState(options, stream) {
-	  var Duplex = __webpack_require__(119);
+	  var Duplex = __webpack_require__(158);
 
 	  options = options || {};
 
@@ -31947,14 +38121,14 @@
 	  this.decoder = null;
 	  this.encoding = null;
 	  if (options.encoding) {
-	    if (!StringDecoder) StringDecoder = __webpack_require__(39).StringDecoder;
+	    if (!StringDecoder) StringDecoder = __webpack_require__(78).StringDecoder;
 	    this.decoder = new StringDecoder(options.encoding);
 	    this.encoding = options.encoding;
 	  }
 	}
 
 	function Readable(options) {
-	  var Duplex = __webpack_require__(119);
+	  var Duplex = __webpack_require__(158);
 
 	  if (!(this instanceof Readable)) return new Readable(options);
 
@@ -32043,7 +38217,7 @@
 
 	// backwards compatibility.
 	Readable.prototype.setEncoding = function (enc) {
-	  if (!StringDecoder) StringDecoder = __webpack_require__(39).StringDecoder;
+	  if (!StringDecoder) StringDecoder = __webpack_require__(78).StringDecoder;
 	  this._readableState.decoder = new StringDecoder(enc);
 	  this._readableState.encoding = enc;
 	  return this;
@@ -32679,10 +38853,10 @@
 	  }
 	  return -1;
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 121 */
+/* 160 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -32692,13 +38866,13 @@
 	};
 
 /***/ },
-/* 122 */
+/* 161 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 123 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -32731,17 +38905,17 @@
 	module.exports = Writable;
 
 	/*<replacement>*/
-	var Buffer = __webpack_require__(21).Buffer;
+	var Buffer = __webpack_require__(37).Buffer;
 	/*</replacement>*/
 
 	Writable.WritableState = WritableState;
 
 	/*<replacement>*/
-	var util = __webpack_require__(35);
-	util.inherits = __webpack_require__(31);
+	var util = __webpack_require__(74);
+	util.inherits = __webpack_require__(70);
 	/*</replacement>*/
 
-	var Stream = __webpack_require__(30);
+	var Stream = __webpack_require__(69);
 
 	util.inherits(Writable, Stream);
 
@@ -32752,7 +38926,7 @@
 	}
 
 	function WritableState(options, stream) {
-	  var Duplex = __webpack_require__(119);
+	  var Duplex = __webpack_require__(158);
 
 	  options = options || {};
 
@@ -32839,7 +39013,7 @@
 	}
 
 	function Writable(options) {
-	  var Duplex = __webpack_require__(119);
+	  var Duplex = __webpack_require__(158);
 
 	  // Writable ctor is applied to Duplexes, though they're not
 	  // instanceof Writable, they're instanceof Readable.
@@ -33128,19 +39302,19 @@
 	  }
 	  state.ended = true;
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 124 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process, Buffer) {'use strict';
 
-	var msg = __webpack_require__(125);
-	var zstream = __webpack_require__(126);
-	var zlib_deflate = __webpack_require__(127);
-	var zlib_inflate = __webpack_require__(132);
-	var constants = __webpack_require__(135);
+	var msg = __webpack_require__(164);
+	var zstream = __webpack_require__(165);
+	var zlib_deflate = __webpack_require__(166);
+	var zlib_inflate = __webpack_require__(171);
+	var constants = __webpack_require__(174);
 
 	for (var key in constants) {
 	  exports[key] = constants[key];
@@ -33344,10 +39518,10 @@
 	};
 
 	exports.Zlib = Zlib;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16), __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59), __webpack_require__(37).Buffer))
 
 /***/ },
-/* 125 */
+/* 164 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -33365,7 +39539,7 @@
 	};
 
 /***/ },
-/* 126 */
+/* 165 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -33398,16 +39572,16 @@
 	module.exports = ZStream;
 
 /***/ },
-/* 127 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(128);
-	var trees = __webpack_require__(129);
-	var adler32 = __webpack_require__(130);
-	var crc32 = __webpack_require__(131);
-	var msg = __webpack_require__(125);
+	var utils = __webpack_require__(167);
+	var trees = __webpack_require__(168);
+	var adler32 = __webpack_require__(169);
+	var crc32 = __webpack_require__(170);
+	var msg = __webpack_require__(164);
 
 	/* Public constants ==========================================================*/
 	/* ===========================================================================*/
@@ -35208,7 +41382,7 @@
 	*/
 
 /***/ },
-/* 128 */
+/* 167 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -35316,12 +41490,12 @@
 	exports.setTyped(TYPED_OK);
 
 /***/ },
-/* 129 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(128);
+	var utils = __webpack_require__(167);
 
 	/* Public constants ==========================================================*/
 	/* ===========================================================================*/
@@ -36498,7 +42672,7 @@
 	exports._tr_align = _tr_align;
 
 /***/ },
-/* 130 */
+/* 169 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36534,7 +42708,7 @@
 	module.exports = adler32;
 
 /***/ },
-/* 131 */
+/* 170 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36580,16 +42754,16 @@
 	module.exports = crc32;
 
 /***/ },
-/* 132 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(128);
-	var adler32 = __webpack_require__(130);
-	var crc32 = __webpack_require__(131);
-	var inflate_fast = __webpack_require__(133);
-	var inflate_table = __webpack_require__(134);
+	var utils = __webpack_require__(167);
+	var adler32 = __webpack_require__(169);
+	var crc32 = __webpack_require__(170);
+	var inflate_fast = __webpack_require__(172);
+	var inflate_table = __webpack_require__(173);
 
 	var CODES = 0;
 	var LENS = 1;
@@ -38209,7 +44383,7 @@
 	*/
 
 /***/ },
-/* 133 */
+/* 172 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38544,12 +44718,12 @@
 	};
 
 /***/ },
-/* 134 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(128);
+	var utils = __webpack_require__(167);
 
 	var MAXBITS = 15;
 	var ENOUGH_LENS = 852;
@@ -38861,7 +45035,7 @@
 	};
 
 /***/ },
-/* 135 */
+/* 174 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38914,12 +45088,12 @@
 	};
 
 /***/ },
-/* 136 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Buffer = __webpack_require__(21).Buffer;
+	var Buffer = __webpack_require__(37).Buffer;
 
 	function JSInflater( /*Buffer*/input) {
 
@@ -39353,7 +45527,7 @@
 	}
 
 	module.exports = function ( /*Buffer*/inbuf) {
-	    var zlib = __webpack_require__(116);
+	    var zlib = __webpack_require__(155);
 	    return {
 	        inflateAsync: function inflateAsync( /*Function*/callback) {
 	            var tmp = zlib.createInflateRaw(),
@@ -39389,21 +45563,21 @@
 	};
 
 /***/ },
-/* 137 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {"use strict";
 
-	var ZipEntry = __webpack_require__(105),
-	    Headers = __webpack_require__(111),
-	    Utils = __webpack_require__(106);
+	var ZipEntry = __webpack_require__(144),
+	    Headers = __webpack_require__(150),
+	    Utils = __webpack_require__(145);
 
 	module.exports = function ( /*String|Buffer*/input, /*Number*/inputType) {
 	    var entryList = [],
 	        entryTable = {},
 	        _comment = new Buffer(0),
 	        filename = "",
-	        fs = __webpack_require__(25),
+	        fs = __webpack_require__(64),
 	        inBuffer = null,
 	        mainHeader = new Headers.MainHeader();
 
@@ -39715,10 +45889,10 @@
 	        }
 	    };
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 138 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -39744,13 +45918,13 @@
 
 	'use strict';
 
-	var Executor = __webpack_require__(26).Executor,
-	    HttpClient = __webpack_require__(26).HttpClient,
-	    HttpRequest = __webpack_require__(26).Request,
-	    Command = __webpack_require__(57).Command,
-	    CommandName = __webpack_require__(57).Name,
-	    error = __webpack_require__(59),
-	    promise = __webpack_require__(61);
+	var Executor = __webpack_require__(65).Executor,
+	    HttpClient = __webpack_require__(65).HttpClient,
+	    HttpRequest = __webpack_require__(65).Request,
+	    Command = __webpack_require__(96).Command,
+	    CommandName = __webpack_require__(96).Name,
+	    error = __webpack_require__(98),
+	    promise = __webpack_require__(100);
 
 	/**
 	 * Queries a WebDriver server for its current status.
@@ -39899,7 +46073,7 @@
 	};
 
 /***/ },
-/* 139 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -39925,7 +46099,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var childProcess = __webpack_require__(25);
+	var childProcess = __webpack_require__(64);
 
 	/**
 	 * A hash with configuration options for an executed command.
@@ -40081,10 +46255,10 @@
 	/** @typedef {!Options} */
 	module.exports.Options = Options;
 	module.exports.Result = Result;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 140 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -40106,7 +46280,7 @@
 
 	'use strict';
 
-	var os = __webpack_require__(141);
+	var os = __webpack_require__(180);
 
 	function getLoInterface() {
 	  var name;
@@ -40198,10 +46372,10 @@
 	  var port = parseInt(hostport.slice(lastIndex + 1), 10);
 	  return { host: host, port: port };
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 141 */
+/* 180 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -40266,7 +46440,7 @@
 	exports.EOL = '\n';
 
 /***/ },
-/* 142 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -40349,17 +46523,17 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var fs = __webpack_require__(25),
-	    util = __webpack_require__(15);
+	var fs = __webpack_require__(64),
+	    util = __webpack_require__(58);
 
-	var http = __webpack_require__(26),
-	    io = __webpack_require__(70),
-	    capabilities = __webpack_require__(64),
-	    promise = __webpack_require__(61),
-	    Symbols = __webpack_require__(65),
-	    webdriver = __webpack_require__(66),
-	    portprober = __webpack_require__(102),
-	    remote = __webpack_require__(103);
+	var http = __webpack_require__(65),
+	    io = __webpack_require__(109),
+	    capabilities = __webpack_require__(103),
+	    promise = __webpack_require__(100),
+	    Symbols = __webpack_require__(104),
+	    webdriver = __webpack_require__(105),
+	    portprober = __webpack_require__(141),
+	    remote = __webpack_require__(142);
 
 	var EDGEDRIVER_EXE = 'MicrosoftWebDriver.exe';
 
@@ -40618,7 +46792,7 @@
 	exports.setDefaultService = setDefaultService;
 
 /***/ },
-/* 143 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -40742,22 +46916,22 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var url = __webpack_require__(48);
+	var url = __webpack_require__(87);
 
-	var Binary = __webpack_require__(144).Binary,
-	    Profile = __webpack_require__(145).Profile,
-	    decodeProfile = __webpack_require__(145).decode,
-	    http = __webpack_require__(26),
-	    httpUtil = __webpack_require__(138),
-	    io = __webpack_require__(70),
-	    capabilities = __webpack_require__(64),
-	    command = __webpack_require__(57),
-	    logging = __webpack_require__(60),
-	    promise = __webpack_require__(61),
-	    webdriver = __webpack_require__(66),
-	    net = __webpack_require__(140),
-	    portprober = __webpack_require__(102),
-	    remote = __webpack_require__(103);
+	var Binary = __webpack_require__(183).Binary,
+	    Profile = __webpack_require__(184).Profile,
+	    decodeProfile = __webpack_require__(184).decode,
+	    http = __webpack_require__(65),
+	    httpUtil = __webpack_require__(177),
+	    io = __webpack_require__(109),
+	    capabilities = __webpack_require__(103),
+	    command = __webpack_require__(96),
+	    logging = __webpack_require__(99),
+	    promise = __webpack_require__(100),
+	    webdriver = __webpack_require__(105),
+	    net = __webpack_require__(179),
+	    portprober = __webpack_require__(141),
+	    remote = __webpack_require__(142);
 
 	/**
 	 * Firefox-specific capability keys. Users should use the {@linkplain Options}
@@ -41369,10 +47543,10 @@
 	exports.Options = Options;
 	exports.Profile = Profile;
 	exports.ServiceBuilder = ServiceBuilder;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 144 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__dirname, process) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -41403,15 +47577,15 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var child = __webpack_require__(25),
-	    fs = __webpack_require__(25),
-	    path = __webpack_require__(56),
-	    util = __webpack_require__(15);
+	var child = __webpack_require__(64),
+	    fs = __webpack_require__(64),
+	    path = __webpack_require__(95),
+	    util = __webpack_require__(58);
 
-	var isDevMode = __webpack_require__(58),
-	    Symbols = __webpack_require__(65),
-	    io = __webpack_require__(70),
-	    exec = __webpack_require__(139);
+	var isDevMode = __webpack_require__(97),
+	    Symbols = __webpack_require__(104),
+	    io = __webpack_require__(109),
+	    exec = __webpack_require__(178);
 
 	/** @const */
 	var NO_FOCUS_LIB_X86 = isDevMode ? path.join(__dirname, '../../../../cpp/prebuilt/i386/libnoblur.so') : path.join(__dirname, '../lib/firefox/i386/libnoblur.so');
@@ -41680,10 +47854,10 @@
 
 
 	exports.Binary = Binary;
-	/* WEBPACK VAR INJECTION */}.call(exports, "/", __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, "/", __webpack_require__(59)))
 
 /***/ },
-/* 145 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__dirname, Buffer) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -41714,15 +47888,15 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var AdmZip = __webpack_require__(104),
-	    fs = __webpack_require__(25),
-	    path = __webpack_require__(56),
-	    vm = __webpack_require__(146);
+	var AdmZip = __webpack_require__(143),
+	    fs = __webpack_require__(64),
+	    path = __webpack_require__(95),
+	    vm = __webpack_require__(185);
 
-	var isDevMode = __webpack_require__(58),
-	    Symbols = __webpack_require__(65),
-	    io = __webpack_require__(70),
-	    extension = __webpack_require__(148);
+	var isDevMode = __webpack_require__(97),
+	    Symbols = __webpack_require__(104),
+	    io = __webpack_require__(109),
+	    extension = __webpack_require__(187);
 
 	/** @const */
 	var WEBDRIVER_PREFERENCES_PATH = isDevMode ? path.join(__dirname, '../../../firefox-driver/webdriver.json') : path.join(__dirname, '../lib/firefox/webdriver.json');
@@ -42156,17 +48330,17 @@
 	exports.Profile = Profile;
 	exports.decode = decode;
 	exports.loadUserPrefs = loadUserPrefs;
-	/* WEBPACK VAR INJECTION */}.call(exports, "/", __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, "/", __webpack_require__(37).Buffer))
 
 /***/ },
-/* 146 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var indexOf = __webpack_require__(147);
+	var indexOf = __webpack_require__(186);
 
 	var Object_keys = function Object_keys(obj) {
 	    if (Object.keys) return Object.keys(obj);else {
@@ -42302,7 +48476,7 @@
 	};
 
 /***/ },
-/* 147 */
+/* 186 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -42318,7 +48492,7 @@
 	};
 
 /***/ },
-/* 148 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -42348,12 +48522,12 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var AdmZip = __webpack_require__(104),
-	    fs = __webpack_require__(25),
-	    path = __webpack_require__(56),
-	    xml = __webpack_require__(149);
+	var AdmZip = __webpack_require__(143),
+	    fs = __webpack_require__(64),
+	    path = __webpack_require__(95),
+	    xml = __webpack_require__(188);
 
-	var io = __webpack_require__(70);
+	var io = __webpack_require__(109);
 
 	/**
 	 * Thrown when there an add-on is malformed.
@@ -42520,7 +48694,7 @@
 	exports.install = install;
 
 /***/ },
-/* 149 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42556,17 +48730,17 @@
 	    };
 	  };
 
-	  sax = __webpack_require__(150);
+	  sax = __webpack_require__(189);
 
-	  events = __webpack_require__(28);
+	  events = __webpack_require__(67);
 
-	  builder = __webpack_require__(151);
+	  builder = __webpack_require__(190);
 
-	  bom = __webpack_require__(302);
+	  bom = __webpack_require__(341);
 
-	  processors = __webpack_require__(303);
+	  processors = __webpack_require__(342);
 
-	  setImmediate = __webpack_require__(304).setImmediate;
+	  setImmediate = __webpack_require__(343).setImmediate;
 
 	  isEmpty = function isEmpty(thing) {
 	    return (typeof thing === 'undefined' ? 'undefined' : _typeof(thing)) === "object" && thing != null && Object.keys(thing).length === 0;
@@ -43089,7 +49263,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 150 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
@@ -43247,7 +49421,7 @@
 
 	  var Stream;
 	  try {
-	    Stream = __webpack_require__(30).Stream;
+	    Stream = __webpack_require__(69).Stream;
 	  } catch (ex) {
 	    Stream = function Stream() {};
 	  }
@@ -43315,7 +49489,7 @@
 	  SAXStream.prototype.write = function (data) {
 	    if (typeof Buffer === 'function' && typeof Buffer.isBuffer === 'function' && Buffer.isBuffer(data)) {
 	      if (!this._decoder) {
-	        var SD = __webpack_require__(39).StringDecoder;
+	        var SD = __webpack_require__(78).StringDecoder;
 	        this._decoder = new SD('utf8');
 	      }
 	      data = this._decoder.write(data);
@@ -44647,10 +50821,10 @@
 	    })();
 	  }
 	})( false ? undefined.sax = {} : exports);
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37).Buffer))
 
 /***/ },
-/* 151 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44659,9 +50833,9 @@
 	(function () {
 	  var XMLBuilder, assign;
 
-	  assign = __webpack_require__(152);
+	  assign = __webpack_require__(191);
 
-	  XMLBuilder = __webpack_require__(202);
+	  XMLBuilder = __webpack_require__(241);
 
 	  module.exports.create = function (name, xmldec, doctype, options) {
 	    options = assign({}, xmldec, doctype, options);
@@ -44670,17 +50844,17 @@
 	}).call(undefined);
 
 /***/ },
-/* 152 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assignValue = __webpack_require__(153),
-	    copyObject = __webpack_require__(171),
-	    createAssigner = __webpack_require__(172),
-	    isArrayLike = __webpack_require__(182),
-	    isPrototype = __webpack_require__(185),
-	    keys = __webpack_require__(186);
+	var assignValue = __webpack_require__(192),
+	    copyObject = __webpack_require__(210),
+	    createAssigner = __webpack_require__(211),
+	    isArrayLike = __webpack_require__(221),
+	    isPrototype = __webpack_require__(224),
+	    keys = __webpack_require__(225);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -44735,13 +50909,13 @@
 	module.exports = assign;
 
 /***/ },
-/* 153 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseAssignValue = __webpack_require__(154),
-	    eq = __webpack_require__(170);
+	var baseAssignValue = __webpack_require__(193),
+	    eq = __webpack_require__(209);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -44769,12 +50943,12 @@
 	module.exports = assignValue;
 
 /***/ },
-/* 154 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var defineProperty = __webpack_require__(155);
+	var defineProperty = __webpack_require__(194);
 
 	/**
 	 * The base implementation of `assignValue` and `assignMergeValue` without
@@ -44801,12 +50975,12 @@
 	module.exports = baseAssignValue;
 
 /***/ },
-/* 155 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getNative = __webpack_require__(156);
+	var getNative = __webpack_require__(195);
 
 	var defineProperty = function () {
 	  try {
@@ -44819,13 +50993,13 @@
 	module.exports = defineProperty;
 
 /***/ },
-/* 156 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseIsNative = __webpack_require__(157),
-	    getValue = __webpack_require__(169);
+	var baseIsNative = __webpack_require__(196),
+	    getValue = __webpack_require__(208);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -44843,15 +51017,15 @@
 	module.exports = getNative;
 
 /***/ },
-/* 157 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isFunction = __webpack_require__(158),
-	    isMasked = __webpack_require__(166),
-	    isObject = __webpack_require__(165),
-	    toSource = __webpack_require__(168);
+	var isFunction = __webpack_require__(197),
+	    isMasked = __webpack_require__(205),
+	    isObject = __webpack_require__(204),
+	    toSource = __webpack_require__(207);
 
 	/**
 	 * Used to match `RegExp`
@@ -44894,13 +51068,13 @@
 	module.exports = baseIsNative;
 
 /***/ },
-/* 158 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseGetTag = __webpack_require__(159),
-	    isObject = __webpack_require__(165);
+	var baseGetTag = __webpack_require__(198),
+	    isObject = __webpack_require__(204);
 
 	/** `Object#toString` result references. */
 	var asyncTag = '[object AsyncFunction]',
@@ -44938,14 +51112,14 @@
 	module.exports = isFunction;
 
 /***/ },
-/* 159 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _Symbol = __webpack_require__(160),
-	    getRawTag = __webpack_require__(163),
-	    objectToString = __webpack_require__(164);
+	var _Symbol = __webpack_require__(199),
+	    getRawTag = __webpack_require__(202),
+	    objectToString = __webpack_require__(203);
 
 	/** `Object#toString` result references. */
 	var nullTag = '[object Null]',
@@ -44972,12 +51146,12 @@
 	module.exports = baseGetTag;
 
 /***/ },
-/* 160 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var root = __webpack_require__(161);
+	var root = __webpack_require__(200);
 
 	/** Built-in value references. */
 	var _Symbol = root.Symbol;
@@ -44985,14 +51159,14 @@
 	module.exports = _Symbol;
 
 /***/ },
-/* 161 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var freeGlobal = __webpack_require__(162);
+	var freeGlobal = __webpack_require__(201);
 
 	/** Detect free variable `self`. */
 	var freeSelf = (typeof self === 'undefined' ? 'undefined' : _typeof(self)) == 'object' && self && self.Object === Object && self;
@@ -45003,7 +51177,7 @@
 	module.exports = root;
 
 /***/ },
-/* 162 */
+/* 201 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -45017,12 +51191,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 163 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _Symbol = __webpack_require__(160);
+	var _Symbol = __webpack_require__(199);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -45070,7 +51244,7 @@
 	module.exports = getRawTag;
 
 /***/ },
-/* 164 */
+/* 203 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -45099,7 +51273,7 @@
 	module.exports = objectToString;
 
 /***/ },
-/* 165 */
+/* 204 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45139,12 +51313,12 @@
 	module.exports = isObject;
 
 /***/ },
-/* 166 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var coreJsData = __webpack_require__(167);
+	var coreJsData = __webpack_require__(206);
 
 	/** Used to detect methods masquerading as native. */
 	var maskSrcKey = function () {
@@ -45166,12 +51340,12 @@
 	module.exports = isMasked;
 
 /***/ },
-/* 167 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var root = __webpack_require__(161);
+	var root = __webpack_require__(200);
 
 	/** Used to detect overreaching core-js shims. */
 	var coreJsData = root['__core-js_shared__'];
@@ -45179,7 +51353,7 @@
 	module.exports = coreJsData;
 
 /***/ },
-/* 168 */
+/* 207 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45212,7 +51386,7 @@
 	module.exports = toSource;
 
 /***/ },
-/* 169 */
+/* 208 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -45232,7 +51406,7 @@
 	module.exports = getValue;
 
 /***/ },
-/* 170 */
+/* 209 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -45276,13 +51450,13 @@
 	module.exports = eq;
 
 /***/ },
-/* 171 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assignValue = __webpack_require__(153),
-	    baseAssignValue = __webpack_require__(154);
+	var assignValue = __webpack_require__(192),
+	    baseAssignValue = __webpack_require__(193);
 
 	/**
 	 * Copies properties of `source` to `object`.
@@ -45321,13 +51495,13 @@
 	module.exports = copyObject;
 
 /***/ },
-/* 172 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseRest = __webpack_require__(173),
-	    isIterateeCall = __webpack_require__(181);
+	var baseRest = __webpack_require__(212),
+	    isIterateeCall = __webpack_require__(220);
 
 	/**
 	 * Creates a function like `_.assign`.
@@ -45363,14 +51537,14 @@
 	module.exports = createAssigner;
 
 /***/ },
-/* 173 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var identity = __webpack_require__(174),
-	    overRest = __webpack_require__(175),
-	    setToString = __webpack_require__(177);
+	var identity = __webpack_require__(213),
+	    overRest = __webpack_require__(214),
+	    setToString = __webpack_require__(216);
 
 	/**
 	 * The base implementation of `_.rest` which doesn't validate or coerce arguments.
@@ -45387,7 +51561,7 @@
 	module.exports = baseRest;
 
 /***/ },
-/* 174 */
+/* 213 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -45415,12 +51589,12 @@
 	module.exports = identity;
 
 /***/ },
-/* 175 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var apply = __webpack_require__(176);
+	var apply = __webpack_require__(215);
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */
 	var nativeMax = Math.max;
@@ -45458,7 +51632,7 @@
 	module.exports = overRest;
 
 /***/ },
-/* 176 */
+/* 215 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -45490,13 +51664,13 @@
 	module.exports = apply;
 
 /***/ },
-/* 177 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseSetToString = __webpack_require__(178),
-	    shortOut = __webpack_require__(180);
+	var baseSetToString = __webpack_require__(217),
+	    shortOut = __webpack_require__(219);
 
 	/**
 	 * Sets the `toString` method of `func` to return `string`.
@@ -45511,14 +51685,14 @@
 	module.exports = setToString;
 
 /***/ },
-/* 178 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var constant = __webpack_require__(179),
-	    defineProperty = __webpack_require__(155),
-	    identity = __webpack_require__(174);
+	var constant = __webpack_require__(218),
+	    defineProperty = __webpack_require__(194),
+	    identity = __webpack_require__(213);
 
 	/**
 	 * The base implementation of `setToString` without support for hot loop shorting.
@@ -45540,7 +51714,7 @@
 	module.exports = baseSetToString;
 
 /***/ },
-/* 179 */
+/* 218 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -45573,7 +51747,7 @@
 	module.exports = constant;
 
 /***/ },
-/* 180 */
+/* 219 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -45617,17 +51791,17 @@
 	module.exports = shortOut;
 
 /***/ },
-/* 181 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var eq = __webpack_require__(170),
-	    isArrayLike = __webpack_require__(182),
-	    isIndex = __webpack_require__(184),
-	    isObject = __webpack_require__(165);
+	var eq = __webpack_require__(209),
+	    isArrayLike = __webpack_require__(221),
+	    isIndex = __webpack_require__(223),
+	    isObject = __webpack_require__(204);
 
 	/**
 	 * Checks if the given arguments are from an iteratee call.
@@ -45653,13 +51827,13 @@
 	module.exports = isIterateeCall;
 
 /***/ },
-/* 182 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isFunction = __webpack_require__(158),
-	    isLength = __webpack_require__(183);
+	var isFunction = __webpack_require__(197),
+	    isLength = __webpack_require__(222);
 
 	/**
 	 * Checks if `value` is array-like. A value is considered array-like if it's
@@ -45693,7 +51867,7 @@
 	module.exports = isArrayLike;
 
 /***/ },
-/* 183 */
+/* 222 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45734,7 +51908,7 @@
 	module.exports = isLength;
 
 /***/ },
-/* 184 */
+/* 223 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45761,7 +51935,7 @@
 	module.exports = isIndex;
 
 /***/ },
-/* 185 */
+/* 224 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45786,14 +51960,14 @@
 	module.exports = isPrototype;
 
 /***/ },
-/* 186 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var arrayLikeKeys = __webpack_require__(187),
-	    baseKeys = __webpack_require__(199),
-	    isArrayLike = __webpack_require__(182);
+	var arrayLikeKeys = __webpack_require__(226),
+	    baseKeys = __webpack_require__(238),
+	    isArrayLike = __webpack_require__(221);
 
 	/**
 	 * Creates an array of the own enumerable property names of `object`.
@@ -45830,17 +52004,17 @@
 	module.exports = keys;
 
 /***/ },
-/* 187 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseTimes = __webpack_require__(188),
-	    isArguments = __webpack_require__(189),
-	    isArray = __webpack_require__(192),
-	    isBuffer = __webpack_require__(193),
-	    isIndex = __webpack_require__(184),
-	    isTypedArray = __webpack_require__(195);
+	var baseTimes = __webpack_require__(227),
+	    isArguments = __webpack_require__(228),
+	    isArray = __webpack_require__(231),
+	    isBuffer = __webpack_require__(232),
+	    isIndex = __webpack_require__(223),
+	    isTypedArray = __webpack_require__(234);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -45884,7 +52058,7 @@
 	module.exports = arrayLikeKeys;
 
 /***/ },
-/* 188 */
+/* 227 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -45911,13 +52085,13 @@
 	module.exports = baseTimes;
 
 /***/ },
-/* 189 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseIsArguments = __webpack_require__(190),
-	    isObjectLike = __webpack_require__(191);
+	var baseIsArguments = __webpack_require__(229),
+	    isObjectLike = __webpack_require__(230);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -45955,13 +52129,13 @@
 	module.exports = isArguments;
 
 /***/ },
-/* 190 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseGetTag = __webpack_require__(159),
-	    isObjectLike = __webpack_require__(191);
+	var baseGetTag = __webpack_require__(198),
+	    isObjectLike = __webpack_require__(230);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]';
@@ -45980,7 +52154,7 @@
 	module.exports = baseIsArguments;
 
 /***/ },
-/* 191 */
+/* 230 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -46018,7 +52192,7 @@
 	module.exports = isObjectLike;
 
 /***/ },
-/* 192 */
+/* 231 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -46051,15 +52225,15 @@
 	module.exports = isArray;
 
 /***/ },
-/* 193 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var root = __webpack_require__(161),
-	    stubFalse = __webpack_require__(194);
+	var root = __webpack_require__(200),
+	    stubFalse = __webpack_require__(233);
 
 	/** Detect free variable `exports`. */
 	var freeExports = ( false ? 'undefined' : _typeof(exports)) == 'object' && exports && !exports.nodeType && exports;
@@ -46099,7 +52273,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module)))
 
 /***/ },
-/* 194 */
+/* 233 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -46124,14 +52298,14 @@
 	module.exports = stubFalse;
 
 /***/ },
-/* 195 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseIsTypedArray = __webpack_require__(196),
-	    baseUnary = __webpack_require__(197),
-	    nodeUtil = __webpack_require__(198);
+	var baseIsTypedArray = __webpack_require__(235),
+	    baseUnary = __webpack_require__(236),
+	    nodeUtil = __webpack_require__(237);
 
 	/* Node.js helper references. */
 	var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
@@ -46158,14 +52332,14 @@
 	module.exports = isTypedArray;
 
 /***/ },
-/* 196 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseGetTag = __webpack_require__(159),
-	    isLength = __webpack_require__(183),
-	    isObjectLike = __webpack_require__(191);
+	var baseGetTag = __webpack_require__(198),
+	    isLength = __webpack_require__(222),
+	    isObjectLike = __webpack_require__(230);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -46213,7 +52387,7 @@
 	module.exports = baseIsTypedArray;
 
 /***/ },
-/* 197 */
+/* 236 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -46234,14 +52408,14 @@
 	module.exports = baseUnary;
 
 /***/ },
-/* 198 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var freeGlobal = __webpack_require__(162);
+	var freeGlobal = __webpack_require__(201);
 
 	/** Detect free variable `exports`. */
 	var freeExports = ( false ? 'undefined' : _typeof(exports)) == 'object' && exports && !exports.nodeType && exports;
@@ -46266,13 +52440,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module)))
 
 /***/ },
-/* 199 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isPrototype = __webpack_require__(185),
-	    nativeKeys = __webpack_require__(200);
+	var isPrototype = __webpack_require__(224),
+	    nativeKeys = __webpack_require__(239);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -46303,12 +52477,12 @@
 	module.exports = baseKeys;
 
 /***/ },
-/* 200 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var overArg = __webpack_require__(201);
+	var overArg = __webpack_require__(240);
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = overArg(Object.keys, Object);
@@ -46316,7 +52490,7 @@
 	module.exports = nativeKeys;
 
 /***/ },
-/* 201 */
+/* 240 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -46338,7 +52512,7 @@
 	module.exports = overArg;
 
 /***/ },
-/* 202 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46347,13 +52521,13 @@
 	(function () {
 	  var XMLBuilder, XMLDeclaration, XMLDocType, XMLElement, XMLStringifier;
 
-	  XMLStringifier = __webpack_require__(203);
+	  XMLStringifier = __webpack_require__(242);
 
-	  XMLDeclaration = __webpack_require__(204);
+	  XMLDeclaration = __webpack_require__(243);
 
-	  XMLDocType = __webpack_require__(295);
+	  XMLDocType = __webpack_require__(334);
 
-	  XMLElement = __webpack_require__(216);
+	  XMLElement = __webpack_require__(255);
 
 	  module.exports = XMLBuilder = function () {
 	    function XMLBuilder(name, options) {
@@ -46412,7 +52586,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 203 */
+/* 242 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -46591,7 +52765,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 204 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46611,11 +52785,11 @@
 	  },
 	      hasProp = {}.hasOwnProperty;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
-	  isObject = __webpack_require__(165);
+	  isObject = __webpack_require__(204);
 
-	  XMLNode = __webpack_require__(208);
+	  XMLNode = __webpack_require__(247);
 
 	  module.exports = XMLDeclaration = function (superClass) {
 	    extend(XMLDeclaration, superClass);
@@ -46670,13 +52844,13 @@
 	}).call(undefined);
 
 /***/ },
-/* 205 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseAssign = __webpack_require__(206),
-	    baseCreate = __webpack_require__(207);
+	var baseAssign = __webpack_require__(245),
+	    baseCreate = __webpack_require__(246);
 
 	/**
 	 * Creates an object that inherits from the `prototype` object. If a
@@ -46720,13 +52894,13 @@
 	module.exports = create;
 
 /***/ },
-/* 206 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var copyObject = __webpack_require__(171),
-	    keys = __webpack_require__(186);
+	var copyObject = __webpack_require__(210),
+	    keys = __webpack_require__(225);
 
 	/**
 	 * The base implementation of `_.assign` without support for multiple sources
@@ -46744,12 +52918,12 @@
 	module.exports = baseAssign;
 
 /***/ },
-/* 207 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isObject = __webpack_require__(165);
+	var isObject = __webpack_require__(204);
 
 	/** Built-in value references. */
 	var objectCreate = Object.create;
@@ -46781,7 +52955,7 @@
 	module.exports = baseCreate;
 
 /***/ },
-/* 208 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46801,11 +52975,11 @@
 	      isObject,
 	      hasProp = {}.hasOwnProperty;
 
-	  isObject = __webpack_require__(165);
+	  isObject = __webpack_require__(204);
 
-	  isFunction = __webpack_require__(158);
+	  isFunction = __webpack_require__(197);
 
-	  isEmpty = __webpack_require__(209);
+	  isEmpty = __webpack_require__(248);
 
 	  XMLElement = null;
 
@@ -46827,13 +53001,13 @@
 	      this.options = this.parent.options;
 	      this.stringify = this.parent.stringify;
 	      if (XMLElement === null) {
-	        XMLElement = __webpack_require__(216);
-	        XMLCData = __webpack_require__(293);
-	        XMLComment = __webpack_require__(294);
-	        XMLDeclaration = __webpack_require__(204);
-	        XMLDocType = __webpack_require__(295);
-	        XMLRaw = __webpack_require__(300);
-	        XMLText = __webpack_require__(301);
+	        XMLElement = __webpack_require__(255);
+	        XMLCData = __webpack_require__(332);
+	        XMLComment = __webpack_require__(333);
+	        XMLDeclaration = __webpack_require__(243);
+	        XMLDocType = __webpack_require__(334);
+	        XMLRaw = __webpack_require__(339);
+	        XMLText = __webpack_require__(340);
 	      }
 	    }
 
@@ -47127,19 +53301,19 @@
 	}).call(undefined);
 
 /***/ },
-/* 209 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseKeys = __webpack_require__(199),
-	    getTag = __webpack_require__(210),
-	    isArguments = __webpack_require__(189),
-	    isArray = __webpack_require__(192),
-	    isArrayLike = __webpack_require__(182),
-	    isBuffer = __webpack_require__(193),
-	    isPrototype = __webpack_require__(185),
-	    isTypedArray = __webpack_require__(195);
+	var baseKeys = __webpack_require__(238),
+	    getTag = __webpack_require__(249),
+	    isArguments = __webpack_require__(228),
+	    isArray = __webpack_require__(231),
+	    isArrayLike = __webpack_require__(221),
+	    isBuffer = __webpack_require__(232),
+	    isPrototype = __webpack_require__(224),
+	    isTypedArray = __webpack_require__(234);
 
 	/** `Object#toString` result references. */
 	var mapTag = '[object Map]',
@@ -47209,18 +53383,18 @@
 	module.exports = isEmpty;
 
 /***/ },
-/* 210 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var DataView = __webpack_require__(211),
-	    Map = __webpack_require__(212),
-	    Promise = __webpack_require__(213),
-	    Set = __webpack_require__(214),
-	    WeakMap = __webpack_require__(215),
-	    baseGetTag = __webpack_require__(159),
-	    toSource = __webpack_require__(168);
+	var DataView = __webpack_require__(250),
+	    Map = __webpack_require__(251),
+	    Promise = __webpack_require__(252),
+	    Set = __webpack_require__(253),
+	    WeakMap = __webpack_require__(254),
+	    baseGetTag = __webpack_require__(198),
+	    toSource = __webpack_require__(207);
 
 	/** `Object#toString` result references. */
 	var mapTag = '[object Map]',
@@ -47275,13 +53449,13 @@
 	module.exports = getTag;
 
 /***/ },
-/* 211 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getNative = __webpack_require__(156),
-	    root = __webpack_require__(161);
+	var getNative = __webpack_require__(195),
+	    root = __webpack_require__(200);
 
 	/* Built-in method references that are verified to be native. */
 	var DataView = getNative(root, 'DataView');
@@ -47289,13 +53463,13 @@
 	module.exports = DataView;
 
 /***/ },
-/* 212 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getNative = __webpack_require__(156),
-	    root = __webpack_require__(161);
+	var getNative = __webpack_require__(195),
+	    root = __webpack_require__(200);
 
 	/* Built-in method references that are verified to be native. */
 	var Map = getNative(root, 'Map');
@@ -47303,13 +53477,13 @@
 	module.exports = Map;
 
 /***/ },
-/* 213 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getNative = __webpack_require__(156),
-	    root = __webpack_require__(161);
+	var getNative = __webpack_require__(195),
+	    root = __webpack_require__(200);
 
 	/* Built-in method references that are verified to be native. */
 	var Promise = getNative(root, 'Promise');
@@ -47317,13 +53491,13 @@
 	module.exports = Promise;
 
 /***/ },
-/* 214 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getNative = __webpack_require__(156),
-	    root = __webpack_require__(161);
+	var getNative = __webpack_require__(195),
+	    root = __webpack_require__(200);
 
 	/* Built-in method references that are verified to be native. */
 	var Set = getNative(root, 'Set');
@@ -47331,13 +53505,13 @@
 	module.exports = Set;
 
 /***/ },
-/* 215 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getNative = __webpack_require__(156),
-	    root = __webpack_require__(161);
+	var getNative = __webpack_require__(195),
+	    root = __webpack_require__(200);
 
 	/* Built-in method references that are verified to be native. */
 	var WeakMap = getNative(root, 'WeakMap');
@@ -47345,7 +53519,7 @@
 	module.exports = WeakMap;
 
 /***/ },
-/* 216 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47369,19 +53543,19 @@
 	  },
 	      hasProp = {}.hasOwnProperty;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
-	  isObject = __webpack_require__(165);
+	  isObject = __webpack_require__(204);
 
-	  isFunction = __webpack_require__(158);
+	  isFunction = __webpack_require__(197);
 
-	  every = __webpack_require__(217);
+	  every = __webpack_require__(256);
 
-	  XMLNode = __webpack_require__(208);
+	  XMLNode = __webpack_require__(247);
 
-	  XMLAttribute = __webpack_require__(291);
+	  XMLAttribute = __webpack_require__(330);
 
-	  XMLProcessingInstruction = __webpack_require__(292);
+	  XMLProcessingInstruction = __webpack_require__(331);
 
 	  module.exports = XMLElement = function (superClass) {
 	    extend(XMLElement, superClass);
@@ -47575,16 +53749,16 @@
 	}).call(undefined);
 
 /***/ },
-/* 217 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var arrayEvery = __webpack_require__(218),
-	    baseEvery = __webpack_require__(219),
-	    baseIteratee = __webpack_require__(225),
-	    isArray = __webpack_require__(192),
-	    isIterateeCall = __webpack_require__(181);
+	var arrayEvery = __webpack_require__(257),
+	    baseEvery = __webpack_require__(258),
+	    baseIteratee = __webpack_require__(264),
+	    isArray = __webpack_require__(231),
+	    isIterateeCall = __webpack_require__(220);
 
 	/**
 	 * Checks if `predicate` returns truthy for **all** elements of `collection`.
@@ -47638,7 +53812,7 @@
 	module.exports = every;
 
 /***/ },
-/* 218 */
+/* 257 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -47668,12 +53842,12 @@
 	module.exports = arrayEvery;
 
 /***/ },
-/* 219 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseEach = __webpack_require__(220);
+	var baseEach = __webpack_require__(259);
 
 	/**
 	 * The base implementation of `_.every` without support for iteratee shorthands.
@@ -47696,13 +53870,13 @@
 	module.exports = baseEvery;
 
 /***/ },
-/* 220 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseForOwn = __webpack_require__(221),
-	    createBaseEach = __webpack_require__(224);
+	var baseForOwn = __webpack_require__(260),
+	    createBaseEach = __webpack_require__(263);
 
 	/**
 	 * The base implementation of `_.forEach` without support for iteratee shorthands.
@@ -47717,13 +53891,13 @@
 	module.exports = baseEach;
 
 /***/ },
-/* 221 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseFor = __webpack_require__(222),
-	    keys = __webpack_require__(186);
+	var baseFor = __webpack_require__(261),
+	    keys = __webpack_require__(225);
 
 	/**
 	 * The base implementation of `_.forOwn` without support for iteratee shorthands.
@@ -47740,12 +53914,12 @@
 	module.exports = baseForOwn;
 
 /***/ },
-/* 222 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createBaseFor = __webpack_require__(223);
+	var createBaseFor = __webpack_require__(262);
 
 	/**
 	 * The base implementation of `baseForOwn` which iterates over `object`
@@ -47763,7 +53937,7 @@
 	module.exports = baseFor;
 
 /***/ },
-/* 223 */
+/* 262 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -47795,12 +53969,12 @@
 	module.exports = createBaseFor;
 
 /***/ },
-/* 224 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isArrayLike = __webpack_require__(182);
+	var isArrayLike = __webpack_require__(221);
 
 	/**
 	 * Creates a `baseEach` or `baseEachRight` function.
@@ -47834,18 +54008,18 @@
 	module.exports = createBaseEach;
 
 /***/ },
-/* 225 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var baseMatches = __webpack_require__(226),
-	    baseMatchesProperty = __webpack_require__(272),
-	    identity = __webpack_require__(174),
-	    isArray = __webpack_require__(192),
-	    property = __webpack_require__(288);
+	var baseMatches = __webpack_require__(265),
+	    baseMatchesProperty = __webpack_require__(311),
+	    identity = __webpack_require__(213),
+	    isArray = __webpack_require__(231),
+	    property = __webpack_require__(327);
 
 	/**
 	 * The base implementation of `_.iteratee`.
@@ -47872,14 +54046,14 @@
 	module.exports = baseIteratee;
 
 /***/ },
-/* 226 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseIsMatch = __webpack_require__(227),
-	    getMatchData = __webpack_require__(269),
-	    matchesStrictComparable = __webpack_require__(271);
+	var baseIsMatch = __webpack_require__(266),
+	    getMatchData = __webpack_require__(308),
+	    matchesStrictComparable = __webpack_require__(310);
 
 	/**
 	 * The base implementation of `_.matches` which doesn't clone `source`.
@@ -47901,13 +54075,13 @@
 	module.exports = baseMatches;
 
 /***/ },
-/* 227 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Stack = __webpack_require__(228),
-	    baseIsEqual = __webpack_require__(256);
+	var Stack = __webpack_require__(267),
+	    baseIsEqual = __webpack_require__(295);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1,
@@ -47964,17 +54138,17 @@
 	module.exports = baseIsMatch;
 
 /***/ },
-/* 228 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var ListCache = __webpack_require__(229),
-	    stackClear = __webpack_require__(236),
-	    stackDelete = __webpack_require__(237),
-	    stackGet = __webpack_require__(238),
-	    stackHas = __webpack_require__(239),
-	    stackSet = __webpack_require__(240);
+	var ListCache = __webpack_require__(268),
+	    stackClear = __webpack_require__(275),
+	    stackDelete = __webpack_require__(276),
+	    stackGet = __webpack_require__(277),
+	    stackHas = __webpack_require__(278),
+	    stackSet = __webpack_require__(279);
 
 	/**
 	 * Creates a stack cache object to store key-value pairs.
@@ -47998,16 +54172,16 @@
 	module.exports = Stack;
 
 /***/ },
-/* 229 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var listCacheClear = __webpack_require__(230),
-	    listCacheDelete = __webpack_require__(231),
-	    listCacheGet = __webpack_require__(233),
-	    listCacheHas = __webpack_require__(234),
-	    listCacheSet = __webpack_require__(235);
+	var listCacheClear = __webpack_require__(269),
+	    listCacheDelete = __webpack_require__(270),
+	    listCacheGet = __webpack_require__(272),
+	    listCacheHas = __webpack_require__(273),
+	    listCacheSet = __webpack_require__(274);
 
 	/**
 	 * Creates an list cache object.
@@ -48037,7 +54211,7 @@
 	module.exports = ListCache;
 
 /***/ },
-/* 230 */
+/* 269 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -48057,12 +54231,12 @@
 	module.exports = listCacheClear;
 
 /***/ },
-/* 231 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assocIndexOf = __webpack_require__(232);
+	var assocIndexOf = __webpack_require__(271);
 
 	/** Used for built-in method references. */
 	var arrayProto = Array.prototype;
@@ -48099,12 +54273,12 @@
 	module.exports = listCacheDelete;
 
 /***/ },
-/* 232 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var eq = __webpack_require__(170);
+	var eq = __webpack_require__(209);
 
 	/**
 	 * Gets the index at which the `key` is found in `array` of key-value pairs.
@@ -48127,12 +54301,12 @@
 	module.exports = assocIndexOf;
 
 /***/ },
-/* 233 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assocIndexOf = __webpack_require__(232);
+	var assocIndexOf = __webpack_require__(271);
 
 	/**
 	 * Gets the list cache value for `key`.
@@ -48153,12 +54327,12 @@
 	module.exports = listCacheGet;
 
 /***/ },
-/* 234 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assocIndexOf = __webpack_require__(232);
+	var assocIndexOf = __webpack_require__(271);
 
 	/**
 	 * Checks if a list cache value for `key` exists.
@@ -48176,12 +54350,12 @@
 	module.exports = listCacheHas;
 
 /***/ },
-/* 235 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assocIndexOf = __webpack_require__(232);
+	var assocIndexOf = __webpack_require__(271);
 
 	/**
 	 * Sets the list cache `key` to `value`.
@@ -48209,12 +54383,12 @@
 	module.exports = listCacheSet;
 
 /***/ },
-/* 236 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var ListCache = __webpack_require__(229);
+	var ListCache = __webpack_require__(268);
 
 	/**
 	 * Removes all key-value entries from the stack.
@@ -48231,7 +54405,7 @@
 	module.exports = stackClear;
 
 /***/ },
-/* 237 */
+/* 276 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -48256,7 +54430,7 @@
 	module.exports = stackDelete;
 
 /***/ },
-/* 238 */
+/* 277 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -48277,7 +54451,7 @@
 	module.exports = stackGet;
 
 /***/ },
-/* 239 */
+/* 278 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -48298,14 +54472,14 @@
 	module.exports = stackHas;
 
 /***/ },
-/* 240 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var ListCache = __webpack_require__(229),
-	    Map = __webpack_require__(212),
-	    MapCache = __webpack_require__(241);
+	var ListCache = __webpack_require__(268),
+	    Map = __webpack_require__(251),
+	    MapCache = __webpack_require__(280);
 
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -48339,16 +54513,16 @@
 	module.exports = stackSet;
 
 /***/ },
-/* 241 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var mapCacheClear = __webpack_require__(242),
-	    mapCacheDelete = __webpack_require__(250),
-	    mapCacheGet = __webpack_require__(253),
-	    mapCacheHas = __webpack_require__(254),
-	    mapCacheSet = __webpack_require__(255);
+	var mapCacheClear = __webpack_require__(281),
+	    mapCacheDelete = __webpack_require__(289),
+	    mapCacheGet = __webpack_require__(292),
+	    mapCacheHas = __webpack_require__(293),
+	    mapCacheSet = __webpack_require__(294);
 
 	/**
 	 * Creates a map cache object to store key-value pairs.
@@ -48378,14 +54552,14 @@
 	module.exports = MapCache;
 
 /***/ },
-/* 242 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Hash = __webpack_require__(243),
-	    ListCache = __webpack_require__(229),
-	    Map = __webpack_require__(212);
+	var Hash = __webpack_require__(282),
+	    ListCache = __webpack_require__(268),
+	    Map = __webpack_require__(251);
 
 	/**
 	 * Removes all key-value entries from the map.
@@ -48406,16 +54580,16 @@
 	module.exports = mapCacheClear;
 
 /***/ },
-/* 243 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var hashClear = __webpack_require__(244),
-	    hashDelete = __webpack_require__(246),
-	    hashGet = __webpack_require__(247),
-	    hashHas = __webpack_require__(248),
-	    hashSet = __webpack_require__(249);
+	var hashClear = __webpack_require__(283),
+	    hashDelete = __webpack_require__(285),
+	    hashGet = __webpack_require__(286),
+	    hashHas = __webpack_require__(287),
+	    hashSet = __webpack_require__(288);
 
 	/**
 	 * Creates a hash object.
@@ -48445,12 +54619,12 @@
 	module.exports = Hash;
 
 /***/ },
-/* 244 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var nativeCreate = __webpack_require__(245);
+	var nativeCreate = __webpack_require__(284);
 
 	/**
 	 * Removes all key-value entries from the hash.
@@ -48467,12 +54641,12 @@
 	module.exports = hashClear;
 
 /***/ },
-/* 245 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getNative = __webpack_require__(156);
+	var getNative = __webpack_require__(195);
 
 	/* Built-in method references that are verified to be native. */
 	var nativeCreate = getNative(Object, 'create');
@@ -48480,7 +54654,7 @@
 	module.exports = nativeCreate;
 
 /***/ },
-/* 246 */
+/* 285 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -48504,12 +54678,12 @@
 	module.exports = hashDelete;
 
 /***/ },
-/* 247 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var nativeCreate = __webpack_require__(245);
+	var nativeCreate = __webpack_require__(284);
 
 	/** Used to stand-in for `undefined` hash values. */
 	var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -48541,12 +54715,12 @@
 	module.exports = hashGet;
 
 /***/ },
-/* 248 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var nativeCreate = __webpack_require__(245);
+	var nativeCreate = __webpack_require__(284);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -48571,12 +54745,12 @@
 	module.exports = hashHas;
 
 /***/ },
-/* 249 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var nativeCreate = __webpack_require__(245);
+	var nativeCreate = __webpack_require__(284);
 
 	/** Used to stand-in for `undefined` hash values. */
 	var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -48601,12 +54775,12 @@
 	module.exports = hashSet;
 
 /***/ },
-/* 250 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getMapData = __webpack_require__(251);
+	var getMapData = __webpack_require__(290);
 
 	/**
 	 * Removes `key` and its value from the map.
@@ -48626,12 +54800,12 @@
 	module.exports = mapCacheDelete;
 
 /***/ },
-/* 251 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isKeyable = __webpack_require__(252);
+	var isKeyable = __webpack_require__(291);
 
 	/**
 	 * Gets the data for `map`.
@@ -48649,7 +54823,7 @@
 	module.exports = getMapData;
 
 /***/ },
-/* 252 */
+/* 291 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -48671,12 +54845,12 @@
 	module.exports = isKeyable;
 
 /***/ },
-/* 253 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getMapData = __webpack_require__(251);
+	var getMapData = __webpack_require__(290);
 
 	/**
 	 * Gets the map value for `key`.
@@ -48694,12 +54868,12 @@
 	module.exports = mapCacheGet;
 
 /***/ },
-/* 254 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getMapData = __webpack_require__(251);
+	var getMapData = __webpack_require__(290);
 
 	/**
 	 * Checks if a map value for `key` exists.
@@ -48717,12 +54891,12 @@
 	module.exports = mapCacheHas;
 
 /***/ },
-/* 255 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getMapData = __webpack_require__(251);
+	var getMapData = __webpack_require__(290);
 
 	/**
 	 * Sets the map `key` to `value`.
@@ -48746,14 +54920,14 @@
 	module.exports = mapCacheSet;
 
 /***/ },
-/* 256 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseIsEqualDeep = __webpack_require__(257),
-	    isObject = __webpack_require__(165),
-	    isObjectLike = __webpack_require__(191);
+	var baseIsEqualDeep = __webpack_require__(296),
+	    isObject = __webpack_require__(204),
+	    isObjectLike = __webpack_require__(230);
 
 	/**
 	 * The base implementation of `_.isEqual` which supports partial comparisons
@@ -48782,19 +54956,19 @@
 	module.exports = baseIsEqual;
 
 /***/ },
-/* 257 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Stack = __webpack_require__(228),
-	    equalArrays = __webpack_require__(258),
-	    equalByTag = __webpack_require__(264),
-	    equalObjects = __webpack_require__(268),
-	    getTag = __webpack_require__(210),
-	    isArray = __webpack_require__(192),
-	    isBuffer = __webpack_require__(193),
-	    isTypedArray = __webpack_require__(195);
+	var Stack = __webpack_require__(267),
+	    equalArrays = __webpack_require__(297),
+	    equalByTag = __webpack_require__(303),
+	    equalObjects = __webpack_require__(307),
+	    getTag = __webpack_require__(249),
+	    isArray = __webpack_require__(231),
+	    isBuffer = __webpack_require__(232),
+	    isTypedArray = __webpack_require__(234);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1;
@@ -48875,14 +55049,14 @@
 	module.exports = baseIsEqualDeep;
 
 /***/ },
-/* 258 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var SetCache = __webpack_require__(259),
-	    arraySome = __webpack_require__(262),
-	    cacheHas = __webpack_require__(263);
+	var SetCache = __webpack_require__(298),
+	    arraySome = __webpack_require__(301),
+	    cacheHas = __webpack_require__(302);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1,
@@ -48959,14 +55133,14 @@
 	module.exports = equalArrays;
 
 /***/ },
-/* 259 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var MapCache = __webpack_require__(241),
-	    setCacheAdd = __webpack_require__(260),
-	    setCacheHas = __webpack_require__(261);
+	var MapCache = __webpack_require__(280),
+	    setCacheAdd = __webpack_require__(299),
+	    setCacheHas = __webpack_require__(300);
 
 	/**
 	 *
@@ -48993,7 +55167,7 @@
 	module.exports = SetCache;
 
 /***/ },
-/* 260 */
+/* 299 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -49019,7 +55193,7 @@
 	module.exports = setCacheAdd;
 
 /***/ },
-/* 261 */
+/* 300 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -49040,7 +55214,7 @@
 	module.exports = setCacheHas;
 
 /***/ },
-/* 262 */
+/* 301 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -49070,7 +55244,7 @@
 	module.exports = arraySome;
 
 /***/ },
-/* 263 */
+/* 302 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -49090,17 +55264,17 @@
 	module.exports = cacheHas;
 
 /***/ },
-/* 264 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _Symbol = __webpack_require__(160),
-	    Uint8Array = __webpack_require__(265),
-	    eq = __webpack_require__(170),
-	    equalArrays = __webpack_require__(258),
-	    mapToArray = __webpack_require__(266),
-	    setToArray = __webpack_require__(267);
+	var _Symbol = __webpack_require__(199),
+	    Uint8Array = __webpack_require__(304),
+	    eq = __webpack_require__(209),
+	    equalArrays = __webpack_require__(297),
+	    mapToArray = __webpack_require__(305),
+	    setToArray = __webpack_require__(306);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1,
@@ -49207,12 +55381,12 @@
 	module.exports = equalByTag;
 
 /***/ },
-/* 265 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var root = __webpack_require__(161);
+	var root = __webpack_require__(200);
 
 	/** Built-in value references. */
 	var Uint8Array = root.Uint8Array;
@@ -49220,7 +55394,7 @@
 	module.exports = Uint8Array;
 
 /***/ },
-/* 266 */
+/* 305 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -49245,7 +55419,7 @@
 	module.exports = mapToArray;
 
 /***/ },
-/* 267 */
+/* 306 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -49270,12 +55444,12 @@
 	module.exports = setToArray;
 
 /***/ },
-/* 268 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var keys = __webpack_require__(186);
+	var keys = __webpack_require__(225);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1;
@@ -49358,13 +55532,13 @@
 	module.exports = equalObjects;
 
 /***/ },
-/* 269 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isStrictComparable = __webpack_require__(270),
-	    keys = __webpack_require__(186);
+	var isStrictComparable = __webpack_require__(309),
+	    keys = __webpack_require__(225);
 
 	/**
 	 * Gets the property names, values, and compare flags of `object`.
@@ -49389,12 +55563,12 @@
 	module.exports = getMatchData;
 
 /***/ },
-/* 270 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isObject = __webpack_require__(165);
+	var isObject = __webpack_require__(204);
 
 	/**
 	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -49411,7 +55585,7 @@
 	module.exports = isStrictComparable;
 
 /***/ },
-/* 271 */
+/* 310 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -49437,18 +55611,18 @@
 	module.exports = matchesStrictComparable;
 
 /***/ },
-/* 272 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseIsEqual = __webpack_require__(256),
-	    get = __webpack_require__(273),
-	    hasIn = __webpack_require__(285),
-	    isKey = __webpack_require__(276),
-	    isStrictComparable = __webpack_require__(270),
-	    matchesStrictComparable = __webpack_require__(271),
-	    toKey = __webpack_require__(284);
+	var baseIsEqual = __webpack_require__(295),
+	    get = __webpack_require__(312),
+	    hasIn = __webpack_require__(324),
+	    isKey = __webpack_require__(315),
+	    isStrictComparable = __webpack_require__(309),
+	    matchesStrictComparable = __webpack_require__(310),
+	    toKey = __webpack_require__(323);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1,
@@ -49475,12 +55649,12 @@
 	module.exports = baseMatchesProperty;
 
 /***/ },
-/* 273 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseGet = __webpack_require__(274);
+	var baseGet = __webpack_require__(313);
 
 	/**
 	 * Gets the value at `path` of `object`. If the resolved value is
@@ -49515,13 +55689,13 @@
 	module.exports = get;
 
 /***/ },
-/* 274 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var castPath = __webpack_require__(275),
-	    toKey = __webpack_require__(284);
+	var castPath = __webpack_require__(314),
+	    toKey = __webpack_require__(323);
 
 	/**
 	 * The base implementation of `_.get` without support for default values.
@@ -49546,15 +55720,15 @@
 	module.exports = baseGet;
 
 /***/ },
-/* 275 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isArray = __webpack_require__(192),
-	    isKey = __webpack_require__(276),
-	    stringToPath = __webpack_require__(278),
-	    toString = __webpack_require__(281);
+	var isArray = __webpack_require__(231),
+	    isKey = __webpack_require__(315),
+	    stringToPath = __webpack_require__(317),
+	    toString = __webpack_require__(320);
 
 	/**
 	 * Casts `value` to a path array if it's not one.
@@ -49574,15 +55748,15 @@
 	module.exports = castPath;
 
 /***/ },
-/* 276 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var isArray = __webpack_require__(192),
-	    isSymbol = __webpack_require__(277);
+	var isArray = __webpack_require__(231),
+	    isSymbol = __webpack_require__(316);
 
 	/** Used to match property names within property paths. */
 	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
@@ -49610,15 +55784,15 @@
 	module.exports = isKey;
 
 /***/ },
-/* 277 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var baseGetTag = __webpack_require__(159),
-	    isObjectLike = __webpack_require__(191);
+	var baseGetTag = __webpack_require__(198),
+	    isObjectLike = __webpack_require__(230);
 
 	/** `Object#toString` result references. */
 	var symbolTag = '[object Symbol]';
@@ -49647,12 +55821,12 @@
 	module.exports = isSymbol;
 
 /***/ },
-/* 278 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var memoizeCapped = __webpack_require__(279);
+	var memoizeCapped = __webpack_require__(318);
 
 	/** Used to match property names within property paths. */
 	var reLeadingDot = /^\./,
@@ -49682,12 +55856,12 @@
 	module.exports = stringToPath;
 
 /***/ },
-/* 279 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var memoize = __webpack_require__(280);
+	var memoize = __webpack_require__(319);
 
 	/** Used as the maximum memoize cache size. */
 	var MAX_MEMOIZE_SIZE = 500;
@@ -49715,12 +55889,12 @@
 	module.exports = memoizeCapped;
 
 /***/ },
-/* 280 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var MapCache = __webpack_require__(241);
+	var MapCache = __webpack_require__(280);
 
 	/** Error message constants. */
 	var FUNC_ERROR_TEXT = 'Expected a function';
@@ -49795,12 +55969,12 @@
 	module.exports = memoize;
 
 /***/ },
-/* 281 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseToString = __webpack_require__(282);
+	var baseToString = __webpack_require__(321);
 
 	/**
 	 * Converts `value` to a string. An empty string is returned for `null`
@@ -49830,15 +56004,15 @@
 	module.exports = toString;
 
 /***/ },
-/* 282 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _Symbol = __webpack_require__(160),
-	    arrayMap = __webpack_require__(283),
-	    isArray = __webpack_require__(192),
-	    isSymbol = __webpack_require__(277);
+	var _Symbol = __webpack_require__(199),
+	    arrayMap = __webpack_require__(322),
+	    isArray = __webpack_require__(231),
+	    isSymbol = __webpack_require__(316);
 
 	/** Used as references for various `Number` constants. */
 	var INFINITY = 1 / 0;
@@ -49874,7 +56048,7 @@
 	module.exports = baseToString;
 
 /***/ },
-/* 283 */
+/* 322 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -49902,12 +56076,12 @@
 	module.exports = arrayMap;
 
 /***/ },
-/* 284 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isSymbol = __webpack_require__(277);
+	var isSymbol = __webpack_require__(316);
 
 	/** Used as references for various `Number` constants. */
 	var INFINITY = 1 / 0;
@@ -49930,13 +56104,13 @@
 	module.exports = toKey;
 
 /***/ },
-/* 285 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseHasIn = __webpack_require__(286),
-	    hasPath = __webpack_require__(287);
+	var baseHasIn = __webpack_require__(325),
+	    hasPath = __webpack_require__(326);
 
 	/**
 	 * Checks if `path` is a direct or inherited property of `object`.
@@ -49971,7 +56145,7 @@
 	module.exports = hasIn;
 
 /***/ },
-/* 286 */
+/* 325 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -49991,17 +56165,17 @@
 	module.exports = baseHasIn;
 
 /***/ },
-/* 287 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var castPath = __webpack_require__(275),
-	    isArguments = __webpack_require__(189),
-	    isArray = __webpack_require__(192),
-	    isIndex = __webpack_require__(184),
-	    isLength = __webpack_require__(183),
-	    toKey = __webpack_require__(284);
+	var castPath = __webpack_require__(314),
+	    isArguments = __webpack_require__(228),
+	    isArray = __webpack_require__(231),
+	    isIndex = __webpack_require__(223),
+	    isLength = __webpack_require__(222),
+	    toKey = __webpack_require__(323);
 
 	/**
 	 * Checks if `path` exists on `object`.
@@ -50036,15 +56210,15 @@
 	module.exports = hasPath;
 
 /***/ },
-/* 288 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseProperty = __webpack_require__(289),
-	    basePropertyDeep = __webpack_require__(290),
-	    isKey = __webpack_require__(276),
-	    toKey = __webpack_require__(284);
+	var baseProperty = __webpack_require__(328),
+	    basePropertyDeep = __webpack_require__(329),
+	    isKey = __webpack_require__(315),
+	    toKey = __webpack_require__(323);
 
 	/**
 	 * Creates a function that returns the value at `path` of a given object.
@@ -50075,7 +56249,7 @@
 	module.exports = property;
 
 /***/ },
-/* 289 */
+/* 328 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -50096,12 +56270,12 @@
 	module.exports = baseProperty;
 
 /***/ },
-/* 290 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseGet = __webpack_require__(274);
+	var baseGet = __webpack_require__(313);
 
 	/**
 	 * A specialized version of `baseProperty` which supports deep paths.
@@ -50119,7 +56293,7 @@
 	module.exports = basePropertyDeep;
 
 /***/ },
-/* 291 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -50128,7 +56302,7 @@
 	(function () {
 	  var XMLAttribute, create;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
 	  module.exports = XMLAttribute = function () {
 	    function XMLAttribute(parent, name, value) {
@@ -50156,7 +56330,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 292 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50165,7 +56339,7 @@
 	(function () {
 	  var XMLProcessingInstruction, create;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
 	  module.exports = XMLProcessingInstruction = function () {
 	    function XMLProcessingInstruction(parent, target, value) {
@@ -50212,7 +56386,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 293 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50231,9 +56405,9 @@
 	  },
 	      hasProp = {}.hasOwnProperty;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
-	  XMLNode = __webpack_require__(208);
+	  XMLNode = __webpack_require__(247);
 
 	  module.exports = XMLCData = function (superClass) {
 	    extend(XMLCData, superClass);
@@ -50274,7 +56448,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 294 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50293,9 +56467,9 @@
 	  },
 	      hasProp = {}.hasOwnProperty;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
-	  XMLNode = __webpack_require__(208);
+	  XMLNode = __webpack_require__(247);
 
 	  module.exports = XMLComment = function (superClass) {
 	    extend(XMLComment, superClass);
@@ -50336,7 +56510,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 295 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50345,23 +56519,23 @@
 	(function () {
 	  var XMLCData, XMLComment, XMLDTDAttList, XMLDTDElement, XMLDTDEntity, XMLDTDNotation, XMLDocType, XMLProcessingInstruction, create, isObject;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
-	  isObject = __webpack_require__(165);
+	  isObject = __webpack_require__(204);
 
-	  XMLCData = __webpack_require__(293);
+	  XMLCData = __webpack_require__(332);
 
-	  XMLComment = __webpack_require__(294);
+	  XMLComment = __webpack_require__(333);
 
-	  XMLDTDAttList = __webpack_require__(296);
+	  XMLDTDAttList = __webpack_require__(335);
 
-	  XMLDTDEntity = __webpack_require__(297);
+	  XMLDTDEntity = __webpack_require__(336);
 
-	  XMLDTDElement = __webpack_require__(298);
+	  XMLDTDElement = __webpack_require__(337);
 
-	  XMLDTDNotation = __webpack_require__(299);
+	  XMLDTDNotation = __webpack_require__(338);
 
-	  XMLProcessingInstruction = __webpack_require__(292);
+	  XMLProcessingInstruction = __webpack_require__(331);
 
 	  module.exports = XMLDocType = function () {
 	    function XMLDocType(parent, pubID, sysID) {
@@ -50529,7 +56703,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 296 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -50538,7 +56712,7 @@
 	(function () {
 	  var XMLDTDAttList, create;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
 	  module.exports = XMLDTDAttList = function () {
 	    function XMLDTDAttList(parent, elementName, attributeName, attributeType, defaultValueType, defaultValue) {
@@ -50602,7 +56776,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 297 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50611,9 +56785,9 @@
 	(function () {
 	  var XMLDTDEntity, create, isObject;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
-	  isObject = __webpack_require__(165);
+	  isObject = __webpack_require__(204);
 
 	  module.exports = XMLDTDEntity = function () {
 	    function XMLDTDEntity(parent, pe, name, value) {
@@ -50691,7 +56865,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 298 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50700,7 +56874,7 @@
 	(function () {
 	  var XMLDTDElement, create;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
 	  module.exports = XMLDTDElement = function () {
 	    function XMLDTDElement(parent, name, value) {
@@ -50742,7 +56916,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 299 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -50751,7 +56925,7 @@
 	(function () {
 	  var XMLDTDNotation, create;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
 	  module.exports = XMLDTDNotation = function () {
 	    function XMLDTDNotation(parent, name, value) {
@@ -50803,7 +56977,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 300 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50822,9 +56996,9 @@
 	  },
 	      hasProp = {}.hasOwnProperty;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
-	  XMLNode = __webpack_require__(208);
+	  XMLNode = __webpack_require__(247);
 
 	  module.exports = XMLRaw = function (superClass) {
 	    extend(XMLRaw, superClass);
@@ -50865,7 +57039,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 301 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50884,9 +57058,9 @@
 	  },
 	      hasProp = {}.hasOwnProperty;
 
-	  create = __webpack_require__(205);
+	  create = __webpack_require__(244);
 
-	  XMLNode = __webpack_require__(208);
+	  XMLNode = __webpack_require__(247);
 
 	  module.exports = XMLText = function (superClass) {
 	    extend(XMLText, superClass);
@@ -50927,7 +57101,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 302 */
+/* 341 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -50946,7 +57120,7 @@
 	}).call(undefined);
 
 /***/ },
-/* 303 */
+/* 342 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -50987,12 +57161,12 @@
 	}).call(undefined);
 
 /***/ },
-/* 304 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {"use strict";
 
-	var nextTick = __webpack_require__(16).nextTick;
+	var nextTick = __webpack_require__(59).nextTick;
 	var apply = Function.prototype.apply;
 	var slice = Array.prototype.slice;
 	var immediateIds = {};
@@ -51068,10 +57242,10 @@
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function (id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(304).setImmediate, __webpack_require__(304).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(343).setImmediate, __webpack_require__(343).clearImmediate))
 
 /***/ },
-/* 305 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -51111,16 +57285,16 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var fs = __webpack_require__(25),
-	    util = __webpack_require__(15);
+	var fs = __webpack_require__(64),
+	    util = __webpack_require__(58);
 
-	var http = __webpack_require__(26),
-	    io = __webpack_require__(70),
-	    capabilities = __webpack_require__(64),
-	    promise = __webpack_require__(61),
-	    webdriver = __webpack_require__(66),
-	    portprober = __webpack_require__(102),
-	    remote = __webpack_require__(103);
+	var http = __webpack_require__(65),
+	    io = __webpack_require__(109),
+	    capabilities = __webpack_require__(103),
+	    promise = __webpack_require__(100),
+	    webdriver = __webpack_require__(105),
+	    portprober = __webpack_require__(141),
+	    remote = __webpack_require__(142);
 
 	var IEDRIVER_EXE = 'IEDriverServer.exe';
 
@@ -51591,10 +57765,10 @@
 	exports.Driver = Driver;
 	exports.Options = Options;
 	exports.Level = Level;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 306 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -51640,10 +57814,10 @@
 
 	'use strict';
 
-	var by = __webpack_require__(69);
-	var By = __webpack_require__(69).By;
-	var error = __webpack_require__(59);
-	var webdriver = __webpack_require__(66),
+	var by = __webpack_require__(108);
+	var By = __webpack_require__(108).By;
+	var error = __webpack_require__(98);
+	var webdriver = __webpack_require__(105),
 	    Condition = webdriver.Condition,
 	    WebElementCondition = webdriver.WebElementCondition;
 
@@ -52008,7 +58182,7 @@
 	};
 
 /***/ },
-/* 307 */
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process, Buffer) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -52093,16 +58267,16 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var fs = __webpack_require__(25);
+	var fs = __webpack_require__(64);
 
-	var http = __webpack_require__(26),
-	    io = __webpack_require__(70),
-	    capabilities = __webpack_require__(64),
-	    promise = __webpack_require__(61),
-	    Symbols = __webpack_require__(65),
-	    webdriver = __webpack_require__(66),
-	    portprober = __webpack_require__(102),
-	    remote = __webpack_require__(103);
+	var http = __webpack_require__(65),
+	    io = __webpack_require__(109),
+	    capabilities = __webpack_require__(103),
+	    promise = __webpack_require__(100),
+	    Symbols = __webpack_require__(104),
+	    webdriver = __webpack_require__(105),
+	    portprober = __webpack_require__(141),
+	    remote = __webpack_require__(142);
 
 	/**
 	 * Name of the OperaDriver executable.
@@ -52471,10 +58645,10 @@
 	exports.ServiceBuilder = ServiceBuilder;
 	exports.getDefaultService = getDefaultService;
 	exports.setDefaultService = setDefaultService;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16), __webpack_require__(21).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59), __webpack_require__(37).Buffer))
 
 /***/ },
-/* 308 */
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -52531,17 +58705,17 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var fs = __webpack_require__(25);
+	var fs = __webpack_require__(64);
 
-	var http = __webpack_require__(26),
-	    io = __webpack_require__(70),
-	    capabilities = __webpack_require__(64),
-	    command = __webpack_require__(57),
-	    logging = __webpack_require__(60),
-	    promise = __webpack_require__(61),
-	    webdriver = __webpack_require__(66),
-	    portprober = __webpack_require__(102),
-	    remote = __webpack_require__(103);
+	var http = __webpack_require__(65),
+	    io = __webpack_require__(109),
+	    capabilities = __webpack_require__(103),
+	    command = __webpack_require__(96),
+	    logging = __webpack_require__(99),
+	    promise = __webpack_require__(100),
+	    webdriver = __webpack_require__(105),
+	    portprober = __webpack_require__(141),
+	    remote = __webpack_require__(142);
 
 	/**
 	 * Name of the PhantomJS executable.
@@ -52763,10 +58937,10 @@
 	// PUBLIC API
 
 	exports.Driver = Driver;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ },
-/* 309 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -52800,21 +58974,21 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var http = __webpack_require__(26);
-	var io = __webpack_require__(70);
+	var http = __webpack_require__(65);
+	var io = __webpack_require__(109);
 
-	var _require = __webpack_require__(64),
+	var _require = __webpack_require__(103),
 	    Capabilities = _require.Capabilities,
 	    Capability = _require.Capability;
 
-	var command = __webpack_require__(57);
-	var error = __webpack_require__(59);
-	var logging = __webpack_require__(60);
-	var promise = __webpack_require__(61);
-	var Symbols = __webpack_require__(65);
-	var webdriver = __webpack_require__(66);
-	var portprober = __webpack_require__(102);
-	var remote = __webpack_require__(103);
+	var command = __webpack_require__(96);
+	var error = __webpack_require__(98);
+	var logging = __webpack_require__(99);
+	var promise = __webpack_require__(100);
+	var Symbols = __webpack_require__(104);
+	var webdriver = __webpack_require__(105);
+	var portprober = __webpack_require__(141);
+	var remote = __webpack_require__(142);
 
 	/**
 	 * @return {string} .
@@ -53053,7 +59227,7 @@
 	exports.ServiceBuilder = ServiceBuilder;
 
 /***/ },
-/* 310 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process, global) {// Licensed to the Software Freedom Conservancy (SFC) under one
@@ -53138,7 +59312,7 @@
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var promise = __webpack_require__(19).promise;
+	var promise = __webpack_require__(62).promise;
 	var flow = function () {
 	  var initial = process.env['SELENIUM_PROMISE_MANAGER'];
 	  try {
@@ -53453,10 +59627,10 @@
 
 	exports.it.skip = exports.xit;
 	exports.ignore = ignore;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59), (function() { return this; }())))
 
 /***/ },
-/* 311 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {process.nextTick(function() {
@@ -53467,7 +59641,7 @@
 			mocha.run();
 	});
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)))
 
 /***/ }
 /******/ ]);
