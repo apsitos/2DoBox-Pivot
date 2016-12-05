@@ -2,6 +2,7 @@
 const assert = require('assert');
 const webdriver = require('selenium-webdriver');
 const test = require('selenium-webdriver/testing');
+const unit = require('unit_test.js');
 
 
 test.describe('testing idea-box', () => {
@@ -38,6 +39,7 @@ test.describe('testing idea-box', () => {
       assert.equal(value, 'this is a description')
     });
     done();
+  })
 
 test.describe('testing 2dobox', function(){
 
@@ -193,4 +195,4 @@ test.describe('testing 2dobox', function(){
       assert.equal(quality, 'Low');
     });
   });
-});
+})

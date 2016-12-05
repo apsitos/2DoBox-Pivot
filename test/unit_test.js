@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const idea = require('../lib/2dobox.js')
+const idea = require('../lib/2dobox.js');
 
 describe ('Create Idea', function() {
 
@@ -12,5 +12,9 @@ describe ('Create Idea', function() {
     assert.equal(idea.title, 'title');
   });
 
-  
+  it('should accept a body', function() {
+    let idea = new CreateIdea('title', 'body')
+    assert.equal(idea.body, 'body');
+  })
+
 })
