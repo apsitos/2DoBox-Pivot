@@ -48,6 +48,8 @@
 
 	__webpack_require__(1);
 
+	__webpack_require__(5);
+
 	__webpack_require__(4);
 
 /***/ },
@@ -64,6 +66,7 @@
 	//Have submit button disabled = true at start;
 	var $ = __webpack_require__(2);
 
+	var CreateIdea = __webpack_require__(4);
 	var title = $('.title-field');
 	var body = $('.body-field');
 	var search = $('.search-field');
@@ -2004,6 +2007,22 @@
 
 /***/ },
 /* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function CreateIdea(title, body, id, quality) {
+	  this.title = title;
+	  this.body = body;
+	  this.id = id || Date.now();
+	  this.quality = quality || "Normal";
+	  this.done = false;
+	}
+
+	module.exports = CreateIdea;
+
+/***/ },
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
