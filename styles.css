@@ -26,7 +26,7 @@ input, textarea, .save-button {
   font-size: 15pt;
   margin: 7px;
   outline: none;
-  width: 40%;
+  width: 50%;
 }
 
 input, textarea {
@@ -43,20 +43,25 @@ textarea {
   resize: none;
 }
 
+.search-section{
+  width: 55%;
+  margin: auto;
+}
 
 .search-field, .show-completed{
   display: inline-block;
   margin: auto;
-  width: 30%;
 }
 
 .search-field{
   height: 30px;
+  width: 70%;
 }
 
 .show-completed{
   height: 35px;
   vertical-align: top;
+  width: 30%;
 }
 
 .importance p{
@@ -89,6 +94,20 @@ textarea {
 text-align: center;
 }
 
+.completed, .show-more-ideas{
+  color: #fff;
+  font-size: 10pt;
+  float: right;
+  background-color: #D3D6D7;
+  border: #B8BDBF 1px solid;
+  padding: 8px 10px;
+  margin-top: 10px;
+}
+
+.completed:hover{
+  background-color: #448C5D;
+}
+
 .show-completed{
   background-color: #004e49;
   border: none;
@@ -102,6 +121,18 @@ text-align: center;
   cursor: pointer;;
 }
 
+.show-more-ideas{
+  font-size: 20px;
+  background-color: #004e49;
+  margin-top: 20px;
+  width: 50%;
+  padding: 0px;
+}
+
+.show-more-ideas:hover{
+  background-color: #045E55;
+}
+
 ul {
   align-items: center;
   display: flex;
@@ -111,8 +142,8 @@ ul {
 .new-idea {
   border-bottom: 1px solid #D1D3D4;
   margin-top: 15px;
-  padding-bottom: 20px;
-  width: 40%;
+  padding: 20px;
+  width: 50%;
 }
 
 .new-idea-done {
