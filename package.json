@@ -6,7 +6,11 @@
   "scripts": {
     "start": "webpack-dev-server --hot --inline",
     "build": "webpack",
+<<<<<<< HEAD
     "test": "mocha"
+=======
+    "test": "mocha test/index.js"
+>>>>>>> master
   },
   "repository": {
     "type": "git",
@@ -30,6 +34,10 @@
     "jquery": "^3.1.1",
     "mocha": "^3.2.0",
     "mocha-loader": "^1.0.0",
+<<<<<<< HEAD
+=======
+    "selenium": "^2.20.0",
+>>>>>>> master
     "selenium-webdriver": "^3.0.1",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
