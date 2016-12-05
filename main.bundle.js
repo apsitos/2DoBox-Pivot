@@ -60,6 +60,8 @@
 	  value: true
 	});
 	/*jshint esversion: 6 */
+
+	//Have submit button disabled = true at start;
 	var $ = __webpack_require__(2);
 
 	var title = $('.title-field');
@@ -98,7 +100,7 @@
 	});
 
 	function showButton() {
-	  $('.idea-list').append('<button class=\'show-more-ideas\' type=\'button\' name=\'more\'>Show More Ideas</button>');
+	  $('.idea-list').append('<button class=\'show-more-ideas\' type=\'button\' name=\'more\'>+</button>');
 	}
 
 	$('.idea-list').on('click', '.show-more-ideas', function () {
@@ -247,13 +249,13 @@
 	  }
 	});
 
-	function CreateIdea(title, body, id, quality) {
-	  this.title = title;
-	  this.body = body;
-	  this.id = id || Date.now();
-	  this.quality = quality || "Normal";
-	  this.done = false;
-	}
+	// function CreateIdea(title, body, id, quality) {
+	//   this.title = title;
+	//   this.body = body;
+	//   this.id = id || Date.now();
+	//   this.quality = quality || "Normal";
+	//   this.done = false;
+	// }
 
 	function displayIdea(titleInput, bodyInput, id, quality) {
 	  $('.idea-list').prepend('<li id=' + id + ' class="new-idea">\n    <h2 class="title-input" contenteditable="true">' + titleInput + '</h2>\n    <button aria-label="delete" class="delete" type="button" name="delete" img src="images/delete.svg"></button>\n    <h3 class="body-input" contenteditable="true">' + bodyInput + '</h3>\n    <button aria-label="up-vote" class="up-vote" type="button" name="up-vote" img src="images/upvote.svg"></button>\n    <button aria-label="down-vote" class="down-vote" type="button" name="down-vote" img src="images/downvote.svg"></button>\n    <p class="rating">quality: <span class="user-quality">' + quality + '</span></p>\n    <button class="completed" type="button" name="completed">Done!</button>\n    </li>');
@@ -286,8 +288,8 @@
 	        displayIdea(_idea.title, _idea.body, _idea.id, _idea.quality);
 	      }
 	    }
+	    showButton();
 	  }
-	  showButton();
 	}
 
 	function clearInputFields() {
