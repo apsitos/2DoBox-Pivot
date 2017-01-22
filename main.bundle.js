@@ -62,53 +62,18 @@
 	  value: true
 	});
 	/*jshint esversion: 6 */
-
-	//Have submit button disabled = true at start;
 	var $ = __webpack_require__(2);
-
 	var CreateIdea = __webpack_require__(4);
+
 	var title = $('.title-field');
 	var body = $('.body-field');
 	var search = $('.search-field');
-	//export
 	var ideaArray = JSON.parse(localStorage.getItem('newUserIdea')) || [];
 	var doneArray = JSON.parse(localStorage.getItem('doneUserIdea')) || [];
 
 	$(document).ready(function () {
-	  for (var i = 0; i < ideaArray.length; i++) {
-	    if (ideaArray[i].done === true) {
-	      for (var _i = 0; _i < ideaArray.length; _i++) {
-	        if (ideaArray[_i].done === true) {
-	          ideaArray[_i].done = false;
-	          doneArray.push(ideaArray[_i]);
-	          ideaArray.splice(_i, 1);
-	          saveToStorage();
-	        }
-	      }
-	    }
-	  }
-	  for (var _i2 = 0; _i2 < doneArray.length; _i2++) {
-	    if (doneArray[_i2].done === true) {
-	      for (var _i3 = 0; _i3 < doneArray.length; _i3++) {
-	        if (doneArray[_i3].done === true) {
-	          doneArray[_i3].done = false;
-	          ideaArray.push(doneArray[_i3]);
-	          doneArray.splice(_i3, 1);
-	          saveToStorage();
-	        }
-	      }
-	    }
-	  }
+	  checkCompleted();
 	  getStorage();
-	});
-
-	function showButton() {
-	  $('.idea-list').append('<button class=\'show-more-ideas\' type=\'button\' name=\'more\'>+</button>');
-	}
-
-	$('.idea-list').on('click', '.show-more-ideas', function () {
-	  var displayAll = true;
-	  getStorage(displayAll);
 	});
 
 	function createNewIdea() {
@@ -152,16 +117,14 @@
 	    if (ideaArray[i].id == thisIdea) {
 	      if (ideaArray[i].done === false) {
 	        ideaArray[i].done = true;
-	        console.log(ideaArray[i].done);
 	      }
 	    }
 	    saveToStorage();
 	  }
-	  for (var _i4 = 0; _i4 < doneArray.length; _i4++) {
-	    if (doneArray[_i4].id == thisIdea) {
-	      if (doneArray[_i4].done === false) {
-	        doneArray[_i4].done = true;
-	        console.log(doneArray[_i4].done);
+	  for (var _i = 0; _i < doneArray.length; _i++) {
+	    if (doneArray[_i].id == thisIdea) {
+	      if (doneArray[_i].done === false) {
+	        doneArray[_i].done = true;
 	      }
 	    }
 	    saveToStorage();
@@ -169,7 +132,6 @@
 	});
 
 	$('.show-completed').on('click', function () {
-	  console.log(doneArray);
 	  if (doneArray) {
 	    for (var i = doneArray.length - 1; i > -1; i--) {
 	      var idea = doneArray[i];
@@ -229,6 +191,11 @@
 	  }
 	});
 
+	$('.idea-list').on('click', '.show-more-ideas', function () {
+	  var displayAll = true;
+	  getStorage(displayAll);
+	});
+
 	search.on('keyup', function (id, title) {
 	  var search = $(this).val();
 	  $('h2:contains(' + search + ')').closest('.new-idea').show();
@@ -252,20 +219,40 @@
 	  }
 	});
 
-	// function CreateIdea(title, body, id, quality) {
-	//   this.title = title;
-	//   this.body = body;
-	//   this.id = id || Date.now();
-	//   this.quality = quality || "Normal";
-	//   this.done = false;
-	// }
+	function checkCompleted() {
+	  for (var i = 0; i < ideaArray.length; i++) {
+	    for (var _i2 = 0; _i2 < ideaArray.length; _i2++) {
+	      if (ideaArray[_i2].done === true) {
+	        ideaArray[_i2].done = false;
+	        doneArray.push(ideaArray[_i2]);
+	        ideaArray.splice(_i2, 1);
+	        saveToStorage();
+	      }
+	    }
+	    // ideaArray.filter(()=>{
+	    //   ideaArray[i].done = false;
+	    //   doneArray.push(ideaArray[i]);
+	    //   ideaArray.splice(i, 1);
+	    //   saveToStorage();
+	    //   return ideaArray;
+	    // });
+	    for (var _i3 = 0; _i3 < doneArray.length; _i3++) {
+	      if (doneArray[_i3].done === true) {
+	        doneArray[_i3].done = false;
+	        ideaArray.unshift(doneArray[_i3]);
+	        doneArray.splice(_i3, 1);
+	        saveToStorage();
+	      }
+	    }
+	  }
+	}
 
 	function displayIdea(titleInput, bodyInput, id, quality) {
-	  $('.idea-list').prepend('<li id=' + id + ' class="new-idea">\n    <h2 class="title-input" contenteditable="true">' + titleInput + '</h2>\n    <button aria-label="delete" class="delete" type="button" name="delete" img src="images/delete.svg"></button>\n    <h3 class="body-input" contenteditable="true">' + bodyInput + '</h3>\n    <button aria-label="up-vote" class="up-vote" type="button" name="up-vote" img src="images/upvote.svg"></button>\n    <button aria-label="down-vote" class="down-vote" type="button" name="down-vote" img src="images/downvote.svg"></button>\n    <p class="rating">quality: <span class="user-quality">' + quality + '</span></p>\n    <button class="completed" type="button" name="completed">Done!</button>\n    </li>');
+	  $('.idea-list').prepend('<li id=' + id + ' class="new-idea">\n    <h2 class="title-input" contenteditable="true">' + titleInput + '</h2>\n    <button aria-label="delete" class="delete" type="button" name="delete" img src="images/delete.svg"></button>\n    <h3 class="body-input" contenteditable="true">' + bodyInput + '</h3>\n    <button aria-label="up-vote" class="up-vote" type="button" name="up-vote" img src="images/upvote.svg"></button>\n    <button aria-label="down-vote" class="down-vote" type="button" name="down-vote" img src="images/downvote.svg"></button>\n    <p class="rating">importance: <span class="user-quality">' + quality + '</span></p>\n    <button class="completed" type="button" name="completed">Done!</button>\n    </li>');
 	}
 
 	function displayCompletedIdea(titleInput, bodyInput, id, quality) {
-	  $('.idea-list').prepend('<li id=' + id + ' class="new-idea new-idea-done">\n    <h2 class="title-input" contenteditable="true">' + titleInput + '</h2>\n    <button class="delete" type="button" name="delete" img src="images/delete.svg"></button>\n    <h3 class="body-input" contenteditable="true">' + bodyInput + '</h3>\n    <button class="up-vote" type="button" name="up-vote" img src="images/upvote.svg"></button>\n    <button class="down-vote" type="button" name="down-vote" img src="images/downvote.svg"></button>\n    <p class="rating">quality: <span class="user-quality">' + quality + '</span></p>\n    <button class="completed" type="button" name="completed">Done!</button>\n    </li>');
+	  $('.idea-list').prepend('<li id=' + id + ' class="new-idea new-idea-done">\n    <h2 class="title-input" contenteditable="true">' + titleInput + '</h2>\n    <button class="delete" type="button" name="delete" img src="images/delete.svg"></button>\n    <h3 class="body-input" contenteditable="true">' + bodyInput + '</h3>\n    <button class="up-vote" type="button" name="up-vote" img src="images/upvote.svg"></button>\n    <button class="down-vote" type="button" name="down-vote" img src="images/downvote.svg"></button>\n    <p class="rating">importance: <span class="user-quality">' + quality + '</span></p>\n    <button class="completed" type="button" name="completed">Done!</button>\n    </li>');
 	}
 
 	//export
@@ -285,8 +272,8 @@
 	      }
 	    }
 	  } else if (ideaArray.length >= 11) {
-	    for (var _i5 = 9; _i5 >= 0; _i5--) {
-	      var _idea = ideaArray[_i5];
+	    for (var _i4 = 9; _i4 >= 0; _i4--) {
+	      var _idea = ideaArray[_i4];
 	      if (_idea.done === false) {
 	        displayIdea(_idea.title, _idea.body, _idea.id, _idea.quality);
 	      }
@@ -326,12 +313,20 @@
 
 	function removeIdea(id, index) {
 	  for (var i = 0; i < ideaArray.length; i++) {
-	    if (ideaArray[i].id === parseInt(id)) {
+	    if (ideaArray[i].id == id) {
 	      ideaArray.splice(i, 1);
 	    }
 	  }
+	  for (var _i5 = 0; _i5 < doneArray.length; _i5++) {
+	    if (doneArray[_i5].id == id) {
+	      doneArray.splice(_i5, 1);
+	    }
+	  }
 	  saveToStorage();
-	  getStorage();
+	}
+
+	function showButton() {
+	  $('.idea-list').append('<button class=\'show-more-ideas\' type=\'button\' name=\'more\'>+</button>');
 	}
 
 	exports.ideaArray = ideaArray;
